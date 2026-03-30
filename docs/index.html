@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.entaingine.com; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests"/>
+  <meta name="referrer" content="strict-origin-when-cross-origin"/>
+  <meta name="color-scheme" content="dark"/>
+  <meta name="description" content="Static RP Product Matcher frontend for GitHub Pages and local customer use."/>
   <title>RP Produkt-Matcher</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     /* ================================================================
        CSS CUSTOM PROPERTIES — RP Group Brand Theme
@@ -60,8 +61,8 @@
       --gray-bg: rgba(99, 107, 128, 0.12);
       --gray-border: rgba(99, 107, 128, 0.3);
 
-      --font-body: 'Open Sans', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 
       --radius-sm: 6px;
       --radius-md: 10px;
@@ -2352,7 +2353,7 @@
        ============================================================ -->
   <header class="header">
     <div class="header-brand">
-      <img src="https://www.rp-group.com/Webseite/bilder/Logos/rp-group/279078/image-thumb__279078__NavLogo/RP-Group-2019-Logo-Claim-WHITE@2x.b67af279.png"
+      <img src="./assets/rp-group-logo.png"
            alt="RP Group" class="header-logo"/>
       <div class="header-divider"></div>
       <div class="header-title-block">

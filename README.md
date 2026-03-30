@@ -2,29 +2,52 @@
 
 Static GitHub Pages deployment for the RP Product Matcher review UI.
 
+Current planned hosting model:
+
+- Immediate hosting: GitHub Pages project site from `main` + `/docs`
+- Initial URL: `https://entaingine.github.io/rp-product-matcher/`
+- Later production setup: custom domain proxied through Cloudflare, with GitHub Pages kept as the static origin
+
 ## Layout
 
 - `docs/index.html`: deployable frontend page for GitHub Pages.
+- `docs/assets/rp-group-logo.png`: local logo asset so the shipped page does not depend on `rp-group.com`.
 - `docs/test_multi_item.json`: sample pasted JSON payload for local verification.
+- `docs/HOSTING.md`: GitHub Pages rollout notes and later Cloudflare cutover steps.
 
 ## GitHub Pages Setup
 
 1. Push this repository to GitHub.
 2. Open `Settings -> Pages`.
 3. Set `Source` to `Deploy from a branch`.
-4. Choose the default branch and the `/docs` folder.
+4. Choose branch `main` and folder `/docs`.
 5. Save. GitHub will publish `docs/index.html`.
+6. The GitHub Pages project URL will be `https://entaingine.github.io/rp-product-matcher/`.
+
+Notes:
+
+- `docs/.nojekyll` is checked in intentionally to keep Pages in plain static-file mode.
+- This repo currently uses branch publishing from `/docs`. No GitHub Actions build workflow is required.
 
 ## Custom Domain Later
 
 When you are ready to use a custom domain:
 
-1. Add the domain in `Settings -> Pages`.
-2. Create the DNS record requested by GitHub.
-3. Add a `docs/CNAME` file with the final hostname.
-4. Re-check HTTPS enforcement in Pages settings after DNS resolves.
+1. Verify the domain in GitHub Pages at the account or organization level first.
+2. Add the domain in `Settings -> Pages`.
+3. Create the DNS records requested by GitHub.
+4. Wait for GitHub Pages certificate issuance.
+5. Enable HTTPS enforcement in Pages settings.
+6. Put the custom hostname behind Cloudflare and enable the Cloudflare HTTPS and header rules described in `docs/HOSTING.md`.
 
-Do not commit a `CNAME` file until the final hostname is confirmed.
+Do not commit a live `CNAME` file in advance. For branch-based publishing, GitHub may create or update it for you when the custom domain is configured in the repository settings.
+
+## Security Notes
+
+- The page is intentionally shippable as a single HTML file for direct customer use.
+- It now includes frontend hardening with a meta CSP and referrer policy, but these are not a substitute for real response headers.
+- GitHub Pages does not provide repo-managed arbitrary security response headers. Add those later at the Cloudflare layer on the custom domain.
+- The API key entered in the UI is held in memory only and is not persisted by the page, but it is still entered into client-side JavaScript and should be treated as user-managed bearer material.
 
 ## Local Run
 

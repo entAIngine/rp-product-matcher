@@ -3,11 +3,55 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.entaingine.com; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.rp-group.com; font-src 'self' data:; connect-src 'self' https://api.entaingine.com; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests"/>
   <meta name="referrer" content="strict-origin-when-cross-origin"/>
   <meta name="color-scheme" content="dark"/>
   <meta name="description" content="Static RP Product Matcher frontend for GitHub Pages and local customer use."/>
+  <script>
+    const RP_REMOTE_ASSETS = {
+      logo: 'https://www.rp-group.com/Webseite/bilder/Logos/rp-group/279078/image-thumb__279078__NavLogo/RP-Group-2019-Logo-Claim-WHITE@2x.b67af279.png',
+      favicon16: 'https://www.rp-group.com/bundles/renderbackend/img/website/favicon-16x16.png',
+      favicon32: 'https://www.rp-group.com/bundles/renderbackend/img/website/favicon-32x32.png',
+      appleTouchIcon: 'https://www.rp-group.com/bundles/renderbackend/img/website/apple-touch-icon.png',
+      safariPinnedTab: 'https://www.rp-group.com/bundles/renderbackend/img/website/safari-pinned-tab.svg',
+    };
+    const RP_LOCAL_ASSETS = {
+      logo: './assets/rp-group-logo.png',
+      favicon16: './assets/favicon-16x16.png',
+      favicon32: './assets/favicon-32x32.png',
+      appleTouchIcon: './assets/apple-touch-icon.png',
+      safariPinnedTab: './assets/safari-pinned-tab.svg',
+    };
+    const prefersRemoteAssets = window.location.protocol === 'file:';
+
+    function useRemoteBrandingAssets() {
+      const appleTouch = document.querySelector('link[data-rp-asset=\"apple-touch-icon\"]');
+      const favicon32 = document.querySelector('link[data-rp-asset=\"favicon-32\"]');
+      const favicon16 = document.querySelector('link[data-rp-asset=\"favicon-16\"]');
+      const maskIcon = document.querySelector('link[data-rp-asset=\"mask-icon\"]');
+      if (appleTouch) appleTouch.href = RP_REMOTE_ASSETS.appleTouchIcon;
+      if (favicon32) favicon32.href = RP_REMOTE_ASSETS.favicon32;
+      if (favicon16) favicon16.href = RP_REMOTE_ASSETS.favicon16;
+      if (maskIcon) maskIcon.href = RP_REMOTE_ASSETS.safariPinnedTab;
+      const logo = document.getElementById('header-logo');
+      if (logo) logo.src = RP_REMOTE_ASSETS.logo;
+    }
+
+    window.addEventListener('error', (event) => {
+      const target = event.target;
+      if (!target || (target.tagName !== 'IMG' && target.tagName !== 'LINK')) return;
+      if (target.dataset && target.dataset.rpAsset) useRemoteBrandingAssets();
+      if (target.id === 'header-logo') useRemoteBrandingAssets();
+    }, true);
+  </script>
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" data-rp-asset="apple-touch-icon"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png" data-rp-asset="favicon-32"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png" data-rp-asset="favicon-16"/>
+  <link rel="mask-icon" href="./assets/safari-pinned-tab.svg" color="#5bbad5" data-rp-asset="mask-icon"/>
   <title>RP Produkt-Matcher</title>
+  <script>
+    if (prefersRemoteAssets) useRemoteBrandingAssets();
+  </script>
   <style>
     /* ================================================================
        CSS CUSTOM PROPERTIES — RP Group Brand Theme
@@ -2354,6 +2398,8 @@
   <header class="header">
     <div class="header-brand">
       <img src="./assets/rp-group-logo.png"
+           id="header-logo"
+           onerror="this.onerror=null; this.src=RP_REMOTE_ASSETS.logo;"
            alt="RP Group" class="header-logo"/>
       <div class="header-divider"></div>
       <div class="header-title-block">

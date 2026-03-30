@@ -17,6 +17,7 @@ This repository intentionally stays build-free for now. GitHub Pages should publ
 
 - `docs/index.html` includes a meta Content Security Policy and a referrer policy.
 - These protections help for local use and GitHub Pages hosting, but they are still document-level controls.
+- Branding assets are checked in locally for GitHub Pages, and the page can fall back to RP-hosted branding assets when opened from `file://` without the `assets/` directory.
 - Real response headers such as HSTS, X-Frame-Options, X-Content-Type-Options, and Permissions-Policy are not managed by this repository on GitHub Pages.
 
 ## Later Cloudflare Fronting Model

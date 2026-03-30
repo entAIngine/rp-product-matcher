@@ -12,6 +12,7 @@ Current planned hosting model:
 
 - `docs/index.html`: deployable frontend page for GitHub Pages.
 - `docs/assets/rp-group-logo.png`: local logo asset so the shipped page does not depend on `rp-group.com`.
+- `docs/assets/favicon-16x16.png`, `docs/assets/favicon-32x32.png`, `docs/assets/apple-touch-icon.png`, `docs/assets/safari-pinned-tab.svg`: local favicon assets matching `www.rp-group.com/de`.
 - `docs/test_multi_item.json`: sample pasted JSON payload for local verification.
 - `docs/HOSTING.md`: GitHub Pages rollout notes and later Cloudflare cutover steps.
 
@@ -46,6 +47,7 @@ Do not commit a live `CNAME` file in advance. For branch-based publishing, GitHu
 
 - The page is intentionally shippable as a single HTML file for direct customer use.
 - It now includes frontend hardening with a meta CSP and referrer policy, but these are not a substitute for real response headers.
+- Branding assets prefer local checked-in files when present and fall back to `www.rp-group.com` when the page is opened standalone and the local `assets/` directory is not available.
 - GitHub Pages does not provide repo-managed arbitrary security response headers. Add those later at the Cloudflare layer on the custom domain.
 - The API key entered in the UI is held in memory only and is not persisted by the page, but it is still entered into client-side JavaScript and should be treated as user-managed bearer material.
 

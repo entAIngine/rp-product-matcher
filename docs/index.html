@@ -2767,8 +2767,8 @@
             <label class="label" data-i18n="settings.material"></label>
             <select class="input-field" id="setting-material">
               <option value="all" data-i18n="settings.material.all"></option>
-              <option value="kunststoff">Kunststoff</option>
-              <option value="metall">Metall</option>
+              <option value="kunststoff" data-i18n="settings.material.plastic"></option>
+              <option value="metall" data-i18n="settings.material.metal"></option>
             </select>
           </div>
           <div class="input-group">
@@ -2782,15 +2782,17 @@
             <label class="label" data-i18n="settings.system"></label>
             <select class="input-field" id="setting-system">
               <option value="auto" data-i18n="settings.system.auto"></option>
-              <optgroup id="optgroup-eb" label="Einzelbatterie (Self-contained)">
-                <option value="SC">SC &mdash; Self-Contained</option>
-                <option value="WL">WL &mdash; Wireless</option>
-                <option value="WB">WB &mdash; Wired Bus</option>
+              <optgroup id="optgroup-supply" label="Versorgung">
+                <option value="EB" data-i18n="settings.system.option.eb"></option>
+                <option value="ZB" data-i18n="settings.system.option.zb"></option>
               </optgroup>
-              <optgroup id="optgroup-zb" label="Zentralbatterie (Central)">
-                <option value="ML">ML &mdash; Mains-Linked</option>
-                <option value="CC">CC &mdash; Central Control</option>
-                <option value="CPS">CPS &mdash; Central Power Supply</option>
+              <optgroup id="optgroup-monitoring" label="Monitoring">
+                <option value="SC" data-i18n="settings.system.option.sc"></option>
+                <option value="WL" data-i18n="settings.system.option.wl"></option>
+                <option value="WB" data-i18n="settings.system.option.wb"></option>
+                <option value="ML" data-i18n="settings.system.option.ml"></option>
+                <option value="CC" data-i18n="settings.system.option.cc"></option>
+                <option value="CPS" data-i18n="settings.system.option.cps"></option>
               </optgroup>
             </select>
             <div class="security-note" data-i18n="settings.system.hint"></div>
@@ -2951,7 +2953,7 @@ const I18N = {
     'auth.security': '\u26A1 Wird nur im Sitzungsspeicher gehalten \u2014 kein persistenter Speicher',
     'file.title': 'P93-Datei',
     'file.drop': 'P93-Datei hierher ziehen',
-    'file.click': 'oder klicken zum Ausw\u00e4hlen',
+    'file.click': 'oder zum Ausw\u00e4hlen klicken',
     'file.remove': 'Datei entfernen',
     'settings.title': 'Parameter',
     'settings.optional': 'Optional',
@@ -2959,14 +2961,24 @@ const I18N = {
     'settings.topk.hint': 'Anzahl der KI-Vorschl\u00e4ge pro Anfrage-Position',
     'settings.material': 'Materialfilter',
     'settings.material.all': 'Alle',
+    'settings.material.plastic': 'Kunststoff',
+    'settings.material.metal': 'Metall',
     'settings.virtual': 'Virtuelle Artikel',
     'settings.virtual.no': 'Nein',
     'settings.virtual.yes': 'Ja',
     'settings.system': 'Systemauswahl',
     'settings.system.auto': 'Automatisch (empfohlen)',
-    'settings.system.hint': 'Auto erkennt den Systemtyp aus der Anfrage. Wählen Sie manuell nur bei Bedarf.',
-    'settings.system.eb': 'Einzelbatterie (Eigenversorgung)',
-    'settings.system.zb': 'Zentralbatterie (Zentral)',
+    'settings.system.hint': 'EB/ZB filtern nach Versorgung. SC/WL/WB/ML/CC/CPS filtern nach Monitoring. DL wird vom Backend nicht unterst\u00fctzt.',
+    'settings.system.group.supply': 'Versorgung',
+    'settings.system.group.monitoring': 'Monitoring',
+    'settings.system.option.eb': 'EB — Einzelbatterie',
+    'settings.system.option.zb': 'ZB — Zentralbatterie',
+    'settings.system.option.sc': 'SC — Self-Contained',
+    'settings.system.option.wl': 'WL — WirelessControl',
+    'settings.system.option.wb': 'WB — Wired Bus',
+    'settings.system.option.ml': 'ML — Mittelleistung',
+    'settings.system.option.cc': 'CC — Zentralsteuerung',
+    'settings.system.option.cps': 'CPS — Zentralversorgung',
     'btn.start': 'Analyse starten',
     'btn.cancel': 'Abbrechen',
     'btn.back': 'Zur\u00fcck zur Konfiguration',
@@ -3003,15 +3015,15 @@ const I18N = {
     'results.positions': 'Positionen',
     'results.time': 'Zeit',
     'results.route': 'Route',
-    'results.run': 'Run',
-    'results.experimental': 'EXPERIMENTELL \u2014 Virtual',
-    'summary.match_label': 'Merkmal-Matches',
+    'results.run': 'Run-ID',
+    'results.experimental': 'EXPERIMENTELL \u2014 Virtuell',
+    'summary.match_label': 'Merkmaltreffer',
     'summary.match_tooltip': 'Anzahl der Anfrage-Merkmale, die mit diesem Vorschlag \u00fcbereinstimmen.',
-    'summary.diff_label': 'Abw.',
+    'summary.diff_label': 'Abweich.',
     'summary.diff_tooltip': 'Anzahl der Anfrage-Merkmale mit abweichenden Produktwerten.',
     'summary.upgrade_label': 'Upgrade',
     'summary.upgrade_tooltip': 'Anzahl der Merkmale, bei denen der Vorschlag die Anfrage sinnvoll \u00fcbererf\u00fcllt.',
-    'summary.missing_label': 'fehlt',
+    'summary.missing_label': 'fehlend',
     'summary.missing_tooltip': 'Anzahl der Anfrage-Merkmale ohne verwertbaren Vergleichswert im Vorschlag.',
     'export.title': 'Auswahl & Export',
     'export.selected': 'ausgew\u00e4hlt',
@@ -3089,14 +3101,24 @@ const I18N = {
     'settings.topk.hint': 'Number of AI proposals per inquiry item',
     'settings.material': 'Material Filter',
     'settings.material.all': 'All',
+    'settings.material.plastic': 'Plastic',
+    'settings.material.metal': 'Metal',
     'settings.virtual': 'Virtual Items',
     'settings.virtual.no': 'No',
     'settings.virtual.yes': 'Yes',
     'settings.system': 'System Selection',
     'settings.system.auto': 'Automatic (recommended)',
-    'settings.system.hint': 'Auto detects the system type from the inquiry. Select manually only when needed.',
-    'settings.system.eb': 'Einzelbatterie (Self-contained)',
-    'settings.system.zb': 'Zentralbatterie (Central)',
+    'settings.system.hint': 'EB/ZB filter by Supply. SC/WL/WB/ML/CC/CPS filter by Monitoring. DL is not supported by the backend.',
+    'settings.system.group.supply': 'Supply',
+    'settings.system.group.monitoring': 'Monitoring',
+    'settings.system.option.eb': 'EB — Self-contained',
+    'settings.system.option.zb': 'ZB — Central battery',
+    'settings.system.option.sc': 'SC — Self-contained',
+    'settings.system.option.wl': 'WL — WirelessControl',
+    'settings.system.option.wb': 'WB — Wired bus',
+    'settings.system.option.ml': 'ML — Medium power',
+    'settings.system.option.cc': 'CC — Central control',
+    'settings.system.option.cps': 'CPS — Central power supply',
     'btn.start': 'Start Analysis',
     'btn.cancel': 'Cancel',
     'btn.back': 'Back to Configuration',
@@ -3124,24 +3146,24 @@ const I18N = {
     'processing.total_time': 'total time',
     'results.proposals': 'Proposals',
     'results.no_proposals': 'No proposals',
-    'results.position': 'Position',
+    'results.position': 'Line Item',
     'results.excerpt': 'Original Text',
     'results.comparison': 'Show field comparison \u25be',
     'results.select_none': 'No proposal suitable',
     'results.strategy': 'Strategy',
     'results.catalog': 'Catalog',
-    'results.positions': 'Positions',
+    'results.positions': 'Items',
     'results.time': 'Time',
     'results.route': 'Route',
-    'results.run': 'Run',
+    'results.run': 'Run ID',
     'results.experimental': 'EXPERIMENTAL \u2014 Virtual',
     'summary.match_label': 'Feature matches',
     'summary.match_tooltip': 'Number of inquiry features that match this proposal.',
-    'summary.diff_label': 'Diff',
+    'summary.diff_label': 'Differences',
     'summary.diff_tooltip': 'Number of inquiry features with different product values.',
     'summary.upgrade_label': 'Upgrade',
     'summary.upgrade_tooltip': 'Number of features where the proposal is a compatible upgrade over the inquiry.',
-    'summary.missing_label': 'N/A',
+    'summary.missing_label': 'Missing',
     'summary.missing_tooltip': 'Number of inquiry features without usable comparison data in this proposal.',
     'export.title': 'Selection & Export',
     'export.selected': 'selected',
@@ -3215,10 +3237,10 @@ function applyLang() {
     el.title = t(el.getAttribute('data-i18n-title'));
   });
   // Update optgroup labels for system selection
-  const ogEb = document.getElementById('optgroup-eb');
-  const ogZb = document.getElementById('optgroup-zb');
-  if (ogEb) ogEb.label = t('settings.system.eb');
-  if (ogZb) ogZb.label = t('settings.system.zb');
+  const ogSupply = document.getElementById('optgroup-supply');
+  const ogMonitoring = document.getElementById('optgroup-monitoring');
+  if (ogSupply) ogSupply.label = t('settings.system.group.supply');
+  if (ogMonitoring) ogMonitoring.label = t('settings.system.group.monitoring');
   // Re-render dynamic parts if results exist (preserve selections)
   if (state.results) {
     const savedSel = { ...state.selections };
@@ -3619,6 +3641,17 @@ async function uploadFile(file, signal) {
   return (await resp.text()).trim();
 }
 
+function toApiMaterialFilter(value) {
+  const materialFilterMap = {
+    all: 'all',
+    kunststoff: 'plastic_only',
+    metall: 'metal_only',
+    plastic_only: 'plastic_only',
+    metal_only: 'metal_only',
+  };
+  return materialFilterMap[value] || 'all';
+}
+
 async function startProcess(blobUrl, signal) {
   const url = `${API_BASE}/v1/m2m/processes`;
   const payload = {
@@ -3626,7 +3659,7 @@ async function startProcess(blobUrl, signal) {
     inputs: [
       { name: 'ANFRAGE', value: blobUrl },
       { name: 'TOP_K', value: $('setting-topk').value },
-      { name: 'MATERIAL_FILTER', value: $('setting-material').value },
+      { name: 'MATERIAL_FILTER', value: toApiMaterialFilter($('setting-material').value) },
       { name: 'USE_VIRTUAL_ITEMS', value: $('setting-virtual').value },
       { name: 'SYSTEM_SELECTION', value: $('setting-system').value },
     ],
@@ -4186,13 +4219,69 @@ const HIDDEN_COMP_FIELDS = new Set(['Positionsnummer','Verkaufstext','Artikelnum
 
 // ── Frontend comparison normalization ──
 // Re-evaluates "different" statuses from the backend for known equivalences
-const _MATERIAL_EQUIV = {
-  'polycarbonate': 'kunststoff', 'polycarbonat': 'kunststoff', 'abs': 'kunststoff',
-  'pc': 'kunststoff', 'pmma': 'kunststoff',
-  'zinc die-cast': 'metall', 'zinkdruckguss': 'metall',
-  'aluminium': 'metall', 'aluminum': 'metall',
-  'stahl': 'metall', 'steel': 'metall', 'edelstahl': 'metall', 'stainless steel': 'metall',
+const _MATERIAL_FAMILY_PATTERNS = {
+  kunststoff: [
+    /\bkunststoff\b/, /\bplastic\b/, /\bpolycarbon(?:ate|at)\b/, /\babs\b/,
+    /\bpmma\b/, /\bacryl(?:ic)?\b/, /\bplexi(?:glas)?\b/,
+  ],
+  metall: [
+    /\bmetall\b/, /\bmetal\b/, /\bzinc\b/, /\bzink\b/,
+    /\baluminium\b/, /\baluminum\b/, /\bstahl\b/, /\bsteel\b/,
+    /\bedelstahl\b/, /\bstainless\s+steel\b/,
+  ],
+  glas: [
+    /\bglas\b/, /\bglass\b/,
+  ],
 };
+
+function _normalizeMaterialValue(value) {
+  if (value === null || value === undefined) return '';
+  return String(value)
+    .toLowerCase()
+    .replace(/[+;/()]/g, ' ')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s*,\s*/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function _materialFamilies(value) {
+  const normalized = _normalizeMaterialValue(value);
+  const families = new Set();
+  if (!normalized) return families;
+  Object.entries(_MATERIAL_FAMILY_PATTERNS).forEach(([family, patterns]) => {
+    if (patterns.some(pattern => pattern.test(normalized))) families.add(family);
+  });
+  return families;
+}
+
+function _materialFamilySetsEqual(left, right) {
+  if (left.size !== right.size) return false;
+  return Array.from(left).every(value => right.has(value));
+}
+
+function _singleMaterialFamilyMatches(singleFamilySet, otherFamilySet) {
+  const [family] = Array.from(singleFamilySet);
+  if (!family || !otherFamilySet.size) return false;
+  if (family === 'metall') return otherFamilySet.has('metall') && !otherFamilySet.has('kunststoff');
+  if (family === 'kunststoff') return otherFamilySet.has('kunststoff') && !otherFamilySet.has('metall');
+  return otherFamilySet.size === 1 && otherFamilySet.has(family);
+}
+
+function _materialsEquivalent(queryValue, candidateValue) {
+  const queryNorm = _normalizeMaterialValue(queryValue);
+  const candidateNorm = _normalizeMaterialValue(candidateValue);
+  if (!queryNorm || !candidateNorm) return false;
+  if (queryNorm === candidateNorm) return true;
+
+  const queryFamilies = _materialFamilies(queryValue);
+  const candidateFamilies = _materialFamilies(candidateValue);
+  if (!queryFamilies.size || !candidateFamilies.size) return false;
+  if (_materialFamilySetsEqual(queryFamilies, candidateFamilies)) return true;
+  if (queryFamilies.size === 1 && _singleMaterialFamilyMatches(queryFamilies, candidateFamilies)) return true;
+  if (candidateFamilies.size === 1 && _singleMaterialFamilyMatches(candidateFamilies, queryFamilies)) return true;
+  return false;
+}
 const _NUMERIC_FIELDS = new Set([
   'HousingDimensions:Height', 'HousingDimensions:Length', 'HousingDimension:Width',
   'RatingsCertifications:RecognitionDistance',
@@ -4360,10 +4449,7 @@ function normalizeComparison(comp) {
 
   // Material equivalence
   if (f === 'MaterialData:Material') {
-    const ql = qv.toLowerCase(), cl = cv.toLowerCase();
-    const qCat = _MATERIAL_EQUIV[ql] || ql;
-    const cCat = _MATERIAL_EQUIV[cl] || cl;
-    if (qCat === cCat) return { ...comp, status: 'match', note: 'equivalent material' };
+    if (_materialsEquivalent(qv, cv)) return { ...comp, status: 'match', note: 'equivalent material' };
   }
 
   // Product type / Luminaire type hierarchy

@@ -1561,8 +1561,8 @@
       gap: 6px;
     }
     .ph-inner-slim {
-      padding: 8px 12px;
-      gap: 4px;
+      padding: 6px 10px;
+      gap: 3px;
     }
     /* Info row: non-sticky detail row below header */
     .info-row td {
@@ -1573,18 +1573,25 @@
     .info-row-label { background: #F1F5FB !important; }
     .info-row-query { background: #F8FAFD !important; }
     .info-row-cell { background: #FAFBFE; }
+    .ph-head-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
     .ph-rank-row {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      flex-shrink: 0;
     }
     .ph-rank {
-      width: 24px; height: 24px;
+      width: 20px; height: 20px;
       border-radius: 50%;
       background: #EBF0FF;
       color: #1032CF;
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.62rem;
       font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
@@ -1592,7 +1599,7 @@
     .col-proposal-th:nth-child(3) .ph-rank { background: #FEF9C3; color: #92400E; }
     .ph-type-badge {
       font-family: var(--font-mono);
-      font-size: 0.58rem;
+      font-size: 0.54rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -1604,20 +1611,28 @@
     .ph-type-badge.virtual { background: #FEF9C3; color: #92400E; }
     .ph-article {
       font-family: var(--font-mono);
-      font-size: 0.82rem;
+      font-size: 0.74rem;
       font-weight: 700;
       color: #1A2B40;
-      word-break: break-all;
-      line-height: 1.3;
+      line-height: 1.15;
+      text-align: right;
+      flex: 1;
+      min-width: 0;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
     .ph-score-row {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
     .ph-score-bar-wrap {
       flex: 1;
-      height: 5px;
+      height: 4px;
       background: #E8EDF5;
       border-radius: 3px;
       overflow: hidden;
@@ -1630,7 +1645,7 @@
     }
     .ph-score-num {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.64rem;
       font-weight: 700;
       color: #3D5170;
       white-space: nowrap;
@@ -4168,10 +4183,12 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
     // Slim sticky header: only rank + article + score
     html += `<th class="col-proposal-th${isSel ? ' is-selected' : ''}" id="ph-${ek}-${pi}" rowspan="2">
       <div class="ph-inner ph-inner-slim">
-        <div class="ph-rank-row">
-          <span class="ph-rank">#${rank}</span>${typeLabel}
+        <div class="ph-head-top">
+          <div class="ph-rank-row">
+            <span class="ph-rank">#${rank}</span>${typeLabel}
+          </div>
+          <div class="ph-article">${escapeHtml(article)}</div>
         </div>
-        <div class="ph-article">${escapeHtml(article)}</div>
         <div class="ph-score-row">
           <div class="ph-score-bar-wrap"><div class="ph-score-bar-fill" style="width:${pct}%"></div></div>
           <span class="ph-score-num">${score.toFixed(3)} <span style="opacity:0.6;font-size:0.6rem">(${pct}%)</span></span>

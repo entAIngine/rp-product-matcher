@@ -1402,6 +1402,10 @@
       text-align: left;
       padding: 0;
     }
+    /* Prevent the generic .field-row flex helper from collapsing table rows. */
+    .matrix-table tr.field-row {
+      display: table-row;
+    }
     /* Column separators between proposals */
     .matrix-table td[data-col], .matrix-table th.col-proposal-th {
       border-left: 2px solid #D8E2F0;
@@ -1443,16 +1447,16 @@
     thead .col-query { z-index: 12; }
     .col-query-content {
       padding: 8px 12px;
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 8px;
       min-width: 0;
     }
     .qval {
       display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 3;
       overflow: hidden;
       max-width: 100%;
       font-size: 0.8rem;
@@ -1461,7 +1465,8 @@
       font-family: var(--font-mono);
       line-height: 1.45;
       word-break: break-word;
-      overflow-wrap: anywhere;
+      overflow-wrap: break-word;
+      hyphens: auto;
     }
     .qval.missing { color: #9CA3AF; font-weight: 400; font-style: italic; }
     .src-dot {
@@ -1597,10 +1602,86 @@
       padding: 4px 8px;
       line-height: 1.4;
     }
-    .ph-issues-mini {
-      font-size: 0.66rem;
+    .ph-issues-panel {
+      margin-top: 2px;
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ph-issues-summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      cursor: pointer;
+      list-style: none;
       color: #92400E;
+      font-size: 0.67rem;
+      font-weight: 700;
       line-height: 1.35;
+    }
+    .ph-issues-summary::-webkit-details-marker { display: none; }
+    .ph-issues-caret {
+      font-size: 0.72rem;
+      color: #B45309;
+      transition: transform 0.16s ease;
+      flex-shrink: 0;
+    }
+    .ph-issues-panel[open] .ph-issues-caret { transform: rotate(90deg); }
+    .ph-issues-count {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(180, 83, 9, 0.1);
+      color: #92400E;
+      flex-shrink: 0;
+    }
+    .ph-issues-label {
+      min-width: 0;
+      flex: 1;
+    }
+    .ph-issues-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 0 8px 8px;
+      margin: 0;
+      list-style: none;
+      border-top: 1px solid #FDE68A;
+    }
+    .ph-issues-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      font-size: 0.66rem;
+      color: #7C2D12;
+      line-height: 1.4;
+    }
+    .ph-issues-item:first-child { padding-top: 7px; }
+    .ph-issues-tag {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 5px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .ph-issues-tag.different { background: #FEF3C7; color: #92400E; }
+    .ph-issues-tag.upgrade { background: #DBEAFE; color: #1E40AF; }
+    .ph-issues-tag.missing_candidate,
+    .ph-issues-tag.missing_query,
+    .ph-issues-tag.missing { background: #F3F4F6; color: #6B7280; }
+    .ph-issues-text strong {
+      display: block;
+      font-weight: 700;
+      color: #92400E;
+      margin-bottom: 1px;
     }
     .ph-overview-actions {
       display: flex;
@@ -1661,15 +1742,17 @@
     .cell-inner {
       padding: 7px 12px;
       display: grid;
-      grid-template-columns: 14px minmax(0, 1fr);
+      grid-template-columns: 16px minmax(0, 1fr);
       align-items: flex-start;
       gap: 5px;
+      width: 100%;
     }
     .cell-icon {
       font-size: 0.75rem;
       font-weight: 700;
       flex-shrink: 0;
-      width: 14px;
+      width: 16px;
+      text-align: center;
     }
     .cell-match .cell-icon    { color: #15803D; }
     .cell-diff .cell-icon     { color: #B45309; }
@@ -3948,14 +4031,42 @@ function buildFieldList(queryFields, proposals) {
   return Array.from(seen.entries()).map(([field, qf]) => ({ field, qf }));
 }
 
-function renderOverviewIssues(issues, limit = 3) {
+function getIssueStatusLabel(status) {
+  if (currentLang === 'de') {
+    if (status === 'upgrade') return 'Upgrade';
+    if (status === 'different') return 'Abweichung';
+    if (status === 'missing_candidate' || status === 'missing_query' || status === 'missing') return 'Fehlt';
+    return 'Hinweis';
+  }
+  if (status === 'upgrade') return 'Upgrade';
+  if (status === 'different') return 'Difference';
+  if (status === 'missing_candidate' || status === 'missing_query' || status === 'missing') return 'Missing';
+  return 'Note';
+}
+
+function renderOverviewIssues(issues) {
   if (!issues || !issues.length) return '';
   const primary = issues.filter(issue => !_OVERVIEW_SECONDARY_FIELDS.has(issue.field));
-  const visible = (primary.length ? primary : issues).slice(0, limit);
-  const hiddenCount = (primary.length ? primary : issues).length - visible.length;
-  const text = visible.map(issue => `${issue.label}: ${issue.note}`).join(' \u00b7 ');
-  const suffix = hiddenCount > 0 ? ` \u00b7 +${hiddenCount}` : '';
-  return `<div class="ph-issues-mini">${escapeHtml(text + suffix)}</div>`;
+  const visible = primary.length ? primary : issues;
+  const summaryLabel = currentLang === 'de'
+    ? (visible.length === 1 ? 'Prüfpunkt anzeigen' : 'Prüfpunkte anzeigen')
+    : (visible.length === 1 ? 'Show review point' : 'Show review points');
+  const listItems = visible.map(issue => `
+    <li class="ph-issues-item">
+      <span class="ph-issues-tag ${escapeHtml(issue.status || 'different')}">${escapeHtml(getIssueStatusLabel(issue.status))}</span>
+      <div class="ph-issues-text">
+        <strong>${escapeHtml(issue.label || shortField(issue.field || ''))}</strong>
+        <span>${escapeHtml(issue.note || issue.status || '')}</span>
+      </div>
+    </li>`).join('');
+  return `<details class="ph-issues-panel">
+    <summary class="ph-issues-summary">
+      <span class="ph-issues-caret">▸</span>
+      <span class="ph-issues-count">${visible.length}</span>
+      <span class="ph-issues-label">${summaryLabel}</span>
+    </summary>
+    <ul class="ph-issues-list">${listItems}</ul>
+  </details>`;
 }
 
 function renderComparisonMatrix(proposals, queryFields, itemKey) {

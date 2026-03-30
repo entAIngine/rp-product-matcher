@@ -40,35 +40,47 @@ Open `http://127.0.0.1:8765`.
 
 ## Playwright Playbooks
 
-These flows assume the page is being served locally from `docs/`.
+Use these flows for fixture-driven frontend regression checks.
 
 ### Open the app
 
 ```bash
-python3 -m http.server 8765 --directory docs
+python3 -m http.server 8001
 ```
 
 Then navigate Playwright to:
 
 ```text
-http://127.0.0.1:8765/index.html
+http://127.0.0.1:8001/docs/index.html
 ```
 
-### Paste JSON flow
+Serve the repo root, not only `docs/`, so Playwright can load the checked-in fixtures from `/.playwright-mcp/`.
+
+### Matrix regression flow
+
+1. Open `http://127.0.0.1:8001/docs/index.html`.
+2. Click `JSON einfügen`.
+3. Load `/.playwright-mcp/wp7-paste-full.json`.
+4. Click `JSON verarbeiten`.
+5. Inspect the first result card and the comparison matrix.
+6. Reload and repeat with `/.playwright-mcp/wp7-table-test.json`.
+
+### Matrix regression checks
+
+- Proposal cells use the full column width and do not collapse into vertical text strips.
+- Left sticky columns (`Feld`, `Ihre Anfrage`) stay aligned with the result columns while scrolling.
+- Long query values wrap cleanly inside the inquiry column instead of breaking at arbitrary characters.
+- The orange review block renders as an expandable disclosure with a visible count and readable itemized reasons.
+- `Produktdaten`, `Auswählen`, and `Kein Vorschlag passend` remain clickable after the matrix re-renders.
+- No API key or session value is hardcoded in the shipped HTML.
+
+### Manual paste flow
 
 1. Open the page.
 2. Click `JSON einfügen`.
-3. Paste `docs/test_multi_item.json` into the large textarea.
+3. Paste `docs/test_multi_item.json` into the textarea.
 4. Click `JSON verarbeiten`.
 5. Inspect the results matrix and export section.
-
-### Regression checks
-
-- Verify the matrix header stays readable with 5 proposals.
-- Verify left columns (`Feld`, `Ihre Anfrage`) remain aligned while scrolling.
-- Verify comparison cell values stay horizontal and do not stack vertically.
-- Verify `Select` / `Auswählen`, `Select none`, CSV export, and JSON export still work.
-- Verify no API key or session value is hardcoded in the shipped HTML.
 
 ## LLM Setup Instructions
 

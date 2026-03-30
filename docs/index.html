@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.rp-group.com; font-src 'self' data:; connect-src 'self' https://api.entaingine.com; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests"/>
   <meta name="referrer" content="strict-origin-when-cross-origin"/>
-  <meta name="color-scheme" content="dark"/>
+  <meta name="color-scheme" content="light"/>
   <meta name="description" content="Static RP Product Matcher frontend for GitHub Pages and local customer use."/>
   <script>
     const RP_REMOTE_ASSETS = {
@@ -57,6 +57,15 @@
        CSS CUSTOM PROPERTIES — RP Group Brand Theme
        ================================================================ */
     :root {
+      --app-gutter: clamp(12px, 2vw, 24px);
+      --app-max-width: 1840px;
+      --matrix-col-fname: 168px;
+      --matrix-col-query: 220px;
+      --matrix-col-proposal: 240px;
+      --scrollbar-track: #E7EDF6;
+      --scrollbar-thumb: #B3C4D9;
+      --scrollbar-thumb-hover: #8EA8C5;
+
       --bg-0: #01193C;
       --bg-1: #071F3D;
       --bg-2: #0D2A4D;
@@ -124,6 +133,29 @@
        ================================================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+      color-scheme: light;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+
+    *::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+      border-radius: 999px;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 999px;
+      border: 3px solid var(--scrollbar-track);
+    }
+
+    *::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
     body {
       font-family: var(--font-body);
       font-size: 14px;
@@ -184,9 +216,9 @@
     .app {
       position: relative;
       z-index: 1;
-      max-width: 1440px;
+      max-width: var(--app-max-width);
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 var(--app-gutter);
     }
 
     .section { display: none; }
@@ -867,6 +899,7 @@
     .item-card-header {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 16px;
       padding: 20px 24px;
       background: var(--bg-3);
@@ -891,11 +924,11 @@
       flex-shrink: 0;
     }
 
-    .item-card-title { flex: 1; }
+    .item-card-title { flex: 1 1 280px; min-width: 0; }
     .item-card-title h3 { margin-bottom: 2px; }
     .item-card-title .item-oz { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-3); }
 
-    .item-card-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .item-card-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
     .item-card-chevron { color: var(--text-3); transition: transform 0.3s; flex-shrink: 0; }
     .item-card.open .item-card-chevron { transform: rotate(180deg); }
 
@@ -1254,8 +1287,23 @@
     /* ================================================================
        RESPONSIVE
        ================================================================ */
+    @media (max-width: 1320px) {
+      :root {
+        --matrix-col-fname: 156px;
+        --matrix-col-query: 208px;
+        --matrix-col-proposal: 228px;
+      }
+    }
+
+    @media (max-width: 880px) {
+      :root {
+        --matrix-col-fname: 140px;
+        --matrix-col-query: 188px;
+        --matrix-col-proposal: 214px;
+      }
+    }
+
     @media (max-width: 640px) {
-      .app { padding: 0 12px; }
       h1 { font-size: 1.4rem; }
       .pipeline { flex-wrap: wrap; gap: 8px; padding: 24px 12px; }
       .pipeline-connector { width: 24px; }
@@ -1295,8 +1343,8 @@
 
     .header {
       background: #01193C;
-      margin: 0 -24px;
-      padding: 14px 24px;
+      margin: 0 calc(var(--app-gutter) * -1);
+      padding: 14px var(--app-gutter);
       border-bottom: none;
       border-radius: 0;
       position: sticky;
@@ -1311,7 +1359,7 @@
     .lang-btn.active { background: rgba(16,50,207,0.4); color: #FFFFFF; }
     .lang-toggle { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
 
-    .step-nav { background: #FFFFFF; margin: 0 -24px; padding: 14px 32px; border-bottom: 1px solid #D8E2F0; margin-bottom: 28px; box-shadow: 0 1px 4px rgba(30,50,90,0.06); }
+    .step-nav { background: #FFFFFF; margin: 0 calc(var(--app-gutter) * -1); padding: 14px clamp(18px, 2.8vw, 32px); border-bottom: 1px solid #D8E2F0; margin-bottom: 28px; box-shadow: 0 1px 4px rgba(30,50,90,0.06); }
     .step-nav-item { opacity: 0.4; }
     .step-nav-item.active { opacity: 1; }
     .step-nav-item.completed { opacity: 0.75; }
@@ -1358,7 +1406,7 @@
     .json-area { background: #F8FAFD; border-color: #C8D8EE; color: #1A2B40; }
 
     /* Pipeline (processing screen) stays dark for drama */
-    #section-processing { background: #01193C; margin: 0 -24px; padding: 32px 24px; border-radius: 0; min-height: 60vh; }
+    #section-processing { background: #01193C; margin: 0 calc(var(--app-gutter) * -1); padding: 32px var(--app-gutter); border-radius: 0; min-height: 60vh; }
     .pipeline-label { color: #A4C8E4; }
     .pipeline-circle { background: #0D2A4D; border-color: #2E5585; }
     .processing-status .status-text { color: #FFFFFF; }
@@ -1426,18 +1474,23 @@
     }
 
     .matrix-wrapper {
+      position: relative;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      max-height: 80vh;
+      max-height: clamp(420px, 78vh, 1040px);
       overflow-y: auto;
       scrollbar-gutter: stable both-edges;
       background: #FFFFFF;
+      overscroll-behavior: contain;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     }
     .matrix-table {
       border-collapse: separate;
       border-spacing: 0;
       font-size: 13px;
       table-layout: fixed;
+      width: max-content;
+      min-width: 100%;
     }
     .matrix-table thead { position: sticky; top: 0; z-index: 10; }
     .matrix-table thead th { box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
@@ -1458,8 +1511,8 @@
 
     /* Field name column */
     .col-fname {
-      width: 160px;
-      min-width: 160px;
+      width: var(--matrix-col-fname);
+      min-width: var(--matrix-col-fname);
       position: sticky;
       left: 0;
       background: #F1F5FB;
@@ -1481,10 +1534,10 @@
 
     /* Query value column */
     .col-query {
-      width: 200px;
-      min-width: 200px;
+      width: var(--matrix-col-query);
+      min-width: var(--matrix-col-query);
       position: sticky;
-      left: 160px;
+      left: var(--matrix-col-fname);
       background: #F8FAFD;
       z-index: 3;
       border-right: 2px solid #D8E2F0 !important;
@@ -1526,7 +1579,7 @@
 
     /* Proposal header column */
     .col-proposal-th {
-      min-width: 210px;
+      min-width: var(--matrix-col-proposal);
       background: #FFFFFF;
       vertical-align: top;
       position: relative;
@@ -1562,6 +1615,8 @@
       align-items: stretch;
       background: #FAFBFE;
       border-bottom: 2px solid #D8E2F0;
+      width: max-content;
+      min-width: 100%;
     }
     .matrix-overview-cell {
       min-width: 0;
@@ -1585,7 +1640,7 @@
     }
     .matrix-overview-query {
       position: sticky;
-      left: 160px;
+      left: var(--matrix-col-fname);
       z-index: 4;
       background: #F8FAFD;
       border-right: 2px solid #D8E2F0;
@@ -1739,6 +1794,7 @@
       gap: 3px;
     }
     .qb { font-family: var(--font-mono); font-size: 0.6rem; font-weight: 600; padding: 1px 5px; border-radius: 3px; }
+    .qb[title] { cursor: help; }
     .qb-match { background: #DCFCE7; color: #15803D; }
     .qb-diff { background: #FEF3C7; color: #92400E; }
     .qb-upgrade { background: #DBEAFE; color: #1E40AF; }
@@ -1868,7 +1924,7 @@
     .ph-select-btn.selected { border-color: #1032CF; background: #1032CF; color: #FFFFFF; }
 
     /* Group header row */
-    .group-row td, .group-label-cell {
+    .group-row td {
       background: #F1F5FB;
       padding: 6px 12px;
       font-family: var(--font-mono);
@@ -1878,10 +1934,20 @@
       letter-spacing: 0.12em;
       color: #1032CF;
       border-top: 2px solid #D8E2F0 !important;
-      position: static !important;
     }
-    /* Ensure sticky col-fname inside group-row works */
-    .group-row .col-fname { position: sticky; left: 0; z-index: 3; }
+    .group-row .group-label-cell {
+      position: sticky !important;
+      left: 0;
+      z-index: 6;
+      width: calc(var(--matrix-col-fname) + var(--matrix-col-query));
+      min-width: calc(var(--matrix-col-fname) + var(--matrix-col-query));
+      border-right: 2px solid #D8E2F0 !important;
+      box-shadow: 1px 0 0 #D8E2F0;
+    }
+    .group-row .group-label-fill {
+      position: static !important;
+      padding: 0;
+    }
 
     /* Status cells */
     .cell-match    { background: #F0FDF4; }
@@ -2212,6 +2278,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
       gap: 16px;
       padding: 12px 20px;
       background: #FFFFFF;
@@ -2220,8 +2287,8 @@
       margin-bottom: 20px;
       box-shadow: 0 1px 4px rgba(30,50,90,0.06);
     }
-    .toolbar-left { display: flex; align-items: center; gap: 12px; flex: 1; }
-    .toolbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .toolbar-left { display: flex; align-items: center; gap: 12px; flex: 1 1 320px; min-width: 0; }
+    .toolbar-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; flex: 1 1 320px; }
     .progress-wrap { display: flex; align-items: center; gap: 10px; flex: 1; max-width: 320px; }
     .progress-label {
       font-family: var(--font-mono);
@@ -2251,7 +2318,8 @@
       font-size: 0.75rem;
       color: #1A2B40;
       background: #F8FAFD;
-      width: 180px;
+      width: clamp(180px, 22vw, 280px);
+      max-width: 100%;
       outline: none;
       transition: border-color 0.2s;
     }
@@ -2271,6 +2339,77 @@
       white-space: nowrap;
     }
     .toolbar-btn:hover { border-color: #1032CF; color: #1032CF; background: #EBF0FF; }
+
+    @media (max-width: 980px) {
+      .header {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .header-brand {
+        min-width: 0;
+        flex: 1 1 320px;
+      }
+      .header-title-block {
+        min-width: 0;
+      }
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .results-toolbar {
+        padding: 12px 14px;
+      }
+      .toolbar-left,
+      .toolbar-right {
+        width: 100%;
+      }
+      .toolbar-left {
+        flex-wrap: wrap;
+      }
+      .toolbar-right {
+        justify-content: flex-start;
+      }
+      .item-card-badges {
+        order: 3;
+        width: 100%;
+        margin-left: 52px;
+      }
+      .feedback-btn {
+        margin-left: 52px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header-divider {
+        display: none;
+      }
+      .header-right {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .step-nav {
+        padding-left: var(--app-gutter);
+        padding-right: var(--app-gutter);
+      }
+      .meta-bar {
+        gap: 8px;
+        padding: 14px;
+      }
+      .item-card-header {
+        padding: 16px;
+      }
+      .item-card-badges,
+      .feedback-btn {
+        margin-left: 0;
+      }
+      .toolbar-btn {
+        flex: 1 1 140px;
+        text-align: center;
+      }
+      .evidence-col {
+        padding: 14px 16px;
+      }
+    }
 
     /* Selection badge in item header */
     .item-sel-badge { font-size: 0.6rem !important; }
@@ -2866,6 +3005,14 @@ const I18N = {
     'results.route': 'Route',
     'results.run': 'Run',
     'results.experimental': 'EXPERIMENTELL \u2014 Virtual',
+    'summary.match_label': 'Merkmal-Matches',
+    'summary.match_tooltip': 'Anzahl der Anfrage-Merkmale, die mit diesem Vorschlag \u00fcbereinstimmen.',
+    'summary.diff_label': 'Abw.',
+    'summary.diff_tooltip': 'Anzahl der Anfrage-Merkmale mit abweichenden Produktwerten.',
+    'summary.upgrade_label': 'Upgrade',
+    'summary.upgrade_tooltip': 'Anzahl der Merkmale, bei denen der Vorschlag die Anfrage sinnvoll \u00fcbererf\u00fcllt.',
+    'summary.missing_label': 'fehlt',
+    'summary.missing_tooltip': 'Anzahl der Anfrage-Merkmale ohne verwertbaren Vergleichswert im Vorschlag.',
     'export.title': 'Auswahl & Export',
     'export.selected': 'ausgew\u00e4hlt',
     'export.summary': 'Auswahl\u00fcbersicht',
@@ -2988,6 +3135,14 @@ const I18N = {
     'results.route': 'Route',
     'results.run': 'Run',
     'results.experimental': 'EXPERIMENTAL \u2014 Virtual',
+    'summary.match_label': 'Feature matches',
+    'summary.match_tooltip': 'Number of inquiry features that match this proposal.',
+    'summary.diff_label': 'Diff',
+    'summary.diff_tooltip': 'Number of inquiry features with different product values.',
+    'summary.upgrade_label': 'Upgrade',
+    'summary.upgrade_tooltip': 'Number of features where the proposal is a compatible upgrade over the inquiry.',
+    'summary.missing_label': 'N/A',
+    'summary.missing_tooltip': 'Number of inquiry features without usable comparison data in this proposal.',
     'export.title': 'Selection & Export',
     'export.selected': 'selected',
     'export.summary': 'Selection Summary',
@@ -3107,6 +3262,32 @@ function applyLang() {
   }
   updateExportSummary();
   updateSessionDot();
+}
+
+function getCssPxVar(name, fallback) {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const parsed = Number.parseFloat(raw);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function getMatrixLayoutMetrics() {
+  return {
+    fname: getCssPxVar('--matrix-col-fname', 168),
+    query: getCssPxVar('--matrix-col-query', 220),
+    proposal: getCssPxVar('--matrix-col-proposal', 240),
+  };
+}
+
+function renderSummaryBadge(count, labelKey, tooltipKey, cls) {
+  return `<span class="qb ${cls}" title="${escapeHtml(t(tooltipKey))}">${count} ${escapeHtml(t(labelKey))}</span>`;
+}
+
+function debounce(fn, wait = 150) {
+  let timeoutId = null;
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => fn(...args), wait);
+  };
 }
 
 function setLang(lang) {
@@ -4265,7 +4446,7 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
   const ek = escapeHtml(itemKey);
 
   // ── COLGROUP (enforces consistent column widths) ────────────────
-  const COL_FNAME = 160, COL_QUERY = 200, COL_PROP = 230;
+  const { fname: COL_FNAME, query: COL_QUERY, proposal: COL_PROP } = getMatrixLayoutMetrics();
   const fixedWidth = COL_FNAME + COL_QUERY;
   const tableMinWidth = fixedWidth + displayProposals.length * COL_PROP;
   const colGroupCols = `<col style="width:${COL_FNAME}px"><col style="width:${COL_QUERY}px">${displayProposals.map(() => `<col style="width:${COL_PROP}px">`).join('')}`;
@@ -4274,7 +4455,7 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
   // ── THEAD ──────────────────────────────────────────────────────
   let html = '';
   let overviewCellsHtml = '';
-  html += `<table class="matrix-table" style="min-width:${tableMinWidth}px;width:100%;table-layout:fixed"><colgroup>${colGroupCols}</colgroup><thead><tr>
+  html += `<table class="matrix-table" style="min-width:${tableMinWidth}px"><colgroup>${colGroupCols}</colgroup><thead><tr>
     <th class="col-fname"><div class="thead-field-label">${t('table.field')}</div></th>
     <th class="col-query"><div class="thead-query-label">${lang === 'de' ? 'Ihre Anfrage' : 'Your Inquiry'}</div></th>`;
 
@@ -4316,10 +4497,10 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
     let summaryHtml = '';
     if (p.comparison?.length) {
       summaryHtml = '<div class="ph-badges" style="margin-top:2px">';
-      if (compCounts.match) summaryHtml += `<span class="qb qb-match">${compCounts.match} ${lang === 'de' ? 'Treffer' : 'match'}</span>`;
-      if (compCounts.different) summaryHtml += `<span class="qb qb-diff">${compCounts.different} ${lang === 'de' ? 'Abw.' : 'diff'}</span>`;
-      if (compCounts.upgrade) summaryHtml += `<span class="qb qb-upgrade">${compCounts.upgrade} ${lang === 'de' ? 'Upgrade' : 'upgrade'}</span>`;
-      if (compCounts.missing) summaryHtml += `<span class="qb qb-other">${compCounts.missing} ${lang === 'de' ? 'fehlt' : 'N/A'}</span>`;
+      if (compCounts.match) summaryHtml += renderSummaryBadge(compCounts.match, 'summary.match_label', 'summary.match_tooltip', 'qb-match');
+      if (compCounts.different) summaryHtml += renderSummaryBadge(compCounts.different, 'summary.diff_label', 'summary.diff_tooltip', 'qb-diff');
+      if (compCounts.upgrade) summaryHtml += renderSummaryBadge(compCounts.upgrade, 'summary.upgrade_label', 'summary.upgrade_tooltip', 'qb-upgrade');
+      if (compCounts.missing) summaryHtml += renderSummaryBadge(compCounts.missing, 'summary.missing_label', 'summary.missing_tooltip', 'qb-other');
       summaryHtml += '</div>';
     }
     // Recompute issues from normalized comparisons (backend issues_summary is not normalized)
@@ -4363,7 +4544,7 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
   fields.forEach(({ field, qf }) => {
     const group = getFieldGroup(field);
     if (group !== lastGroup) {
-      html += `<tr class="group-row"><td class="group-label-cell" colspan="${proposals.length + 2}">${escapeHtml(t(group))}</td></tr>`;
+      html += `<tr class="group-row"><td class="group-label-cell" colspan="2">${escapeHtml(t(group))}</td><td class="group-label-fill" colspan="${proposals.length}"></td></tr>`;
       lastGroup = group;
     }
     const qVal = qf?.value != null ? String(qf.value) : null;
@@ -4644,6 +4825,10 @@ function toggleRawJson() { $('raw-json-output').classList.toggle('hidden'); }
 // ================================================================
 // INIT
 // ================================================================
+window.addEventListener('resize', debounce(() => {
+  if (state.results) renderResults(state.results);
+}, 120));
+
 goToStep('config');
 applyLang();
 </script>

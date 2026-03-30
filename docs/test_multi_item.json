@@ -1,0 +1,466 @@
+{
+  "_meta": {
+    "request_id": "test-multi-item",
+    "run_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "catalog_mode": "base",
+    "catalog_version": "base-2252",
+    "catalog_strategy": "base_only_e17",
+    "serving_route": "e17_per_item_routing",
+    "route_counts": { "e9": 2, "e10": 1 },
+    "model_versions": { "e10": "E10_eval_aligned_neg", "e9": "E9_mounting_filter" },
+    "top_k": 5,
+    "item_count": 4,
+    "warnings": [],
+    "timings_ms": { "total": 87.3 }
+  },
+  "items": [
+    {
+      "item_id": "test:01060049",
+      "positionsnummer": "01060049",
+      "original_excerpt": "Rettungszeichenleuchte Aluminium, Pendelmontage,\nErkennungsweite 22 m\nRettungszeichenscheibenleuchte Aluminium\nFunktionale Rettungszeichen-Scheibenleuchten aus\nhochwertigem Aluminiumprofil mit rahmenloser,\nfreihängender Acrylglasscheibe.\nErkennungsweite: 22 m\nBefestigungsart: Pendelmontage\nMaterial: Aluminium\nAbmessungen: 275 mm x 203 mm x 54 mm\nSchutzart: IP20\nSchutzklasse: I\nNennspannung: 230 V AC",
+      "query_fields": [
+        { "field": "Produkttyp", "value": "Rettungszeichenleuchte", "source": "extracted" },
+        { "field": "RatingsCertifications:LuminaireType", "value": "Rettungszeichenleuchte", "source": "extracted" },
+        { "field": "RatingsCertifications:IngressProtection", "value": "IP 20", "source": "extracted" },
+        { "field": "Mounting:MountingMethod", "value": "Deckenaufbau-Pendel", "source": "extracted" },
+        { "field": "Monitoring", "value": "SC", "source": "extracted" },
+        { "field": "Supply", "value": "Einzelbatterie", "source": "extracted" },
+        { "field": "ElectronicPerformanceData:LuminousFluxMains", "value": null, "source": "missing" },
+        { "field": "ElectronicPerformanceData:LuminousFluxEmergency", "value": null, "source": "missing" },
+        { "field": "RatingsCertifications:IKclass", "value": null, "source": "missing" },
+        { "field": "RatingsCertifications:RecognitionDistance", "value": "22 m", "source": "extracted" },
+        { "field": "HousingColorInformation:Color", "value": null, "source": "missing" },
+        { "field": "MaterialData:Material", "value": "Aluminum", "source": "extracted" },
+        { "field": "HousingDimensions:Height", "value": "54 mm", "source": "extracted" },
+        { "field": "HousingDimensions:Length", "value": "275 mm", "source": "extracted" },
+        { "field": "HousingDimension:Width", "value": "203 mm", "source": "extracted" },
+        { "field": "ElectronicBackupTimes:MaxBackupTime", "value": null, "source": "missing" },
+        { "field": "Positionsnummer", "value": "01060049", "source": "extracted" },
+        { "field": "Verkaufstext", "value": "Rettungszeichenleuchte Aluminium, Pendelmontage, Erkennungsweite 22 m, mit rahmenloser Acrylglasscheibe, IP20, 230V AC", "source": "extracted" },
+        { "field": "Artikelnummer", "value": null, "source": "missing" },
+        { "field": "DesiredSupplyType", "value": "einzelbatterie", "source": "extracted" },
+        { "field": "Mounting:AllowedMethods", "value": null, "source": "missing" },
+        { "field": "Mounting:EnforcedMethods", "value": null, "source": "missing" },
+        { "field": "Warnings", "value": null, "source": "missing" },
+        { "field": "Evidence", "value": null, "source": "missing" },
+        { "field": "Betriebsart", "value": "BS", "source": "derived" }
+      ],
+      "quick_badges": [
+        { "key": "type", "label": "Type", "value": "Rettungszeichenleuchte", "source": "extracted" },
+        { "key": "ip", "label": "IP", "value": "IP 20", "source": "extracted" },
+        { "key": "mounting", "label": "Mounting", "value": "Deckenaufbau-Pendel", "source": "extracted" },
+        { "key": "monitoring", "label": "Monitoring", "value": "SC", "source": "extracted" },
+        { "key": "supply", "label": "Supply", "value": "Einzelbatterie", "source": "extracted" }
+      ],
+      "issues_summary": [],
+      "warnings": [],
+      "candidate_stats": {
+        "initial": 2252,
+        "explicit_material": 2252,
+        "explicit_system": 776,
+        "explicit_country": 776,
+        "explicit_final": 776,
+        "internal_supply": 772,
+        "internal_luminaire": 531,
+        "internal_mounting": 78,
+        "scored": 78
+      },
+      "route": "e9",
+      "extralogic_logs": ["anfrage.Produkte[0]: DesiredSupplyType='einzelbatterie' (from 'Supply')"],
+      "proposals": [
+        {
+          "rank": 1,
+          "score": 0.8078,
+          "score_raw": null,
+          "candidate_type": "base_product",
+          "display_article": "KSU003-EB100",
+          "base_article": "KSU003-EB100",
+          "reason_codes": ["base_product_candidate", "monitoring_match", "mounting_match", "supply_match"],
+          "quick_badges": [
+            { "field": "Monitoring", "label": "SC" },
+            { "field": "Supply", "label": "Einzelbatterie" }
+          ],
+          "product_features": {
+            "Monitoring": "SC",
+            "Supply": "Einzelbatterie",
+            "Mounting:MountingMethod": "Deckenaufbau-Pendel",
+            "MaterialData:Material": "Aluminium",
+            "RatingsCertifications:IngressProtection": "IP 20",
+            "accessory_keys": "KME-EB|AWKSU|2PW-EB"
+          },
+          "comparison": [
+            { "field": "Produkttyp", "query_value": "Rettungszeichenleuchte", "candidate_value": "Rettungszeichenleuchte", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Monitoring", "query_value": "SC", "candidate_value": "SC", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Supply", "query_value": "Einzelbatterie", "candidate_value": "Einzelbatterie", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Mounting:MountingMethod", "query_value": "Deckenaufbau-Pendel", "candidate_value": "Deckenaufbau-Pendel", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:IngressProtection", "query_value": "IP 20", "candidate_value": "IP 20", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "MaterialData:Material", "query_value": "Aluminum", "candidate_value": "Aluminium", "query_source": "extracted", "status": "different", "note": "spelling variant" },
+            { "field": "RatingsCertifications:RecognitionDistance", "query_value": "22 m", "candidate_value": "22 m", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "HousingDimensions:Height", "query_value": "54 mm", "candidate_value": "54 mm", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "HousingDimensions:Length", "query_value": "275 mm", "candidate_value": "275 mm", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "HousingDimension:Width", "query_value": "203 mm", "candidate_value": "203 mm", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "ElectronicBackupTimes:MaxBackupTime", "query_value": null, "candidate_value": "3 h", "query_source": "missing", "status": "missing_query", "note": "" }
+          ],
+          "issues_summary": [
+            { "field": "MaterialData:Material", "label": "Material", "status": "different", "note": "Aluminum vs Aluminium" }
+          ],
+          "virtual_bundle": null
+        },
+        {
+          "rank": 2,
+          "score": 0.7854,
+          "score_raw": null,
+          "candidate_type": "base_product",
+          "display_article": "KSU003-EB100-WS",
+          "base_article": "KSU003-EB100-WS",
+          "reason_codes": ["base_product_candidate", "monitoring_match", "mounting_match", "supply_match"],
+          "quick_badges": [
+            { "field": "Monitoring", "label": "SC" }
+          ],
+          "product_features": {
+            "Monitoring": "SC",
+            "Supply": "Einzelbatterie",
+            "Mounting:MountingMethod": "Deckenaufbau-Pendel"
+          },
+          "comparison": [
+            { "field": "Produkttyp", "query_value": "Rettungszeichenleuchte", "candidate_value": "Rettungszeichenleuchte", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Monitoring", "query_value": "SC", "candidate_value": "SC", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Supply", "query_value": "Einzelbatterie", "candidate_value": "Einzelbatterie", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Mounting:MountingMethod", "query_value": "Deckenaufbau-Pendel", "candidate_value": "Deckenaufbau-Pendel", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:IngressProtection", "query_value": "IP 20", "candidate_value": "IP 40", "query_source": "extracted", "status": "upgrade", "note": "higher protection" },
+            { "field": "MaterialData:Material", "query_value": "Aluminum", "candidate_value": "Kunststoff", "query_source": "extracted", "status": "different", "note": "" },
+            { "field": "RatingsCertifications:RecognitionDistance", "query_value": "22 m", "candidate_value": "30 m", "query_source": "extracted", "status": "upgrade", "note": "" },
+            { "field": "HousingDimensions:Height", "query_value": "54 mm", "candidate_value": "60 mm", "query_source": "extracted", "status": "different", "note": "" },
+            { "field": "ElectronicBackupTimes:MaxBackupTime", "query_value": null, "candidate_value": "3 h", "query_source": "missing", "status": "missing_query", "note": "" }
+          ],
+          "issues_summary": [
+            { "field": "MaterialData:Material", "label": "Material", "status": "different", "note": "Aluminum vs Kunststoff" },
+            { "field": "HousingDimensions:Height", "label": "Height", "status": "different", "note": "54 mm vs 60 mm" }
+          ],
+          "virtual_bundle": null
+        },
+        {
+          "rank": 3,
+          "score": 0.6921,
+          "score_raw": null,
+          "candidate_type": "base_product",
+          "display_article": "ASMU411SC",
+          "base_article": "ASMU411SC",
+          "reason_codes": ["base_product_candidate", "monitoring_match"],
+          "quick_badges": [
+            { "field": "Monitoring", "label": "SC" }
+          ],
+          "product_features": {
+            "Monitoring": "SC",
+            "Supply": "Einzelbatterie"
+          },
+          "comparison": [
+            { "field": "Produkttyp", "query_value": "Rettungszeichenleuchte", "candidate_value": "Sicherheitsleuchte", "query_source": "extracted", "status": "different", "note": "" },
+            { "field": "Monitoring", "query_value": "SC", "candidate_value": "SC", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Supply", "query_value": "Einzelbatterie", "candidate_value": "Einzelbatterie", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Mounting:MountingMethod", "query_value": "Deckenaufbau-Pendel", "candidate_value": "Deckenaufbau", "query_source": "extracted", "status": "different", "note": "" },
+            { "field": "RatingsCertifications:IngressProtection", "query_value": "IP 20", "candidate_value": "IP 65", "query_source": "extracted", "status": "upgrade", "note": "" },
+            { "field": "ElectronicBackupTimes:MaxBackupTime", "query_value": null, "candidate_value": "3 h", "query_source": "missing", "status": "missing_query", "note": "" }
+          ],
+          "issues_summary": [
+            { "field": "Produkttyp", "label": "Type", "status": "different", "note": "Rettungszeichen vs Sicherheit" },
+            { "field": "Mounting:MountingMethod", "label": "Mounting", "status": "different", "note": "Missing Pendel" }
+          ],
+          "virtual_bundle": null
+        }
+      ],
+      "timings_ms": { "item_total": 22.1 }
+    },
+    {
+      "item_id": "test:01060050",
+      "positionsnummer": "01060050",
+      "original_excerpt": "Sicherheitsleuchte LED als Rettungswegleuchte\nWandmontage, Schutzart IP65\nEinzelbatterieversorgung mit SC-Überwachung\nErkennungsweite: 30 m\nMaterial: Kunststoff\nAbmessungen: 350 x 150 x 80 mm",
+      "query_fields": [
+        { "field": "Produkttyp", "value": "Sicherheitsleuchte", "source": "extracted" },
+        { "field": "RatingsCertifications:LuminaireType", "value": "Rettungswegleuchte", "source": "extracted" },
+        { "field": "RatingsCertifications:IngressProtection", "value": "IP 65", "source": "extracted" },
+        { "field": "Mounting:MountingMethod", "value": "Wandaufbau", "source": "extracted" },
+        { "field": "Monitoring", "value": "SC", "source": "derived" },
+        { "field": "Supply", "value": "Einzelbatterie", "source": "extracted" },
+        { "field": "ElectronicPerformanceData:LuminousFluxMains", "value": null, "source": "missing" },
+        { "field": "ElectronicPerformanceData:LuminousFluxEmergency", "value": null, "source": "missing" },
+        { "field": "RatingsCertifications:IKclass", "value": null, "source": "missing" },
+        { "field": "RatingsCertifications:RecognitionDistance", "value": "30 m", "source": "extracted" },
+        { "field": "HousingColorInformation:Color", "value": null, "source": "missing" },
+        { "field": "MaterialData:Material", "value": "Kunststoff", "source": "extracted" },
+        { "field": "HousingDimensions:Height", "value": "80 mm", "source": "extracted" },
+        { "field": "HousingDimensions:Length", "value": "350 mm", "source": "extracted" },
+        { "field": "HousingDimension:Width", "value": "150 mm", "source": "extracted" },
+        { "field": "ElectronicBackupTimes:MaxBackupTime", "value": null, "source": "missing" },
+        { "field": "Positionsnummer", "value": "01060050", "source": "extracted" },
+        { "field": "Verkaufstext", "value": "Sicherheitsleuchte LED als Rettungswegleuchte, Wandmontage, IP65, Einzelbatterie, SC, 30m", "source": "extracted" },
+        { "field": "DesiredSupplyType", "value": "einzelbatterie", "source": "extracted" },
+        { "field": "Betriebsart", "value": "BS", "source": "derived" }
+      ],
+      "quick_badges": [
+        { "key": "type", "label": "Type", "value": "Sicherheitsleuchte", "source": "extracted" },
+        { "key": "ip", "label": "IP", "value": "IP 65", "source": "extracted" },
+        { "key": "mounting", "label": "Mounting", "value": "Wandaufbau", "source": "extracted" },
+        { "key": "monitoring", "label": "Monitoring", "value": "SC", "source": "derived" },
+        { "key": "supply", "label": "Supply", "value": "Einzelbatterie", "source": "extracted" }
+      ],
+      "issues_summary": [
+        { "field": "Monitoring", "label": "Monitoring", "status": "different", "note": "derived, not extracted" }
+      ],
+      "warnings": ["Monitoring was derived from Supply=Einzelbatterie, not explicitly stated"],
+      "candidate_stats": {
+        "initial": 2252,
+        "explicit_material": 1876,
+        "explicit_system": 648,
+        "explicit_country": 648,
+        "explicit_final": 648,
+        "internal_supply": 640,
+        "internal_luminaire": 312,
+        "internal_mounting": 45,
+        "scored": 45
+      },
+      "route": "e9",
+      "proposals": [
+        {
+          "rank": 1,
+          "score": 0.9123,
+          "score_raw": null,
+          "candidate_type": "base_product",
+          "display_article": "AMW411SC-WS",
+          "base_article": "AMW411SC-WS",
+          "reason_codes": ["base_product_candidate", "monitoring_match", "supply_match", "ip_match"],
+          "quick_badges": [
+            { "field": "Monitoring", "label": "SC" },
+            { "field": "IP", "label": "IP 65" }
+          ],
+          "product_features": {
+            "Monitoring": "SC",
+            "Supply": "Einzelbatterie",
+            "Mounting:MountingMethod": "Wandaufbau",
+            "RatingsCertifications:IngressProtection": "IP 65"
+          },
+          "comparison": [
+            { "field": "Produkttyp", "query_value": "Sicherheitsleuchte", "candidate_value": "Sicherheitsleuchte", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Monitoring", "query_value": "SC", "candidate_value": "SC", "query_source": "derived", "status": "match", "note": "" },
+            { "field": "Supply", "query_value": "Einzelbatterie", "candidate_value": "Einzelbatterie", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Mounting:MountingMethod", "query_value": "Wandaufbau", "candidate_value": "Wandaufbau", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:IngressProtection", "query_value": "IP 65", "candidate_value": "IP 65", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "MaterialData:Material", "query_value": "Kunststoff", "candidate_value": "Kunststoff", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:RecognitionDistance", "query_value": "30 m", "candidate_value": "28 m", "query_source": "extracted", "status": "different", "note": "slightly less" },
+            { "field": "HousingDimensions:Height", "query_value": "80 mm", "candidate_value": "82 mm", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "ElectronicBackupTimes:MaxBackupTime", "query_value": null, "candidate_value": "3 h", "query_source": "missing", "status": "missing_query", "note": "" }
+          ],
+          "issues_summary": [
+            { "field": "RatingsCertifications:RecognitionDistance", "label": "Distance", "status": "different", "note": "30m vs 28m" }
+          ],
+          "virtual_bundle": null
+        },
+        {
+          "rank": 2,
+          "score": 0.8456,
+          "score_raw": null,
+          "candidate_type": "base_product",
+          "display_article": "AMW411SC",
+          "base_article": "AMW411SC",
+          "reason_codes": ["base_product_candidate", "monitoring_match", "supply_match"],
+          "quick_badges": [
+            { "field": "Monitoring", "label": "SC" }
+          ],
+          "product_features": {
+            "Monitoring": "SC",
+            "Supply": "Einzelbatterie",
+            "Mounting:MountingMethod": "Wandaufbau"
+          },
+          "comparison": [
+            { "field": "Produkttyp", "query_value": "Sicherheitsleuchte", "candidate_value": "Sicherheitsleuchte", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Monitoring", "query_value": "SC", "candidate_value": "SC", "query_source": "derived", "status": "match", "note": "" },
+            { "field": "Supply", "query_value": "Einzelbatterie", "candidate_value": "Einzelbatterie", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:IngressProtection", "query_value": "IP 65", "candidate_value": "IP 54", "query_source": "extracted", "status": "different", "note": "" },
+            { "field": "MaterialData:Material", "query_value": "Kunststoff", "candidate_value": "Kunststoff", "query_source": "extracted", "status": "match", "note": "" }
+          ],
+          "issues_summary": [
+            { "field": "RatingsCertifications:IngressProtection", "label": "IP", "status": "different", "note": "IP 65 vs IP 54" }
+          ],
+          "virtual_bundle": null
+        }
+      ],
+      "timings_ms": { "item_total": 18.7 }
+    },
+    {
+      "item_id": "test:01060051",
+      "positionsnummer": "01060051",
+      "original_excerpt": "Sicherheitsleuchte Deckeneinbau LED\nZentralbatterieversorgung\nMittelleistungs-Überwachung ML\nSchutzart IP40, Material Kunststoff\nDauerlicht-Betrieb\n120 lm Netz, 60 lm Notbetrieb\nIK-Klasse: IK07",
+      "query_fields": [
+        { "field": "Produkttyp", "value": "Sicherheitsleuchte", "source": "extracted" },
+        { "field": "RatingsCertifications:LuminaireType", "value": "Sicherheitsleuchte", "source": "extracted" },
+        { "field": "RatingsCertifications:IngressProtection", "value": "IP 40", "source": "extracted" },
+        { "field": "Mounting:MountingMethod", "value": "Deckeneinbau", "source": "extracted" },
+        { "field": "Monitoring", "value": "ML", "source": "extracted" },
+        { "field": "Supply", "value": "Zentralbatterie", "source": "extracted" },
+        { "field": "ElectronicPerformanceData:LuminousFluxMains", "value": "120 lm", "source": "extracted" },
+        { "field": "ElectronicPerformanceData:LuminousFluxEmergency", "value": "60 lm", "source": "extracted" },
+        { "field": "RatingsCertifications:IKclass", "value": "IK07", "source": "extracted" },
+        { "field": "RatingsCertifications:RecognitionDistance", "value": null, "source": "missing" },
+        { "field": "HousingColorInformation:Color", "value": "Weiss", "source": "derived" },
+        { "field": "MaterialData:Material", "value": "Kunststoff", "source": "extracted" },
+        { "field": "HousingDimensions:Height", "value": null, "source": "missing" },
+        { "field": "HousingDimensions:Length", "value": null, "source": "missing" },
+        { "field": "HousingDimension:Width", "value": null, "source": "missing" },
+        { "field": "ElectronicBackupTimes:MaxBackupTime", "value": null, "source": "missing" },
+        { "field": "Positionsnummer", "value": "01060051", "source": "extracted" },
+        { "field": "Verkaufstext", "value": "Sicherheitsleuchte Deckeneinbau LED, Zentralbatterie, ML, IP40, Kunststoff, DL, 120/60 lm", "source": "extracted" },
+        { "field": "DesiredSupplyType", "value": "zentralbatterie", "source": "extracted" },
+        { "field": "Betriebsart", "value": "DS", "source": "extracted" }
+      ],
+      "quick_badges": [
+        { "key": "type", "label": "Type", "value": "Sicherheitsleuchte", "source": "extracted" },
+        { "key": "ip", "label": "IP", "value": "IP 40", "source": "extracted" },
+        { "key": "monitoring", "label": "Monitoring", "value": "ML", "source": "extracted" },
+        { "key": "supply", "label": "Supply", "value": "Zentralbatterie", "source": "extracted" }
+      ],
+      "issues_summary": [],
+      "warnings": [],
+      "candidate_stats": {
+        "initial": 2252,
+        "explicit_material": 1876,
+        "explicit_system": 412,
+        "explicit_country": 412,
+        "explicit_final": 412,
+        "internal_supply": 405,
+        "internal_luminaire": 198,
+        "internal_mounting": 32,
+        "scored": 32
+      },
+      "route": "e10",
+      "proposals": [
+        {
+          "rank": 1,
+          "score": 0.8765,
+          "score_raw": null,
+          "candidate_type": "base_product",
+          "display_article": "ILDL421ML-4K",
+          "base_article": "ILDL421ML-4K",
+          "reason_codes": ["base_product_candidate", "monitoring_match", "supply_match", "mounting_match"],
+          "quick_badges": [
+            { "field": "Monitoring", "label": "ML" },
+            { "field": "Supply", "label": "Zentralbatterie" }
+          ],
+          "product_features": {
+            "Monitoring": "ML",
+            "Supply": "Zentralbatterie",
+            "Mounting:MountingMethod": "Deckeneinbau"
+          },
+          "comparison": [
+            { "field": "Produkttyp", "query_value": "Sicherheitsleuchte", "candidate_value": "Sicherheitsleuchte", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Monitoring", "query_value": "ML", "candidate_value": "ML", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Supply", "query_value": "Zentralbatterie", "candidate_value": "Zentralbatterie", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Mounting:MountingMethod", "query_value": "Deckeneinbau", "candidate_value": "Deckeneinbau", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:IngressProtection", "query_value": "IP 40", "candidate_value": "IP 40", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "MaterialData:Material", "query_value": "Kunststoff", "candidate_value": "Kunststoff", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:IKclass", "query_value": "IK07", "candidate_value": "IK05", "query_source": "extracted", "status": "different", "note": "lower IK" },
+            { "field": "ElectronicPerformanceData:LuminousFluxMains", "query_value": "120 lm", "candidate_value": "150 lm", "query_source": "extracted", "status": "upgrade", "note": "" },
+            { "field": "ElectronicPerformanceData:LuminousFluxEmergency", "query_value": "60 lm", "candidate_value": "65 lm", "query_source": "extracted", "status": "upgrade", "note": "" }
+          ],
+          "issues_summary": [
+            { "field": "RatingsCertifications:IKclass", "label": "IK", "status": "different", "note": "IK07 vs IK05" }
+          ],
+          "virtual_bundle": null
+        },
+        {
+          "rank": 2,
+          "score": 0.8234,
+          "score_raw": null,
+          "candidate_type": "base_product",
+          "display_article": "ILEL421ML-4K",
+          "base_article": "ILEL421ML-4K",
+          "reason_codes": ["base_product_candidate", "monitoring_match", "supply_match"],
+          "quick_badges": [
+            { "field": "Monitoring", "label": "ML" }
+          ],
+          "product_features": { "Monitoring": "ML", "Supply": "Zentralbatterie" },
+          "comparison": [
+            { "field": "Produkttyp", "query_value": "Sicherheitsleuchte", "candidate_value": "Sicherheitsleuchte", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Monitoring", "query_value": "ML", "candidate_value": "ML", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Supply", "query_value": "Zentralbatterie", "candidate_value": "Zentralbatterie", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:IngressProtection", "query_value": "IP 40", "candidate_value": "IP 40", "query_source": "extracted", "status": "match", "note": "" }
+          ],
+          "issues_summary": [],
+          "virtual_bundle": null
+        }
+      ],
+      "timings_ms": { "item_total": 15.2 }
+    },
+    {
+      "item_id": "test:01060052",
+      "positionsnummer": "01060052",
+      "original_excerpt": "EX-Sicherheitsleuchte für explosionsgefährdete Bereiche\nZone 1/21, ATEX-zertifiziert\nZentralbatterie, CPS-Überwachung\nSchutzart IP66, IK10\nMaterial: Edelstahl",
+      "query_fields": [
+        { "field": "Produkttyp", "value": "EX-Sicherheitsleuchte", "source": "extracted" },
+        { "field": "RatingsCertifications:LuminaireType", "value": "EX-Sicherheitsleuchte", "source": "extracted" },
+        { "field": "RatingsCertifications:IngressProtection", "value": "IP 66", "source": "extracted" },
+        { "field": "Mounting:MountingMethod", "value": null, "source": "missing" },
+        { "field": "Monitoring", "value": "CPS", "source": "extracted" },
+        { "field": "Supply", "value": "Zentralbatterie", "source": "extracted" },
+        { "field": "RatingsCertifications:IKclass", "value": "IK10", "source": "extracted" },
+        { "field": "MaterialData:Material", "value": "Edelstahl", "source": "extracted" },
+        { "field": "Positionsnummer", "value": "01060052", "source": "extracted" },
+        { "field": "Verkaufstext", "value": "EX-Sicherheitsleuchte Zone 1/21 ATEX, Zentralbatterie, CPS, IP66, IK10, Edelstahl", "source": "extracted" },
+        { "field": "DesiredSupplyType", "value": "zentralbatterie", "source": "extracted" }
+      ],
+      "quick_badges": [
+        { "key": "type", "label": "Type", "value": "EX-Sicherheitsleuchte", "source": "extracted" },
+        { "key": "ip", "label": "IP", "value": "IP 66", "source": "extracted" },
+        { "key": "monitoring", "label": "Monitoring", "value": "CPS", "source": "extracted" }
+      ],
+      "issues_summary": [],
+      "warnings": ["EX products have limited catalog coverage"],
+      "candidate_stats": {
+        "initial": 2252,
+        "explicit_material": 234,
+        "explicit_system": 89,
+        "explicit_country": 89,
+        "explicit_final": 89,
+        "internal_supply": 82,
+        "internal_luminaire": 18,
+        "internal_mounting": 18,
+        "scored": 18
+      },
+      "route": "e9",
+      "proposals": [
+        {
+          "rank": 1,
+          "score": 0.5432,
+          "score_raw": null,
+          "candidate_type": "base_product",
+          "display_article": "XGIU411CPS",
+          "base_article": "XGIU411CPS",
+          "reason_codes": ["base_product_candidate", "monitoring_match", "ex_rated"],
+          "quick_badges": [
+            { "field": "Monitoring", "label": "CPS" },
+            { "field": "EX", "label": "ATEX" }
+          ],
+          "product_features": {
+            "Monitoring": "CPS",
+            "Supply": "Zentralbatterie",
+            "RatingsCertifications:IngressProtection": "IP 66",
+            "accessory_keys": "X-KE001|X-MB001"
+          },
+          "comparison": [
+            { "field": "Produkttyp", "query_value": "EX-Sicherheitsleuchte", "candidate_value": "EX-Sicherheitsleuchte", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Monitoring", "query_value": "CPS", "candidate_value": "CPS", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "Supply", "query_value": "Zentralbatterie", "candidate_value": "Zentralbatterie", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:IngressProtection", "query_value": "IP 66", "candidate_value": "IP 66", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "RatingsCertifications:IKclass", "query_value": "IK10", "candidate_value": "IK10", "query_source": "extracted", "status": "match", "note": "" },
+            { "field": "MaterialData:Material", "query_value": "Edelstahl", "candidate_value": "Aluminium", "query_source": "extracted", "status": "different", "note": "" },
+            { "field": "Mounting:MountingMethod", "query_value": null, "candidate_value": "Wand-/Deckenmontage", "query_source": "missing", "status": "missing_query", "note": "" }
+          ],
+          "issues_summary": [
+            { "field": "MaterialData:Material", "label": "Material", "status": "different", "note": "Edelstahl vs Aluminium" }
+          ],
+          "virtual_bundle": null
+        }
+      ],
+      "timings_ms": { "item_total": 31.3 }
+    }
+  ]
+}

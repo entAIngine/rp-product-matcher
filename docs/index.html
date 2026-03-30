@@ -1,0 +1,4351 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RP Produkt-Matcher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    /* ================================================================
+       CSS CUSTOM PROPERTIES — RP Group Brand Theme
+       ================================================================ */
+    :root {
+      --bg-0: #01193C;
+      --bg-1: #071F3D;
+      --bg-2: #0D2A4D;
+      --bg-3: #14355D;
+      --bg-4: #1C416E;
+      --bg-5: #24507F;
+
+      --border-1: #142E52;
+      --border-2: #1E3E6A;
+      --border-3: #2E5585;
+
+      --rp-50: #E8F0FC;
+      --rp-100: #B8D0F5;
+      --rp-200: #7BAAE8;
+      --rp-300: #2E88D5;
+      --rp-400: #1032CF;
+      --rp-500: #003A8F;
+      --rp-600: #002D6F;
+      --rp-700: #001E4D;
+      --rp-glow: rgba(16, 50, 207, 0.18);
+      --rp-glow-strong: rgba(16, 50, 207, 0.35);
+
+      --text-1: #FFFFFF;
+      --text-2: #A4C8E4;
+      --text-3: #5A7FA0;
+      --text-4: #2E5070;
+
+      --green-400: #4ADE80;
+      --green-500: #22C55E;
+      --green-bg: rgba(34, 197, 94, 0.12);
+      --green-border: rgba(34, 197, 94, 0.3);
+
+      --red-400: #F87171;
+      --red-500: #EF4444;
+      --red-bg: rgba(239, 68, 68, 0.12);
+      --red-border: rgba(239, 68, 68, 0.3);
+
+      --blue-400: #60A5FA;
+      --blue-500: #3B82F6;
+      --blue-bg: rgba(59, 130, 246, 0.12);
+      --blue-border: rgba(59, 130, 246, 0.3);
+
+      --yellow-400: #FBBF24;
+      --yellow-bg: rgba(251, 191, 36, 0.12);
+
+      --gray-bg: rgba(99, 107, 128, 0.12);
+      --gray-border: rgba(99, 107, 128, 0.3);
+
+      --font-body: 'Open Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+      --shadow-glow: 0 0 20px var(--rp-glow), 0 0 60px rgba(16, 50, 207, 0.06);
+    }
+
+    /* ================================================================
+       RESET & BASE
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-1);
+      background: var(--bg-0);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 59px, var(--border-1) 59px, var(--border-1) 60px),
+        repeating-linear-gradient(90deg, transparent, transparent 59px, var(--border-1) 59px, var(--border-1) 60px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 20%, var(--rp-glow) 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 70%, rgba(46, 136, 213, 0.06) 0%, transparent 45%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ================================================================
+       TYPOGRAPHY
+       ================================================================ */
+    h1, h2, h3 { font-family: var(--font-body); font-weight: 700; letter-spacing: -0.01em; }
+    h1 { font-size: 2rem; line-height: 1.2; }
+    h2 { font-size: 1.35rem; line-height: 1.3; }
+    h3 { font-size: 1.05rem; line-height: 1.4; }
+
+    .label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+    }
+
+    .mono { font-family: var(--font-mono); font-size: 0.85em; }
+
+    /* ================================================================
+       LAYOUT
+       ================================================================ */
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; animation: fadeSlideIn 0.5s ease; }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ================================================================
+       HEADER
+       ================================================================ */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-1);
+      margin-bottom: 32px;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-logo {
+      height: 38px;
+      width: auto;
+      display: block;
+    }
+
+    .header-divider {
+      width: 1px;
+      height: 32px;
+      background: var(--border-2);
+    }
+
+    .header-title-block {}
+
+    .header-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-1);
+    }
+
+    .header-subtitle {
+      font-size: 0.7rem;
+      color: var(--text-3);
+      font-family: var(--font-mono);
+      letter-spacing: 0.03em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-session {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-3);
+    }
+
+    .header-session .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-4);
+    }
+
+    .header-session .dot.active {
+      background: var(--green-400);
+      box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+    }
+
+    /* ================================================================
+       LANGUAGE TOGGLE
+       ================================================================ */
+    .lang-toggle {
+      display: flex;
+      background: var(--bg-2);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      padding: 5px 10px;
+      background: none;
+      border: none;
+      color: var(--text-3);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      color: var(--text-1);
+      background: var(--rp-500);
+    }
+
+    .lang-btn:hover:not(.active) {
+      color: var(--text-2);
+      background: var(--bg-3);
+    }
+
+    /* ================================================================
+       STEP NAVIGATION
+       ================================================================ */
+    .step-nav {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 40px;
+      padding: 16px 0;
+    }
+
+    .step-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      cursor: default;
+      opacity: 0.35;
+      transition: opacity 0.3s;
+    }
+
+    .step-nav-item.active { opacity: 1; }
+    .step-nav-item.completed { opacity: 0.7; }
+
+    .step-nav-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--border-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-3);
+      background: var(--bg-2);
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .step-nav-item.active .step-nav-circle {
+      border-color: var(--rp-400);
+      color: var(--rp-200);
+      background: var(--rp-glow);
+      box-shadow: 0 0 12px var(--rp-glow);
+    }
+
+    .step-nav-item.completed .step-nav-circle {
+      border-color: var(--green-500);
+      background: var(--green-bg);
+      color: var(--green-400);
+    }
+
+    .step-nav-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .step-nav-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border-1);
+      margin: 0 16px;
+      position: relative;
+      min-width: 32px;
+    }
+
+    .step-nav-line::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: var(--rp-400);
+      transition: width 0.6s ease;
+    }
+
+    .step-nav-line.filled::after { width: 100%; }
+
+    /* ================================================================
+       CARDS & SURFACES
+       ================================================================ */
+    .card {
+      background: var(--bg-2);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover { border-color: var(--border-2); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .card-title { font-size: 1rem; font-weight: 700; }
+
+    /* ================================================================
+       FORM ELEMENTS
+       ================================================================ */
+    .input-group { margin-bottom: 20px; }
+    .input-group .label { display: block; margin-bottom: 8px; }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-1);
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius-md);
+      color: var(--text-1);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--rp-400);
+      box-shadow: 0 0 0 3px var(--rp-glow);
+    }
+
+    .input-field::placeholder { color: var(--text-4); }
+
+    .input-wrapper { position: relative; }
+
+    .input-wrapper .toggle-vis {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 4px;
+      font-size: 0.85rem;
+    }
+
+    .input-wrapper .toggle-vis:hover { color: var(--text-1); }
+
+    select.input-field {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%235A7FA0'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    select.input-field option { background: var(--bg-2); color: var(--text-1); }
+
+    /* ================================================================
+       MODE TOGGLE
+       ================================================================ */
+    .mode-toggle {
+      display: flex;
+      background: var(--bg-1);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .mode-toggle-btn {
+      flex: 1;
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      color: var(--text-3);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+    }
+
+    .mode-toggle-btn.active {
+      color: var(--rp-200);
+      background: var(--rp-glow);
+    }
+
+    .mode-toggle-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 16px;
+      right: 16px;
+      height: 2px;
+      background: var(--rp-400);
+      border-radius: 1px;
+    }
+
+    .mode-toggle-btn:hover:not(.active) { color: var(--text-2); background: var(--bg-2); }
+
+    /* ================================================================
+       DROPZONE
+       ================================================================ */
+    .dropzone {
+      position: relative;
+      border: 2px dashed var(--border-2);
+      border-radius: var(--radius-lg);
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: var(--bg-1);
+      overflow: hidden;
+    }
+
+    .dropzone::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--rp-glow) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--rp-400);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .dropzone:hover::before, .dropzone.dragover::before { opacity: 1; }
+
+    .dropzone-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: var(--bg-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .dropzone-icon svg { width: 24px; height: 24px; color: var(--text-3); }
+
+    .dropzone-text { font-size: 0.95rem; color: var(--text-2); margin-bottom: 4px; position: relative; }
+    .dropzone-hint { font-size: 0.75rem; color: var(--text-4); position: relative; }
+
+    .dropzone.has-file { border-color: var(--green-500); border-style: solid; }
+    .dropzone.has-file::before { background: linear-gradient(135deg, var(--green-bg) 0%, transparent 60%); opacity: 1; }
+
+    .file-info { display: flex; align-items: center; gap: 12px; justify-content: center; position: relative; }
+
+    .file-info-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green-400);
+      font-size: 1.1rem;
+    }
+
+    .file-info-name { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-1); font-weight: 500; }
+    .file-info-size { font-size: 0.75rem; color: var(--text-3); }
+
+    .file-info-remove {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .file-info-remove:hover { color: var(--red-400); background: var(--red-bg); }
+    .dropzone input[type="file"] { display: none; }
+
+    /* ================================================================
+       SETTINGS ROW
+       ================================================================ */
+    .settings-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+      padding: 20px;
+      background: var(--bg-1);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-md);
+    }
+
+    .settings-row .input-group { margin-bottom: 0; }
+
+    /* ================================================================
+       BUTTONS
+       ================================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--rp-400), var(--rp-500));
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px var(--rp-glow-strong);
+    }
+
+    .btn-primary:hover { box-shadow: 0 4px 20px var(--rp-glow-strong); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-secondary { background: var(--bg-3); color: var(--text-1); border: 1px solid var(--border-2); }
+    .btn-secondary:hover { background: var(--bg-4); border-color: var(--border-3); }
+
+    .btn-ghost { background: none; color: var(--text-2); padding: 8px 16px; }
+    .btn-ghost:hover { color: var(--text-1); background: var(--bg-3); }
+
+    .btn-full { width: 100%; }
+
+    .btn .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ================================================================
+       CONFIG LAYOUT
+       ================================================================ */
+    .config-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 860px) { .config-grid { grid-template-columns: 1fr; } }
+
+    /* ================================================================
+       JSON PASTE AREA
+       ================================================================ */
+    .json-area {
+      width: 100%;
+      min-height: 300px;
+      padding: 16px;
+      background: var(--bg-1);
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius-md);
+      color: var(--text-1);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .json-area:focus { border-color: var(--rp-400); box-shadow: 0 0 0 3px var(--rp-glow); }
+
+    /* ================================================================
+       PROCESSING PIPELINE
+       ================================================================ */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 60px 24px;
+      margin: 40px 0;
+    }
+
+    .pipeline-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      min-width: 120px;
+    }
+
+    .pipeline-circle {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      border: 2px solid var(--border-2);
+      background: var(--bg-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: all 0.4s;
+      position: relative;
+    }
+
+    .pipeline-node.active .pipeline-circle {
+      border-color: var(--rp-400);
+      background: rgba(16, 50, 207, 0.08);
+      box-shadow: 0 0 24px var(--rp-glow-strong), 0 0 48px var(--rp-glow);
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    .pipeline-node.done .pipeline-circle { border-color: var(--green-500); background: var(--green-bg); color: var(--green-400); }
+    .pipeline-node.error .pipeline-circle { border-color: var(--red-500); background: var(--red-bg); color: var(--red-400); }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 24px var(--rp-glow-strong), 0 0 48px var(--rp-glow); }
+      50% { box-shadow: 0 0 32px var(--rp-glow-strong), 0 0 64px var(--rp-glow-strong); }
+    }
+
+    .pipeline-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+      text-align: center;
+      transition: color 0.3s;
+    }
+
+    .pipeline-node.active .pipeline-label { color: var(--rp-200); }
+    .pipeline-node.done .pipeline-label { color: var(--green-400); }
+
+    .pipeline-connector {
+      width: 64px; height: 2px;
+      background: var(--border-1);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .pipeline-connector::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      height: 100%; width: 0%;
+      background: var(--rp-400);
+      transition: width 0.6s ease;
+    }
+
+    .pipeline-connector.filled::after { width: 100%; background: var(--green-400); }
+    .pipeline-connector.active::after { width: 50%; animation: connector-pulse 1.5s ease-in-out infinite; }
+
+    @keyframes connector-pulse {
+      0%, 100% { width: 30%; }
+      50% { width: 70%; }
+    }
+
+    .processing-status { text-align: center; margin: 24px 0; }
+    .processing-status .status-text { font-size: 1.1rem; font-weight: 700; color: var(--text-1); margin-bottom: 8px; }
+
+    .processing-status .elapsed {
+      font-family: var(--font-mono);
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--rp-300);
+      letter-spacing: 0.05em;
+    }
+
+    .processing-status .sub-text { font-size: 0.8rem; color: var(--text-3); margin-top: 8px; }
+
+    .task-outputs { margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto; }
+
+    .task-output-item {
+      background: var(--bg-2);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-md);
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .task-output-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .task-output-header:hover { background: var(--bg-3); }
+    .task-output-header .task-name { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 500; flex: 1; }
+    .task-output-body { display: none; padding: 0 16px 16px; }
+    .task-output-body.open { display: block; }
+
+    .task-output-body pre {
+      background: var(--bg-0);
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: var(--text-2);
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* ================================================================
+       RESULTS — META BAR
+       ================================================================ */
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--bg-2);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-lg);
+      margin-bottom: 32px;
+    }
+
+    .meta-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--bg-3);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+    }
+
+    .meta-chip .meta-label { color: var(--text-3); }
+    .meta-chip .meta-value { color: var(--text-1); font-weight: 600; }
+
+    /* ================================================================
+       RESULTS — ITEM CARD
+       ================================================================ */
+    .item-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-xl);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .item-card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--border-1);
+      cursor: pointer;
+    }
+
+    .item-card-header:hover { background: var(--bg-4); }
+
+    .item-rank {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--rp-glow);
+      border: 2px solid var(--rp-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--rp-200);
+      flex-shrink: 0;
+    }
+
+    .item-card-title { flex: 1; }
+    .item-card-title h3 { margin-bottom: 2px; }
+    .item-card-title .item-oz { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-3); }
+
+    .item-card-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .item-card-chevron { color: var(--text-3); transition: transform 0.3s; flex-shrink: 0; }
+    .item-card.open .item-card-chevron { transform: rotate(180deg); }
+
+    .item-card-body { display: none; padding: 24px; }
+    .item-card.open .item-card-body { display: block; animation: fadeSlideIn 0.3s ease; }
+
+    .item-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 1000px) { .item-columns { grid-template-columns: 1fr; } }
+
+    .item-columns-3 { display: grid; grid-template-columns: 1fr 1.4fr 2.6fr; gap: 20px; align-items: start; }
+    @media (max-width: 1200px) { .item-columns-3 { grid-template-columns: 1fr 1fr; } .col-proposals { grid-column: 1 / -1; } }
+    @media (max-width: 700px) { .item-columns-3 { grid-template-columns: 1fr; } .col-proposals { grid-column: auto; } }
+
+    .topk-pill {
+      display: inline-flex; align-items: center;
+      padding: 2px 10px; border-radius: 999px;
+      font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700;
+      background: var(--rp-glow); color: var(--rp-200);
+      border: 1px solid rgba(16,50,207,0.3); cursor: help; letter-spacing: 0.03em;
+    }
+
+    .col-section-title {
+      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--text-4); margin-bottom: 12px;
+      padding-bottom: 6px; border-bottom: 1px solid var(--border-1);
+    }
+
+    /* ================================================================
+       SOURCE EXCERPT
+       ================================================================ */
+    .excerpt-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .excerpt-card .excerpt-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+      margin-bottom: 10px;
+    }
+
+    .excerpt-card .excerpt-text {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--text-2);
+      white-space: pre-wrap;
+    }
+
+    /* ================================================================
+       QUERY FIELDS TABLE
+       ================================================================ */
+    .fields-section { margin-bottom: 20px; }
+
+    .fields-group-title {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--rp-300);
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border-1);
+    }
+
+    .field-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--bg-4);
+      gap: 8px;
+    }
+
+    .field-row:last-child { border-bottom: none; }
+    .field-name { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-2); flex-shrink: 0; }
+    .field-value { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-1); font-weight: 500; text-align: right; }
+
+    /* ================================================================
+       BADGES / PILLS
+       ================================================================ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-extracted { background: var(--green-bg); color: var(--green-400); border: 1px solid var(--green-border); }
+    .badge-derived { background: var(--blue-bg); color: var(--blue-400); border: 1px solid var(--blue-border); }
+    .badge-missing { background: var(--gray-bg); color: var(--text-3); border: 1px solid var(--gray-border); }
+    .badge-match { background: var(--green-bg); color: var(--green-400); }
+    .badge-different { background: var(--yellow-bg); color: var(--yellow-400); }
+    .badge-upgrade { background: var(--blue-bg); color: var(--blue-400); }
+    .badge-rp { background: var(--rp-glow); color: var(--rp-200); border: 1px solid rgba(16,50,207,0.3); }
+
+    /* ================================================================
+       PROPOSAL CARDS
+       ================================================================ */
+    .proposals-section { margin-top: 24px; }
+    .proposals-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+
+    .proposal-card {
+      background: var(--bg-1);
+      border: 2px solid var(--border-1);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+    }
+
+    .proposal-card:hover { border-color: var(--border-3); background: var(--bg-2); }
+
+    .proposal-card.selected {
+      border-color: var(--rp-400);
+      box-shadow: 0 0 16px var(--rp-glow), inset 0 0 0 1px var(--rp-glow-strong);
+    }
+
+    .proposal-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+
+    .proposal-rank {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-4);
+      width: 32px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .proposal-card:nth-child(1) .proposal-rank { color: var(--rp-300); }
+    .proposal-card:nth-child(2) .proposal-rank { color: var(--text-2); }
+    .proposal-card:nth-child(3) .proposal-rank { color: var(--text-3); }
+
+    .proposal-article { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: var(--text-1); }
+
+    .proposal-score-bar { flex: 1; height: 6px; background: var(--bg-4); border-radius: 3px; overflow: hidden; }
+
+    .proposal-score-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--rp-500), var(--rp-300));
+      transition: width 0.6s ease;
+    }
+
+    .proposal-score-val {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-2);
+      font-weight: 600;
+      flex-shrink: 0;
+      min-width: 50px;
+      text-align: right;
+    }
+
+    .proposal-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+
+    .proposal-quick-badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--bg-3);
+      color: var(--text-2);
+    }
+
+    .proposal-quick-badge.match { background: var(--green-bg); color: var(--green-400); }
+    .proposal-quick-badge.different { background: var(--yellow-bg); color: var(--yellow-400); }
+    .proposal-quick-badge.upgrade { background: var(--blue-bg); color: var(--blue-400); }
+    .proposal-quick-badge.missing { background: var(--gray-bg); color: var(--text-3); }
+
+    /* ================================================================
+       COMPARISON TABLE
+       ================================================================ */
+    .comparison-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--rp-300);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 0;
+      margin-top: 4px;
+    }
+
+    .comparison-toggle:hover { text-decoration: underline; }
+
+    .comparison-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.78rem; }
+
+    .comparison-table th {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-2);
+      background: var(--bg-3);
+    }
+
+    .comparison-table td { padding: 6px 10px; border-bottom: 1px solid var(--border-1); vertical-align: top; }
+    .comparison-table .cell-match { background: rgba(34, 197, 94, 0.06); }
+    .comparison-table .cell-different { background: rgba(251, 191, 36, 0.06); }
+    .comparison-table .cell-upgrade { background: rgba(59, 130, 246, 0.06); }
+    .comparison-table .cell-missing { background: rgba(99, 107, 128, 0.06); color: var(--text-3); font-style: italic; }
+
+    .comparison-status { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .comparison-status.match { background: var(--green-400); }
+    .comparison-status.different { background: var(--yellow-400); }
+    .comparison-status.upgrade { background: var(--blue-400); }
+    .comparison-status.missing_query, .comparison-status.missing_candidate { background: var(--text-4); }
+
+    /* ================================================================
+       SELECT NONE
+       ================================================================ */
+    .select-none-card {
+      background: var(--bg-1);
+      border: 2px dashed var(--border-2);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-3);
+    }
+
+    .select-none-card:hover { border-color: var(--text-3); color: var(--text-2); }
+
+    .select-none-card.selected {
+      border-color: var(--red-400);
+      border-style: solid;
+      color: var(--red-400);
+      background: var(--red-bg);
+    }
+
+    /* ================================================================
+       EXPORT SECTION
+       ================================================================ */
+    .export-section { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border-1); }
+
+    .export-summary {
+      background: var(--bg-2);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .export-summary-header { padding: 16px 20px; background: var(--bg-3); border-bottom: 1px solid var(--border-1); }
+    .export-summary-body { padding: 16px 20px; }
+
+    .export-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-1);
+    }
+
+    .export-row:last-child { border-bottom: none; }
+    .export-row .export-oz { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--text-1); min-width: 100px; }
+    .export-row .export-selection { flex: 1; font-size: 0.85rem; }
+    .export-row .export-article { font-family: var(--font-mono); font-size: 0.8rem; color: var(--rp-300); font-weight: 500; }
+
+    .export-actions { display: flex; gap: 12px; justify-content: center; }
+
+    /* ================================================================
+       WARNINGS / ERRORS
+       ================================================================ */
+    .warning-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      background: var(--yellow-bg);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      font-size: 0.8rem;
+      color: var(--yellow-400);
+    }
+
+    .error-bar {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 12px 16px;
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+      color: var(--red-400);
+    }
+
+    .issues-summary { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+
+    .issue-chip {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--yellow-bg);
+      color: var(--yellow-400);
+    }
+
+    /* ================================================================
+       RAW JSON VIEWER
+       ================================================================ */
+    .json-viewer { margin-top: 32px; }
+
+    .json-viewer-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-3);
+      background: none;
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .json-viewer-toggle:hover { color: var(--text-1); border-color: var(--border-2); }
+
+    .json-viewer pre {
+      background: var(--bg-0);
+      border: 1px solid var(--border-1);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-top: 12px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: var(--text-2);
+      max-height: 500px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* ================================================================
+       RESPONSIVE
+       ================================================================ */
+    @media (max-width: 640px) {
+      .app { padding: 0 12px; }
+      h1 { font-size: 1.4rem; }
+      .pipeline { flex-wrap: wrap; gap: 8px; padding: 24px 12px; }
+      .pipeline-connector { width: 24px; }
+      .step-nav { flex-wrap: wrap; gap: 4px; }
+      .step-nav-line { min-width: 16px; margin: 0 8px; }
+      .header-subtitle { display: none; }
+    }
+
+    /* ================================================================
+       UTILITY
+       ================================================================ */
+    .hidden { display: none !important; }
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .mb-16 { margin-bottom: 16px; }
+    .text-center { text-align: center; }
+    .text-muted { color: var(--text-3); }
+
+    .security-note {
+      font-size: 0.72rem;
+      color: var(--text-4);
+      font-family: var(--font-mono);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ================================================================
+       LIGHT THEME — entire page shifts to readable light palette
+       ================================================================ */
+    body {
+      background: #EEF2F8 !important;
+      color: #1A2B40 !important;
+    }
+    body::before, body::after { display: none !important; }
+
+    .header {
+      background: #01193C;
+      margin: 0 -24px;
+      padding: 14px 24px;
+      border-bottom: none;
+      border-radius: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(1,25,60,0.35);
+    }
+    .header-title { color: #FFFFFF; }
+    .header-subtitle { color: rgba(164,200,228,0.8); }
+    .header-session { color: rgba(164,200,228,0.7); }
+    .lang-btn { color: rgba(164,200,228,0.7); }
+    .lang-btn.active { background: rgba(16,50,207,0.4); color: #FFFFFF; }
+    .lang-toggle { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+
+    .step-nav { background: #FFFFFF; margin: 0 -24px; padding: 14px 32px; border-bottom: 1px solid #D8E2F0; margin-bottom: 28px; box-shadow: 0 1px 4px rgba(30,50,90,0.06); }
+    .step-nav-item { opacity: 0.4; }
+    .step-nav-item.active { opacity: 1; }
+    .step-nav-item.completed { opacity: 0.75; }
+    .step-nav-circle { background: #F4F7FC; border-color: #C8D8EE; color: #4A6080; }
+    .step-nav-item.active .step-nav-circle { background: #EBF0FF; border-color: #1032CF; color: #1032CF; box-shadow: 0 0 0 3px rgba(16,50,207,0.12); }
+    .step-nav-item.completed .step-nav-circle { background: #DCFCE7; border-color: #86EFAC; color: #15803D; }
+    .step-nav-label { color: #1A2B40; font-size: 0.75rem; }
+    .step-nav-item.active .step-nav-label { color: #1032CF; }
+    .step-nav-line { background: #D8E2F0; }
+    .step-nav-line::after { background: #1032CF; }
+
+    .card { background: #FFFFFF; border-color: #D8E2F0; box-shadow: 0 2px 8px rgba(30,50,90,0.06); }
+    .card-title { color: #1A2B40; }
+
+    .mode-toggle { background: #F4F7FC; border-color: #D8E2F0; }
+    .mode-toggle-btn { color: #4A6080; }
+    .mode-toggle-btn.active { color: #1032CF; background: #EBF0FF; }
+    .mode-toggle-btn.active::after { background: #1032CF; }
+    .mode-toggle-btn:hover:not(.active) { color: #1A2B40; background: #E8EDF5; }
+
+    .input-field { background: #F8FAFD; border-color: #C8D8EE; color: #1A2B40; }
+    .input-field::placeholder { color: #8BA0B8; }
+    .input-field:focus { border-color: #1032CF; box-shadow: 0 0 0 3px rgba(16,50,207,0.12); }
+    select.input-field option { background: #FFFFFF; color: #1A2B40; }
+
+    .dropzone { background: #F8FAFD; border-color: #C8D8EE; }
+    .dropzone:hover, .dropzone.dragover { border-color: #1032CF; box-shadow: 0 0 0 3px rgba(16,50,207,0.1); }
+    .dropzone-text { color: #4A6080; }
+    .dropzone-hint { color: #8BA0B8; }
+    .dropzone-icon svg { color: #8BA0B8; }
+    .dropzone-icon { background: #EEF2F8; }
+
+    .settings-row { background: #F8FAFD; border-color: #D8E2F0; }
+    .label { color: #4A6080; }
+    .security-note { color: #8BA0B8; }
+
+    .btn-primary { background: linear-gradient(135deg, #1032CF, #003A8F); box-shadow: 0 2px 8px rgba(16,50,207,0.25); }
+    .btn-primary:hover { box-shadow: 0 4px 16px rgba(16,50,207,0.35); }
+    .btn-secondary { background: #FFFFFF; color: #1A2B40; border-color: #C8D8EE; }
+    .btn-secondary:hover { background: #F4F7FC; border-color: #A8BDD8; }
+    .btn-ghost { color: #4A6080; }
+    .btn-ghost:hover { color: #1A2B40; background: #EEF2F8; }
+
+    .json-area { background: #F8FAFD; border-color: #C8D8EE; color: #1A2B40; }
+
+    /* Pipeline (processing screen) stays dark for drama */
+    #section-processing { background: #01193C; margin: 0 -24px; padding: 32px 24px; border-radius: 0; min-height: 60vh; }
+    .pipeline-label { color: #A4C8E4; }
+    .pipeline-circle { background: #0D2A4D; border-color: #2E5585; }
+    .processing-status .status-text { color: #FFFFFF; }
+    .processing-status .elapsed { color: #2E88D5; }
+    .processing-status .sub-text { color: #5A7FA0; }
+    .task-output-item { background: #0D2A4D; border-color: #1E3E6A; }
+    .task-output-header .task-name { color: #A4C8E4; }
+    .task-output-body pre { background: #071F3D; color: #7BAAE8; }
+
+    /* Results */
+    .meta-bar { background: #FFFFFF; border-color: #D8E2F0; box-shadow: 0 2px 8px rgba(30,50,90,0.06); }
+    .meta-chip { background: #F4F7FC; }
+    .meta-chip .meta-label { color: #4A6080; }
+    .meta-chip .meta-value { color: #1A2B40; }
+
+    .item-card { background: #FFFFFF; border: 1px solid #D8E2F0; box-shadow: 0 2px 12px rgba(30,50,90,0.07); border-radius: 12px; }
+    .item-card-header { background: #FFFFFF; border-bottom-color: #E8EDF5; }
+    .item-card-header:hover { background: #F8FAFD; }
+    .item-rank { background: #EBF0FF; border-color: #1032CF; color: #1032CF; }
+    .item-card-title h3 { color: #1A2B40; }
+    .item-card-title .item-oz { color: #4A6080; }
+
+    .warning-bar { background: #FFFBEB; border-color: #FDE68A; color: #92400E; }
+    .error-bar { background: #FEF2F2; border-color: #FECACA; color: #991B1B; }
+
+    /* Export section */
+    .export-section { border-top-color: #D8E2F0; }
+    .export-summary { background: #FFFFFF; border-color: #D8E2F0; box-shadow: 0 2px 8px rgba(30,50,90,0.06); }
+    .export-summary-header { background: #F4F7FC; border-bottom-color: #D8E2F0; }
+    .export-summary-header .card-title { color: #1A2B40; }
+    .export-row { border-bottom-color: #E8EDF5; }
+    .export-row .export-oz { color: #1A2B40; }
+    .export-row .export-article { color: #1032CF; }
+    .text-muted { color: #8BA0B8; }
+
+    .json-viewer-toggle { color: #4A6080; border-color: #D8E2F0; background: #FFFFFF; }
+    .json-viewer-toggle:hover { color: #1A2B40; border-color: #A8BDD8; }
+    .json-viewer pre { background: #1A2B40; border-color: #D8E2F0; color: #A4C8E4; }
+
+    /* ================================================================
+       COMPARISON MATRIX — the core results UI
+       ================================================================ */
+    .source-strip {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 20px;
+      background: #F4F7FC;
+      border-bottom: 1px solid #E0E8F4;
+      font-size: 0.82rem;
+    }
+    .source-strip-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8BA0B8;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+    .source-strip-text {
+      color: #1A2B40;
+      line-height: 1.5;
+    }
+
+    .matrix-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      max-height: 80vh;
+      overflow-y: auto;
+      scrollbar-gutter: stable both-edges;
+      background: #FFFFFF;
+    }
+    .matrix-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+    .matrix-table thead { position: sticky; top: 0; z-index: 10; }
+    .matrix-table thead th { box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+    .matrix-table th, .matrix-table td {
+      border: 1px solid #E8EDF5;
+      vertical-align: top;
+      text-align: left;
+      padding: 0;
+    }
+    /* Column separators between proposals */
+    .matrix-table td[data-col], .matrix-table th.col-proposal-th {
+      border-left: 2px solid #D8E2F0;
+    }
+
+    /* Field name column */
+    .col-fname {
+      width: 160px;
+      min-width: 160px;
+      position: sticky;
+      left: 0;
+      background: #F1F5FB;
+      z-index: 3;
+      border-right: 2px solid #D8E2F0 !important;
+    }
+    thead .col-fname { z-index: 12; }
+    .col-fname-content {
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #3D5170;
+      font-weight: 500;
+      line-height: 1.45;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      overflow: hidden;
+    }
+
+    /* Query value column */
+    .col-query {
+      width: 200px;
+      min-width: 200px;
+      position: sticky;
+      left: 160px;
+      background: #F8FAFD;
+      z-index: 3;
+      border-right: 2px solid #D8E2F0 !important;
+    }
+    thead .col-query { z-index: 12; }
+    .col-query-content {
+      padding: 8px 12px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+    .qval {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      max-width: 100%;
+      font-size: 0.8rem;
+      color: #1A2B40;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      line-height: 1.45;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+    .qval.missing { color: #9CA3AF; font-weight: 400; font-style: italic; }
+    .src-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .src-dot.extracted { background: #22C55E; }
+    .src-dot.derived { background: #3B82F6; }
+    .src-dot.missing { background: #D1D5DB; }
+
+    /* Proposal header column */
+    .col-proposal-th {
+      min-width: 210px;
+      background: #FFFFFF;
+      vertical-align: top;
+      position: relative;
+    }
+    /* Thead label cells */
+    .thead-field-label, .thead-query-label {
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #4A6080;
+    }
+    .col-proposal-th.is-selected {
+      background: #EBF0FF;
+      outline: 2px solid #1032CF;
+      outline-offset: -2px;
+    }
+    .ph-inner {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .ph-inner-slim {
+      padding: 8px 12px;
+      gap: 4px;
+    }
+    /* Info row: non-sticky detail row below header */
+    .info-row td {
+      background: #FAFBFE;
+      border-bottom: 2px solid #D8E2F0 !important;
+      vertical-align: top;
+    }
+    .info-row-label { background: #F1F5FB !important; }
+    .info-row-query { background: #F8FAFD !important; }
+    .info-row-cell { background: #FAFBFE; }
+    .ph-rank-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ph-rank {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: #EBF0FF;
+      color: #1032CF;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .col-proposal-th:nth-child(3) .ph-rank { background: #FEF9C3; color: #92400E; }
+    .ph-type-badge {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: #EBF0FF;
+      color: #1D4ED8;
+    }
+    .ph-type-badge.virtual { background: #FEF9C3; color: #92400E; }
+    .ph-article {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #1A2B40;
+      word-break: break-all;
+      line-height: 1.3;
+    }
+    .ph-score-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ph-score-bar-wrap {
+      flex: 1;
+      height: 5px;
+      background: #E8EDF5;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .ph-score-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #1032CF, #2E88D5);
+      transition: width 0.5s ease;
+    }
+    .ph-score-num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #3D5170;
+      white-space: nowrap;
+    }
+    .ph-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+    }
+    .qb { font-family: var(--font-mono); font-size: 0.6rem; font-weight: 600; padding: 1px 5px; border-radius: 3px; }
+    .qb-match { background: #DCFCE7; color: #15803D; }
+    .qb-diff { background: #FEF3C7; color: #92400E; }
+    .qb-upgrade { background: #DBEAFE; color: #1E40AF; }
+    .qb-other { background: #F3F4F6; color: #6B7280; }
+
+    .ph-issues {
+      font-size: 0.72rem;
+      color: #92400E;
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-radius: 4px;
+      padding: 4px 8px;
+      line-height: 1.4;
+    }
+    .ph-issues-mini {
+      font-size: 0.66rem;
+      color: #92400E;
+      line-height: 1.35;
+    }
+    .ph-overview-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    .ph-select-btn {
+      margin-top: 4px;
+      width: 100%;
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1.5px solid #D8E2F0;
+      background: #FFFFFF;
+      color: #4A6080;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+      letter-spacing: 0.01em;
+    }
+    .ph-select-btn.compact {
+      width: auto;
+      margin-top: 0;
+      padding: 5px 10px;
+      font-size: 0.72rem;
+      flex: 0 0 auto;
+    }
+    .ph-select-btn:hover { border-color: #1032CF; color: #1032CF; background: #EBF0FF; }
+    .ph-select-btn.selected { border-color: #1032CF; background: #1032CF; color: #FFFFFF; }
+
+    /* Group header row */
+    .group-row td, .group-label-cell {
+      background: #F1F5FB;
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #1032CF;
+      border-top: 2px solid #D8E2F0 !important;
+      position: static !important;
+    }
+    /* Ensure sticky col-fname inside group-row works */
+    .group-row .col-fname { position: sticky; left: 0; z-index: 3; }
+
+    /* Status cells */
+    .cell-match    { background: #F0FDF4; }
+    .cell-diff     { background: #FFFBEB; }
+    .cell-upgrade  { background: #EFF6FF; }
+    .cell-missing  { background: #F9FAFB; }
+    .cell-nodata   { background: #FAFAFA; }
+
+    .cell-inner {
+      padding: 7px 12px;
+      display: grid;
+      grid-template-columns: 14px minmax(0, 1fr);
+      align-items: flex-start;
+      gap: 5px;
+    }
+    .cell-icon {
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      width: 14px;
+    }
+    .cell-match .cell-icon    { color: #15803D; }
+    .cell-diff .cell-icon     { color: #B45309; }
+    .cell-upgrade .cell-icon  { color: #1D4ED8; }
+    .cell-missing .cell-icon  { color: #9CA3AF; }
+
+    .cell-val {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #1A2B40;
+      line-height: 1.3;
+      word-break: normal;
+      overflow-wrap: break-word;
+      hyphens: none;
+      white-space: normal;
+    }
+    .cell-missing .cell-val   { color: #9CA3AF; font-style: italic; }
+    .cell-diff .cell-val      { color: #92400E; }
+    .cell-upgrade .cell-val   { color: #1D4ED8; font-weight: 600; }
+    .cell-match .cell-val     { color: #15803D; }
+
+    /* Select-none row */
+    .snone-row td {
+      border-top: 2px solid #D8E2F0 !important;
+      padding: 10px 12px;
+      background: #FAFAFA;
+    }
+    .snone-btn {
+      padding: 6px 14px;
+      border: 1.5px dashed #C8D8EE;
+      border-radius: 6px;
+      background: none;
+      color: #8BA0B8;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .snone-btn:hover { border-color: #EF4444; color: #EF4444; background: #FEF2F2; }
+    .snone-btn.selected { border-color: #EF4444; border-style: solid; color: #EF4444; background: #FEF2F2; }
+
+    /* Sticky header top */
+    .matrix-table thead th { position: sticky; top: 0; z-index: 3; }
+    .col-fname, .col-query { top: 0; z-index: 4; }
+
+    /* Col-header sticky override */
+    .matrix-table thead .col-fname { top: 0; z-index: 5; }
+    .matrix-table thead .col-query { top: 0; z-index: 5; }
+
+    .thead-field-label {
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8BA0B8;
+      background: #F1F5FB;
+      border-right: 2px solid #D8E2F0 !important;
+    }
+    .thead-query-label {
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8BA0B8;
+      background: #F8FAFD;
+      border-right: 2px solid #D8E2F0 !important;
+    }
+
+    .no-proposals-msg {
+      padding: 40px 24px;
+      text-align: center;
+      color: #8BA0B8;
+      font-size: 0.9rem;
+    }
+
+    /* Topk pill on light bg */
+    .topk-pill { background: #EBF0FF; color: #1032CF; border-color: rgba(16,50,207,0.2); }
+
+    /* Badge overrides for light bg */
+    .badge-extracted { background: #DCFCE7; color: #15803D; border-color: #86EFAC; }
+    .badge-derived   { background: #DBEAFE; color: #1E40AF; border-color: #93C5FD; }
+    .badge-missing   { background: #F3F4F6; color: #6B7280; border-color: #D1D5DB; }
+    .badge-rp        { background: #EBF0FF; color: #1032CF; border-color: rgba(16,50,207,0.2); }
+
+    /* Ensure item-card-body doesn't have old padding/grid */
+    .item-card-body { padding: 0 !important; }
+
+    /* ================================================================
+       EVIDENCE PANEL — P93 source + ANFRAGE fields above matrix
+       ================================================================ */
+    .evidence-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid #E0E8F4;
+    }
+    @media (max-width: 800px) { .evidence-panel { grid-template-columns: 1fr; } }
+    .evidence-col { padding: 14px 20px; overflow: hidden; }
+    .evidence-col:last-child { border-left: 1px solid #E0E8F4; background: #F8FAFD; }
+    .evidence-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8BA0B8;
+      margin-bottom: 8px;
+    }
+    .evidence-text {
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: #1A2B40;
+      white-space: pre-wrap;
+      max-height: 160px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+    }
+    .evidence-fields {
+      display: flex;
+      flex-direction: column;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+    .ev-field-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      padding: 3px 0;
+      border-bottom: 1px solid #EEF2F8;
+      font-size: 0.78rem;
+    }
+    .ev-field-row:last-child { border-bottom: none; }
+    .ev-fname {
+      font-family: var(--font-mono);
+      color: #4A6080;
+      font-size: 0.7rem;
+      flex: 0 0 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .ev-fval {
+      font-family: var(--font-mono);
+      color: #1A2B40;
+      font-weight: 600;
+      flex: 1;
+      font-size: 0.75rem;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    .ev-fval.missing { color: #9CA3AF; font-weight: 400; font-style: italic; }
+    .ev-badge {
+      font-size: 0.58rem;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+    .ev-badge.extracted { background: #DCFCE7; color: #15803D; }
+    .ev-badge.derived   { background: #DBEAFE; color: #1E40AF; }
+    .ev-badge.missing   { background: #F3F4F6; color: #9CA3AF; }
+
+    /* ================================================================
+       FEEDBACK BUTTON
+       ================================================================ */
+    .feedback-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid #D8E2F0;
+      background: #FFFFFF;
+      color: #4A6080;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+    .feedback-btn:hover { border-color: #DC4A1A; color: #DC4A1A; background: #FFF5F0; }
+
+    /* ================================================================
+       FULL COLUMN HIGHLIGHT
+       ================================================================ */
+    td.col-selected { background: #EBF3FF !important; }
+
+    /* ================================================================
+       ZUBEHÖR PANEL
+       ================================================================ */
+    .zubehoer-panel {
+      padding: 14px 20px;
+      border-top: 1px solid #E0E8F4;
+      background: #FAFBFD;
+    }
+    .zubehoer-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .zubehoer-title {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #1032CF;
+    }
+    .zubehoer-subtitle { font-size: 0.75rem; color: #8BA0B8; }
+    .zubehoer-cat-block { margin-bottom: 10px; }
+    .zubehoer-cat-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #3D5170;
+      margin-bottom: 5px;
+    }
+    .zubehoer-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .zubehoer-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border: 1.5px solid #D8E2F0;
+      border-radius: 8px;
+      background: #FFFFFF;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: left;
+    }
+    .zubehoer-chip:hover { border-color: #1032CF; background: #EBF0FF; }
+    .zubehoer-chip.zc-selected { border-color: #1032CF; background: #EBF0FF; }
+    .zc-check { font-size: 0.7rem; color: #1032CF; width: 12px; text-align: center; }
+    .zc-key { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: #1A2B40; white-space: nowrap; }
+    .zc-sep { color: #C8D8EE; }
+    .zc-desc { font-size: 0.72rem; color: #4A6080; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .zc-fa { font-family: var(--font-mono); font-size: 0.6rem; color: #8BA0B8; background: #F4F7FC; padding: 1px 4px; border-radius: 3px; white-space: nowrap; }
+    .zubehoer-empty { font-size: 0.8rem; color: #8BA0B8; padding: 2px 0; }
+    .zubehoer-cat-mandatory {
+      background: rgba(239, 68, 68, 0.04);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .zubehoer-cat-mandatory .zubehoer-cat-label { color: #C53030; }
+    .zubehoer-chip.zc-paired {
+      border-color: #22C55E;
+      background: rgba(34, 197, 94, 0.06);
+    }
+    .zubehoer-chip.zc-paired:hover { border-color: #16A34A; background: rgba(34, 197, 94, 0.12); }
+    .zubehoer-chip.zc-paired.zc-selected { border-color: #1032CF; background: #EBF0FF; }
+    .zc-paired-badge {
+      font-size: 0.6rem;
+      color: #22C55E;
+      margin-right: -2px;
+    }
+    .zc-wrapper { display: contents; }
+    .zc-wrapper-selected { display: block; }
+    .zc-detail {
+      background: #F4F7FC;
+      border: 1px solid #D8E2F0;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      padding: 6px 10px;
+      margin-top: -1px;
+      font-size: 0.68rem;
+    }
+    .zc-detail-row {
+      display: flex;
+      gap: 6px;
+      padding: 1px 0;
+    }
+    .zc-detail-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: #8BA0B8;
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+    .zc-detail-val {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: #1A2B40;
+      font-weight: 600;
+    }
+
+    /* ================================================================
+       RESULTS TOOLBAR — progress, search, expand/collapse
+       ================================================================ */
+    .results-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 20px;
+      background: #FFFFFF;
+      border: 1px solid #D8E2F0;
+      border-radius: var(--radius-md);
+      margin-bottom: 20px;
+      box-shadow: 0 1px 4px rgba(30,50,90,0.06);
+    }
+    .toolbar-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+    .toolbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .progress-wrap { display: flex; align-items: center; gap: 10px; flex: 1; max-width: 320px; }
+    .progress-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #1032CF;
+      white-space: nowrap;
+    }
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: #E8EDF5;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #1032CF, #22C55E);
+      transition: width 0.4s ease;
+    }
+    .item-search {
+      padding: 6px 12px;
+      border: 1px solid #D8E2F0;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #1A2B40;
+      background: #F8FAFD;
+      width: 180px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .item-search:focus { border-color: #1032CF; box-shadow: 0 0 0 2px rgba(16,50,207,0.1); }
+    .item-search::placeholder { color: #8BA0B8; }
+    .toolbar-btn {
+      padding: 5px 10px;
+      border: 1px solid #D8E2F0;
+      border-radius: var(--radius-sm);
+      background: #FFFFFF;
+      color: #4A6080;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .toolbar-btn:hover { border-color: #1032CF; color: #1032CF; background: #EBF0FF; }
+
+    /* Selection badge in item header */
+    .item-sel-badge { font-size: 0.6rem !important; }
+
+    /* Extralogic logs panel */
+    .extralogic-panel {
+      padding: 6px 20px;
+      background: #F8FAFD;
+      border-bottom: 1px solid #E0E8F4;
+    }
+    .extralogic-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #4A6080;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 0;
+      transition: color 0.15s;
+    }
+    .extralogic-toggle:hover { color: #1032CF; }
+    .extralogic-list {
+      display: none;
+      padding: 6px 0 4px;
+    }
+    .extralogic-list.open { display: block; }
+    .extralogic-entry {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: #3D5170;
+      padding: 2px 0;
+      line-height: 1.4;
+      border-left: 2px solid #DBEAFE;
+      padding-left: 8px;
+      margin-bottom: 3px;
+    }
+
+    /* Reason codes in proposal header */
+    .ph-reasons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      margin-top: 2px;
+    }
+    .reason-tag {
+      font-family: var(--font-mono);
+      font-size: 0.54rem;
+      padding: 1px 4px;
+      border-radius: 3px;
+      background: #F4F7FC;
+      color: #4A6080;
+      white-space: nowrap;
+    }
+    .reason-tag.rc-match { background: #DCFCE7; color: #15803D; }
+    .reason-tag.rc-upgrade { background: #DBEAFE; color: #1E40AF; }
+
+    /* Comparison notes stay in the title tooltip to keep narrow cells readable */
+    .cell-note {
+      font-size: 0.6rem;
+      color: #8BA0B8;
+      font-style: italic;
+      display: none;
+      margin-top: 1px;
+      line-height: 1.2;
+    }
+
+    /* Product features mini-card */
+    .ph-features {
+      display: none;
+      margin-top: 4px;
+      padding: 4px 6px;
+      background: #F8FAFD;
+      border: 1px solid #E8EDF5;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: #4A6080;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+    .ph-features.open { display: block; }
+    .ph-feat-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 4px; padding: 1px 0; }
+    .ph-feat-key { color: #8BA0B8; min-width: 0; overflow-wrap: anywhere; }
+    .ph-feat-val { color: #1A2B40; font-weight: 600; text-align: right; min-width: 0; overflow-wrap: anywhere; }
+    .ph-feat-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: #8BA0B8;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 2px 0;
+      transition: color 0.15s;
+    }
+    .ph-feat-toggle.compact {
+      padding: 5px 8px;
+      border: 1px solid #D8E2F0;
+      border-radius: 999px;
+      background: #FFFFFF;
+      color: #4A6080;
+      flex: 0 0 auto;
+    }
+    .ph-feat-toggle:hover { color: #1032CF; }
+    .ph-feat-toggle.compact:hover { border-color: #1032CF; background: #EBF0FF; }
+
+    /* Intermediate task outputs panel */
+    .intermediate-panel {
+      padding: 10px 20px;
+      background: #F8FAFD;
+      border-top: 1px solid #E0E8F4;
+      border-bottom: 1px solid #E0E8F4;
+    }
+    .intermediate-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #4A6080;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .intermediate-toggle:hover { color: #1032CF; }
+    .intermediate-body {
+      display: none;
+      padding: 8px 0;
+    }
+    .intermediate-body.open { display: block; }
+    .intermediate-task {
+      margin-bottom: 8px;
+    }
+    .intermediate-task-name {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #1032CF;
+      margin-bottom: 4px;
+    }
+    .intermediate-task-body {
+      background: #1A2B40;
+      color: #A4C8E4;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      max-height: 500px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.4;
+    }
+    .intermediate-task-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .intermediate-actions {
+      display: flex;
+      gap: 4px;
+    }
+    .intermediate-actions button {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid #D8E2F0;
+      background: #FFFFFF;
+      color: #4A6080;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .intermediate-actions button:hover { border-color: #1032CF; color: #1032CF; background: #EBF0FF; }
+    .intermediate-actions button.copied { border-color: #22C55E; color: #15803D; background: #F0FDF4; }
+
+    /* Candidate stats funnel */
+    .stats-funnel {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 20px;
+      background: #F4F7FC;
+      border-bottom: 1px solid #E0E8F4;
+      overflow-x: auto;
+    }
+    .funnel-step {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: #4A6080;
+      white-space: nowrap;
+    }
+    .funnel-count {
+      font-weight: 700;
+      color: #1A2B40;
+      background: #FFFFFF;
+      border: 1px solid #D8E2F0;
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
+    .funnel-arrow { color: #C8D8EE; font-size: 0.8rem; }
+    .funnel-final .funnel-count {
+      background: #EBF0FF;
+      border-color: #1032CF;
+      color: #1032CF;
+    }
+    .route-badge {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: #EBF0FF;
+      color: #1032CF;
+      text-transform: uppercase;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header class="header">
+    <div class="header-brand">
+      <img src="https://www.rp-group.com/Webseite/bilder/Logos/rp-group/279078/image-thumb__279078__NavLogo/RP-Group-2019-Logo-Claim-WHITE@2x.b67af279.png"
+           alt="RP Group" class="header-logo"/>
+      <div class="header-divider"></div>
+      <div class="header-title-block">
+        <div class="header-title">Produkt-Matcher</div>
+        <div class="header-subtitle" data-i18n="header.subtitle"></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-session">
+        <span class="dot" id="session-dot"></span>
+        <span id="session-label" data-i18n="session.none"></span>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="de" onclick="setLang('de')">DE</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       STEP NAVIGATION
+       ============================================================ -->
+  <nav class="step-nav">
+    <div class="step-nav-item active" data-step="config">
+      <div class="step-nav-circle">01</div>
+      <span class="step-nav-label" data-i18n="nav.config"></span>
+    </div>
+    <div class="step-nav-line" id="line-1-2"></div>
+    <div class="step-nav-item" data-step="processing">
+      <div class="step-nav-circle">02</div>
+      <span class="step-nav-label" data-i18n="nav.processing"></span>
+    </div>
+    <div class="step-nav-line" id="line-2-3"></div>
+    <div class="step-nav-item" data-step="results">
+      <div class="step-nav-circle">03</div>
+      <span class="step-nav-label" data-i18n="nav.results"></span>
+    </div>
+    <div class="step-nav-line" id="line-3-4"></div>
+    <div class="step-nav-item" data-step="export">
+      <div class="step-nav-circle">04</div>
+      <span class="step-nav-label" data-i18n="nav.export"></span>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       STEP 1: CONFIGURATION
+       ============================================================ -->
+  <section class="section active" id="section-config">
+
+    <div class="mode-toggle">
+      <button class="mode-toggle-btn active" data-mode="api" onclick="setMode('api')" data-i18n="mode.api"></button>
+      <button class="mode-toggle-btn" data-mode="json" onclick="setMode('json')" data-i18n="mode.json"></button>
+    </div>
+
+    <!-- API MODE -->
+    <div id="mode-api">
+      <div class="config-grid">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title" data-i18n="auth.title"></span>
+          </div>
+          <div class="input-group">
+            <label class="label" data-i18n="auth.label"></label>
+            <div class="input-wrapper">
+              <input type="password" class="input-field" id="api-key-input"
+                     data-i18n-placeholder="auth.placeholder"
+                     autocomplete="off" spellcheck="false"/>
+              <button class="toggle-vis" onclick="toggleKeyVis()" data-i18n-title="auth.toggle">&#9673;</button>
+            </div>
+            <div class="security-note" data-i18n="auth.security"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title" data-i18n="file.title"></span>
+          </div>
+          <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+            <div id="dropzone-empty">
+              <div class="dropzone-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <div class="dropzone-text" data-i18n="file.drop"></div>
+              <div class="dropzone-hint" data-i18n="file.click"></div>
+            </div>
+            <div id="dropzone-filled" class="hidden">
+              <div class="file-info">
+                <div class="file-info-icon">P93</div>
+                <div>
+                  <div class="file-info-name" id="file-name"></div>
+                  <div class="file-info-size" id="file-size"></div>
+                </div>
+                <button class="file-info-remove" onclick="event.stopPropagation(); removeFile()" data-i18n-title="file.remove">&#10005;</button>
+              </div>
+            </div>
+            <input type="file" id="file-input" accept=".p93"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title" data-i18n="settings.title"></span>
+          <span class="label" data-i18n="settings.optional"></span>
+        </div>
+        <div class="settings-row">
+          <div class="input-group">
+            <label class="label" data-i18n="settings.topk"></label>
+            <select class="input-field" id="setting-topk">
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="10">10</option>
+            </select>
+            <div class="security-note" data-i18n="settings.topk.hint"></div>
+          </div>
+          <div class="input-group">
+            <label class="label" data-i18n="settings.material"></label>
+            <select class="input-field" id="setting-material">
+              <option value="all" data-i18n="settings.material.all"></option>
+              <option value="kunststoff">Kunststoff</option>
+              <option value="metall">Metall</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="label" data-i18n="settings.virtual"></label>
+            <select class="input-field" id="setting-virtual">
+              <option value="false" data-i18n="settings.virtual.no"></option>
+              <option value="true" data-i18n="settings.virtual.yes"></option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="label" data-i18n="settings.system"></label>
+            <select class="input-field" id="setting-system">
+              <option value="auto" data-i18n="settings.system.auto"></option>
+              <optgroup id="optgroup-eb" label="Einzelbatterie (Self-contained)">
+                <option value="SC">SC &mdash; Self-Contained</option>
+                <option value="WL">WL &mdash; Wireless</option>
+                <option value="WB">WB &mdash; Wired Bus</option>
+              </optgroup>
+              <optgroup id="optgroup-zb" label="Zentralbatterie (Central)">
+                <option value="ML">ML &mdash; Mains-Linked</option>
+                <option value="CC">CC &mdash; Central Control</option>
+                <option value="CPS">CPS &mdash; Central Power Supply</option>
+              </optgroup>
+            </select>
+            <div class="security-note" data-i18n="settings.system.hint"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-24 text-center">
+        <button class="btn btn-primary" id="btn-start" onclick="startPipeline()" disabled data-i18n="btn.start"></button>
+      </div>
+    </div>
+
+    <!-- JSON PASTE MODE -->
+    <div id="mode-json" class="hidden">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title" data-i18n="json.title"></span>
+          <span class="label" data-i18n="json.subtitle"></span>
+        </div>
+        <textarea class="json-area" id="json-paste"
+                  placeholder='{"_meta": { ... }, "items": [ ... ]}'
+                  spellcheck="false"></textarea>
+        <div class="mt-16 text-center">
+          <button class="btn btn-primary" id="btn-parse-json" onclick="parseJsonInput()" data-i18n="json.parse"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STEP 2: PROCESSING
+       ============================================================ -->
+  <section class="section" id="section-processing">
+
+    <div class="pipeline">
+      <div class="pipeline-node" id="pipe-upload">
+        <div class="pipeline-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <span class="pipeline-label" data-i18n="pipeline.upload"></span>
+      </div>
+      <div class="pipeline-connector" id="conn-1"></div>
+      <div class="pipeline-node" id="pipe-start">
+        <div class="pipeline-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </div>
+        <span class="pipeline-label" data-i18n="pipeline.process"></span>
+      </div>
+      <div class="pipeline-connector" id="conn-2"></div>
+      <div class="pipeline-node" id="pipe-extract">
+        <div class="pipeline-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <span class="pipeline-label" data-i18n="pipeline.extraction"></span>
+      </div>
+      <div class="pipeline-connector" id="conn-3"></div>
+      <div class="pipeline-node" id="pipe-rank">
+        <div class="pipeline-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+            <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+            <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+          </svg>
+        </div>
+        <span class="pipeline-label" data-i18n="pipeline.ranking"></span>
+      </div>
+    </div>
+
+    <div class="processing-status">
+      <div class="status-text" id="processing-status-text" data-i18n="processing.init"></div>
+      <div class="elapsed" id="processing-elapsed">00:00</div>
+      <div class="sub-text" id="processing-sub-text"></div>
+    </div>
+
+    <div class="task-outputs" id="task-outputs"></div>
+
+    <div class="mt-24 text-center">
+      <button class="btn btn-ghost hidden" id="btn-cancel" onclick="cancelPipeline()" data-i18n="btn.cancel"></button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STEP 3: RESULTS
+       ============================================================ -->
+  <section class="section" id="section-results">
+    <div id="results-warnings"></div>
+    <div class="meta-bar" id="results-meta"></div>
+
+    <!-- Toolbar: progress + controls -->
+    <div class="results-toolbar" id="results-toolbar" style="display:none">
+      <div class="toolbar-left">
+        <div class="progress-wrap">
+          <span class="progress-label" id="progress-label">0 / 0</span>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <input type="text" class="item-search" id="item-search" placeholder="" oninput="filterItems(this.value)"/>
+        <button class="btn-ghost toolbar-btn" onclick="toggleAllItems(true)" title=""><span id="expand-label"></span></button>
+        <button class="btn-ghost toolbar-btn" onclick="toggleAllItems(false)" title=""><span id="collapse-label"></span></button>
+      </div>
+    </div>
+
+    <div id="results-items"></div>
+
+    <div class="export-section" id="export-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <h2 data-i18n="export.title"></h2>
+        <span class="label" id="selection-count"></span>
+      </div>
+      <div class="export-summary" id="export-summary"></div>
+      <div class="export-actions">
+        <button class="btn btn-primary" onclick="downloadExport('csv')" data-i18n="export.csv"></button>
+        <button class="btn btn-secondary" onclick="downloadExport('json')" data-i18n="export.json"></button>
+        <button class="btn btn-ghost" onclick="goToStep('config')" data-i18n="btn.new"></button>
+      </div>
+    </div>
+
+    <!-- Intermediate pipeline outputs -->
+    <div class="intermediate-panel mt-24" id="intermediate-container" style="display:none"></div>
+
+    <div class="json-viewer mt-24">
+      <button class="json-viewer-toggle" onclick="toggleRawJson()" data-i18n="json.raw"></button>
+      <pre id="raw-json-output" class="hidden"></pre>
+    </div>
+  </section>
+</div>
+
+<!-- ==============================================================
+     JAVASCRIPT
+     ============================================================== -->
+<script>
+// ================================================================
+// I18N
+// ================================================================
+const I18N = {
+  de: {
+    'header.subtitle': 'Notbeleuchtung \u2014 Anfrage \u2192 Katalogvorschlag',
+    'session.none': 'Keine Sitzung',
+    'session.connected': 'API verbunden',
+    'nav.config': 'Konfiguration',
+    'nav.processing': 'Verarbeitung',
+    'nav.results': 'Ergebnisse',
+    'nav.export': 'Export',
+    'mode.api': 'API-Modus',
+    'mode.json': 'JSON einf\u00fcgen',
+    'auth.title': 'Authentifizierung',
+    'auth.label': 'Entaingine API-Schl\u00fcssel',
+    'auth.placeholder': 'Schl\u00fcssel hier einf\u00fcgen \u2026',
+    'auth.toggle': 'Schl\u00fcssel anzeigen/verbergen',
+    'auth.security': '\u26A1 Wird nur im Sitzungsspeicher gehalten \u2014 kein persistenter Speicher',
+    'file.title': 'P93-Datei',
+    'file.drop': 'P93-Datei hierher ziehen',
+    'file.click': 'oder klicken zum Ausw\u00e4hlen',
+    'file.remove': 'Datei entfernen',
+    'settings.title': 'Parameter',
+    'settings.optional': 'Optional',
+    'settings.topk': 'Top K',
+    'settings.topk.hint': 'Anzahl der KI-Vorschl\u00e4ge pro Anfrage-Position',
+    'settings.material': 'Materialfilter',
+    'settings.material.all': 'Alle',
+    'settings.virtual': 'Virtuelle Artikel',
+    'settings.virtual.no': 'Nein',
+    'settings.virtual.yes': 'Ja',
+    'settings.system': 'Systemauswahl',
+    'settings.system.auto': 'Automatisch (empfohlen)',
+    'settings.system.hint': 'Auto erkennt den Systemtyp aus der Anfrage. Wählen Sie manuell nur bei Bedarf.',
+    'settings.system.eb': 'Einzelbatterie (Eigenversorgung)',
+    'settings.system.zb': 'Zentralbatterie (Zentral)',
+    'btn.start': 'Analyse starten',
+    'btn.cancel': 'Abbrechen',
+    'btn.back': 'Zur\u00fcck zur Konfiguration',
+    'btn.new': 'Neue Analyse',
+    'json.title': 'Pipeline-JSON einf\u00fcgen',
+    'json.subtitle': 'Lambda-Ausgabe oder vollst\u00e4ndige Poll-Antwort',
+    'json.parse': 'JSON verarbeiten',
+    'json.raw': 'Roh-JSON anzeigen/verbergen',
+    'pipeline.upload': 'Upload',
+    'pipeline.process': 'Prozess',
+    'pipeline.extraction': 'Extraktion',
+    'pipeline.ranking': 'Ranking',
+    'processing.init': 'Initialisierung \u2026',
+    'processing.uploading': 'Datei hochladen',
+    'processing.wait': 'Bitte warten \u2026',
+    'processing.starting': 'Prozess starten \u2026',
+    'processing.running': 'Extraktion & Ranking l\u00e4uft \u2026',
+    'processing.ranking': 'Ranking l\u00e4uft \u2026',
+    'processing.done': 'Abgeschlossen!',
+    'processing.error': 'Fehler',
+    'processing.cancelled': 'Abgebrochen',
+    'processing.cors': 'Netzwerkfehler \u2014 m\u00f6glicherweise CORS-Einschr\u00e4nkung. Versuchen Sie den JSON-Modus oder pr\u00fcfen Sie die Browser-Konsole.',
+    'processing.tasks_completed': 'Aufgabe(n) abgeschlossen',
+    'processing.tasks': 'Aufgaben',
+    'processing.total_time': 'Gesamtzeit',
+    'results.proposals': 'Vorschl\u00e4ge',
+    'results.no_proposals': 'Keine Vorschl\u00e4ge',
+    'results.position': 'Position',
+    'results.excerpt': 'Originaltext',
+    'results.comparison': 'Feldvergleich anzeigen \u25be',
+    'results.select_none': 'Kein Vorschlag passend',
+    'results.strategy': 'Strategie',
+    'results.catalog': 'Katalog',
+    'results.positions': 'Positionen',
+    'results.time': 'Zeit',
+    'results.route': 'Route',
+    'results.run': 'Run',
+    'results.experimental': 'EXPERIMENTELL \u2014 Virtual',
+    'export.title': 'Auswahl & Export',
+    'export.selected': 'ausgew\u00e4hlt',
+    'export.summary': 'Auswahl\u00fcbersicht',
+    'export.not_selected': '\u2014 Nicht ausgew\u00e4hlt \u2014',
+    'export.none': 'Kein Vorschlag',
+    'export.proposal': 'Vorschlag',
+    'export.csv': 'CSV herunterladen',
+    'export.json': 'JSON herunterladen',
+    'fg.identity': 'Produktidentit\u00e4t',
+    'fg.mounting': 'Montage & System',
+    'fg.protection': 'Schutz & Sicherheit',
+    'fg.dimensions': 'Abmessungen',
+    'fg.electrical': 'Elektrik & Backup',
+    'fg.material': 'Material & Farbe',
+    'fg.other': 'Weitere',
+    'table.field': 'Feld',
+    'table.query': 'Anfrage',
+    'table.catalog': 'Katalog',
+    'table.status': 'Status',
+    'no_fields': 'Keine extrahierten Felder',
+    'truncated': '(gek\u00fcrzt)',
+    'upload_failed': 'Upload fehlgeschlagen',
+    'process_failed': 'Prozessstart fehlgeschlagen',
+    'poll_failed': 'Polling fehlgeschlagen',
+    'process_error': 'Prozess fehlgeschlagen \u2014 siehe Aufgabenausgaben',
+    'json_error': 'JSON-Fehler',
+    'json_unknown': 'Unbekanntes JSON-Format. Erwartet: {_meta, items} oder {outputs: [...]}',
+    'timeout_after': 'Zeit\u00fcberschreitung nach',
+    'evidence.p93': 'P93 Original-Text',
+    'evidence.fields': 'Extrahierte Anfrage-Felder',
+    'feedback.btn': 'Feedback',
+    'feedback.tooltip': 'Feedback an michael.auth@rp-group.com senden',
+    'progress.reviewed': 'bearbeitet',
+    'search.placeholder': 'Position suchen \u2026',
+    'toolbar.expand': '\u25BC Alle \u00f6ffnen',
+    'toolbar.collapse': '\u25B2 Alle schlie\u00dfen',
+    'stats.initial': 'Katalog',
+    'stats.system': 'System',
+    'stats.supply': 'Versorgung',
+    'stats.luminaire': 'Leuchte',
+    'stats.mounting': 'Montage',
+    'stats.scored': 'Bewertet',
+    'zubehoer.title': 'Zubeh\u00f6r',
+    'zubehoer.select_first': 'W\u00e4hlen Sie zuerst ein Produkt aus, um passendes Zubeh\u00f6r zu sehen.',
+    'zubehoer.none': 'Kein Zubehör für diese Produktreihe bekannt.',
+    'zubehoer.paired': 'Bekannte Zubehör-Paarung für dieses Produkt',
+    'extralogic.title': 'Anreicherungslogik',
+    'proposal.features': 'Produktdaten',
+    'intermediate.title': 'Pipeline-Zwischenergebnisse',
+    'intermediate.show': 'Zwischenergebnisse anzeigen',
+  },
+  en: {
+    'header.subtitle': 'Emergency Lighting \u2014 Inquiry \u2192 Catalog Proposal',
+    'session.none': 'No session',
+    'session.connected': 'API connected',
+    'nav.config': 'Configuration',
+    'nav.processing': 'Processing',
+    'nav.results': 'Results',
+    'nav.export': 'Export',
+    'mode.api': 'API Mode',
+    'mode.json': 'Paste JSON',
+    'auth.title': 'Authentication',
+    'auth.label': 'Entaingine API Key',
+    'auth.placeholder': 'Paste key here \u2026',
+    'auth.toggle': 'Show/hide key',
+    'auth.security': '\u26A1 Stored in session memory only \u2014 no persistent storage',
+    'file.title': 'P93 File',
+    'file.drop': 'Drop P93 file here',
+    'file.click': 'or click to browse',
+    'file.remove': 'Remove file',
+    'settings.title': 'Parameters',
+    'settings.optional': 'Optional',
+    'settings.topk': 'Top K',
+    'settings.topk.hint': 'Number of AI proposals per inquiry item',
+    'settings.material': 'Material Filter',
+    'settings.material.all': 'All',
+    'settings.virtual': 'Virtual Items',
+    'settings.virtual.no': 'No',
+    'settings.virtual.yes': 'Yes',
+    'settings.system': 'System Selection',
+    'settings.system.auto': 'Automatic (recommended)',
+    'settings.system.hint': 'Auto detects the system type from the inquiry. Select manually only when needed.',
+    'settings.system.eb': 'Einzelbatterie (Self-contained)',
+    'settings.system.zb': 'Zentralbatterie (Central)',
+    'btn.start': 'Start Analysis',
+    'btn.cancel': 'Cancel',
+    'btn.back': 'Back to Configuration',
+    'btn.new': 'New Analysis',
+    'json.title': 'Paste Pipeline JSON',
+    'json.subtitle': 'Lambda output or complete poll response',
+    'json.parse': 'Process JSON',
+    'json.raw': 'Show/hide raw JSON',
+    'pipeline.upload': 'Upload',
+    'pipeline.process': 'Process',
+    'pipeline.extraction': 'Extraction',
+    'pipeline.ranking': 'Ranking',
+    'processing.init': 'Initializing \u2026',
+    'processing.uploading': 'Uploading file',
+    'processing.wait': 'Please wait \u2026',
+    'processing.starting': 'Starting process \u2026',
+    'processing.running': 'Extraction & Ranking in progress \u2026',
+    'processing.ranking': 'Ranking in progress \u2026',
+    'processing.done': 'Completed!',
+    'processing.error': 'Error',
+    'processing.cancelled': 'Cancelled',
+    'processing.cors': 'Network error \u2014 possibly a CORS restriction. Try JSON mode or check the browser console.',
+    'processing.tasks_completed': 'task(s) completed',
+    'processing.tasks': 'tasks',
+    'processing.total_time': 'total time',
+    'results.proposals': 'Proposals',
+    'results.no_proposals': 'No proposals',
+    'results.position': 'Position',
+    'results.excerpt': 'Original Text',
+    'results.comparison': 'Show field comparison \u25be',
+    'results.select_none': 'No proposal suitable',
+    'results.strategy': 'Strategy',
+    'results.catalog': 'Catalog',
+    'results.positions': 'Positions',
+    'results.time': 'Time',
+    'results.route': 'Route',
+    'results.run': 'Run',
+    'results.experimental': 'EXPERIMENTAL \u2014 Virtual',
+    'export.title': 'Selection & Export',
+    'export.selected': 'selected',
+    'export.summary': 'Selection Summary',
+    'export.not_selected': '\u2014 Not selected \u2014',
+    'export.none': 'No proposal',
+    'export.proposal': 'Proposal',
+    'export.csv': 'Download CSV',
+    'export.json': 'Download JSON',
+    'fg.identity': 'Product Identity',
+    'fg.mounting': 'Mounting & System',
+    'fg.protection': 'Protection & Safety',
+    'fg.dimensions': 'Dimensions',
+    'fg.electrical': 'Electrical & Backup',
+    'fg.material': 'Material & Color',
+    'fg.other': 'Other',
+    'table.field': 'Field',
+    'table.query': 'Query',
+    'table.catalog': 'Catalog',
+    'table.status': 'Status',
+    'no_fields': 'No extracted fields',
+    'truncated': '(truncated)',
+    'upload_failed': 'Upload failed',
+    'process_failed': 'Process start failed',
+    'poll_failed': 'Polling failed',
+    'process_error': 'Process failed \u2014 see task outputs',
+    'json_error': 'JSON Error',
+    'json_unknown': 'Unknown JSON format. Expected: {_meta, items} or {outputs: [...]}',
+    'timeout_after': 'Timeout after',
+    'evidence.p93': 'P93 Original Text',
+    'evidence.fields': 'Extracted Inquiry Fields',
+    'feedback.btn': 'Feedback',
+    'feedback.tooltip': 'Send feedback to michael.auth@rp-group.com',
+    'progress.reviewed': 'reviewed',
+    'search.placeholder': 'Search position \u2026',
+    'toolbar.expand': '\u25BC Expand all',
+    'toolbar.collapse': '\u25B2 Collapse all',
+    'stats.initial': 'Catalog',
+    'stats.system': 'System',
+    'stats.supply': 'Supply',
+    'stats.luminaire': 'Luminaire',
+    'stats.mounting': 'Mounting',
+    'stats.scored': 'Scored',
+    'zubehoer.title': 'Accessories',
+    'zubehoer.select_first': 'Select a product first to see compatible accessories.',
+    'zubehoer.none': 'No accessories known for this product series.',
+    'zubehoer.paired': 'Known accessory pairing for this product',
+    'extralogic.title': 'Enrichment Logic',
+    'proposal.features': 'Product Data',
+    'intermediate.title': 'Pipeline Intermediate Results',
+    'intermediate.show': 'Show intermediate results',
+  },
+};
+
+let currentLang = 'de';
+
+function t(key) { return (I18N[currentLang] && I18N[currentLang][key]) || key; }
+
+function applyLang() {
+  document.documentElement.lang = currentLang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const text = t(key);
+    if (el.tagName === 'OPTION') el.textContent = text;
+    else el.textContent = text;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    el.title = t(el.getAttribute('data-i18n-title'));
+  });
+  // Update optgroup labels for system selection
+  const ogEb = document.getElementById('optgroup-eb');
+  const ogZb = document.getElementById('optgroup-zb');
+  if (ogEb) ogEb.label = t('settings.system.eb');
+  if (ogZb) ogZb.label = t('settings.system.zb');
+  // Re-render dynamic parts if results exist (preserve selections)
+  if (state.results) {
+    const savedSel = { ...state.selections };
+    const savedAcc = {};
+    Object.entries(state.accessorySelections).forEach(([k, v]) => { savedAcc[k] = new Set(v); });
+    renderResults(state.results);
+    state.selections = savedSel;
+    state.accessorySelections = savedAcc;
+    // Re-apply selection visuals
+    Object.entries(savedSel).forEach(([itemKey, sel]) => {
+      if (sel !== null && sel !== undefined) {
+        const card = document.getElementById('item-' + itemKey);
+        if (!card) return;
+        card.querySelectorAll('.col-proposal-th').forEach((th, pi) => th.classList.toggle('is-selected', sel === pi));
+        card.querySelectorAll('.ph-select-btn').forEach((btn, pi) => {
+          btn.classList.toggle('selected', sel === pi);
+          if (sel === pi) btn.innerHTML = '✓ ' + (currentLang === 'de' ? 'Ausgewählt' : 'Selected');
+        });
+        // Update header selection badge
+        const selBadge = document.getElementById('selbadge-' + itemKey);
+        if (selBadge) {
+          if (sel === 'none') {
+            selBadge.className = 'badge item-sel-badge';
+            selBadge.style.cssText = 'background:#FEF2F2;color:#991B1B;border:1px solid #FECACA';
+            selBadge.textContent = t('export.none');
+          } else {
+            const proposals = (state.results?.items || []).find(i => (i.positionsnummer || i.item_id) === itemKey)?.proposals || [];
+            const p = proposals[sel];
+            selBadge.className = 'badge badge-extracted item-sel-badge';
+            selBadge.textContent = '\u2713 ' + (p?.display_article || p?.base_article || '#' + (sel + 1));
+          }
+        }
+        const zuPanel = document.getElementById('zubehoer-' + itemKey);
+        if (zuPanel) {
+          const itm = (state.results?.items || []).find(i => (i.positionsnummer || i.item_id) === itemKey);
+          if (itm) zuPanel.innerHTML = renderZubehoerContent(itemKey, itm.proposals || [], sel);
+        }
+      }
+    });
+    updateProgressBar();
+  }
+  updateExportSummary();
+  updateSessionDot();
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  applyLang();
+}
+
+// ================================================================
+// CONSTANTS
+// ================================================================
+const API_BASE = 'https://api.entaingine.com/aiengine/api';
+const PROCESS_TEMPLATE_ID = 11738;
+const SPACE_ID = '.eai.rp-group';
+const POLL_INTERVAL = 8000;
+const MAX_POLL_TIME = 600000;
+
+const FIELD_GROUPS_MAP = {
+  'fg.identity': ['Produkttyp', 'RatingsCertifications:LuminaireType', 'Betriebsart'],
+  'fg.mounting': ['Mounting:MountingMethod', 'Supply', 'Monitoring'],
+  'fg.protection': ['RatingsCertifications:IngressProtection', 'RatingsCertifications:IKclass', 'RatingsCertifications:RecognitionDistance'],
+  'fg.dimensions': ['HousingDimensions:Height', 'HousingDimensions:Length', 'HousingDimension:Width'],
+  'fg.electrical': ['ElectronicPerformanceData:LuminousFluxMains', 'ElectronicPerformanceData:LuminousFluxEmergency', 'ElectronicBackupTimes:MaxBackupTime'],
+  'fg.material': ['MaterialData:Material', 'HousingColorInformation:Color'],
+};
+
+// ================================================================
+// ACCESSORY DATA (from compatibility_matrix.csv + Zubehör Kategorien-1.xlsx)
+// ================================================================
+const SERIES_MAP = {"KSU0":["KME-EB","AWKSU","2PW-EB","KMBE","DSA","KSE-MB-WS","KSE-MB-SI"],"KXU0":["KXE-EB","AWX001","DSA","2PW-EB"],"KEU0":["DSA","KEE-EB","2PW-EB"],"KLU0":["DSA","BALL2","2PW-EB"],"KDU0":["DSA","BALL1","2PW-EB","BALLPLX-KD"],"KBU0":["KBK","KBM","KBG","AWX001","BALLPLX-KBE","BALLPLX-KBS","BALLPLX-KBU","2PW-EB","KBBE","DSA"],"LMW0":["BALL1","AWM001-SI"],"LMD0":["DSA","2PS-EB","AWM001-SI"],"LXW0":["BALL2"],"LXD0":["DSA","2PS-EB","2DS-EB"],"LSD0":["DSA","2PS-EB"],"PFW0":["BALL2"],"PFD0":["2PW-EB","DSA","PFER"],"WKD0":["WKO","1PV-EB","DSA-Y4M","DSA-Y4M-APA"],"WGD0":["WKO","1PV-EB","DSA-Y4M-APA","DSA-Y4M"],"WXD0":["WKO","1PV-EB"],"U6E":["U6BE"],"U8E":["U8BE"],"KMB0":["KME-EB","BALL1","KMBE","BALLPLX-KMB"],"KMU0":["DSA","KME-EB","AWKSU","2PW-EB","KMBE","KME","2PSW-EB","KME-SW"],"KSH0":["DSA","KME-EB","AWKSU","2PW-EB","KMBE"],"KSC0":["DSA","AWKSU","2PW-EB","KMBE","KS4FIRE","KS4HELP","KME","KME-EB","KME-SW"],"KXH0":["KXE-EB","AWX001","DSA","2PW-EB"],"KBDUO0":["KBK","KBM","KBG","AWX001","BALLPLX-KBE","BALLPLX-KBS","BALLPLX-KBU","2PW-EB","KBBE","DSA"],"WGW0":["WKO"],"KSHC0":["DSA","KME-EB","AWKSU","2PW-EB","KMBE","KME"],"AMW0":["BALLPLX-AM","AM-X-APA"],"AXW0":["BALLPLX-AX","AM-X-APA"],"AMD0":["AM-X-APA"],"AXD0":["AM-X-APA"],"AMR0":["BALLPLX-AM"],"AMCP0":["AM-X-PKG"],"AMDC0":["AM-X-APA"],"AMDT0":["AM-X-APA"],"AMDP0":["AM-X-APA","AM-X-PKG"],"AMEP0":["AM-X-PKG"],"AMWA0":["AM-X-APA"],"AMWT0":["BALLPLX-AM","AM-X-APA"],"AXCP0":["AM-X-PKG"],"AXDC0":["AM-X-APA"],"AXDT0":["AM-X-APA"],"AXDP0":["AM-X-APA","AM-X-PKG"],"AXEP0":["AM-X-PKG"],"AXR0":["BALLPLX-AX"],"AXWA0":["AM-X-APA"],"AXWT0":["BALLPLX-AX","AM-X-APA"],"WKW0":["WKO","1PV-EB","DSA-Y4M","DSA-Y4M-APA"],"FMDS0":["FMDA001","FMDA002","FMDA001.AZ","FMDA002.AZ"],"ASMU0":["DSA","2PS-EB"],"FMW0":["FMDA001","FMDA002.AZ","FMDA001.AZ","FMDA002"],"AIEP0":["AM-X-PKG"],"FMWT0":["FMDA001","FMDA002.AZ","FMDA001.AZ","FMDA002"],"XGIU0":["X-KE001","X-KO001","X-MB001","X4N"],"XGMU0":["X-KO001","X-MB001","X-KE001","X4N"],"XGXU0":["X-KO001","X-MB001","X-KE001","X4N"],"XPIU0":["X-KE001","X-MB001","X-KO001","X4N"],"XPMU0":["X-KO001","X-MB001","X-KE001","X4N"],"XPXU0":["X-KO001","X-MB001","X-KE001","X4N"],"AMR4":["BALLPLX-AM"],"AMD4":["AM-X-APA"],"AGD0":["AM-X-APA-AZ","AM-X-APA","AM-X-APA-E"],"KWIW0":["BKW"],"KWID0":["BKW"],"WHXD4":["WKO","DSA-Y4M","DSA-Y4M-APA"],"WHXD0":["WKO","DSA-Y4M","DSA-Y4M-APA"],"WHGD4":["DSA-Y4M","DSA-Y4M-APA","WKO"],"WHGD0":["DSA-Y4M","DSA-Y4M-APA","WKO"],"AXW4":["BALLPLX-AX","AM-X-APA"],"AMW4":["BALLPLX-AM","AM-X-APA"],"LBLT0":["LSYS-H4","LSYS-S4","LSYS-B4"],"KMUK4":["DSA","AWKSU","2PW-EB","KME","KMBE","KME-SW"],"ILDK4":["ILD-APA-02","IL-IK10-AZ","IL-IK10-W","ILB1","ILB2","BALLPLX-ILD","IL-IP65-K","LSYS-B4","LSYS-S4","LSYS-H4","ILD-APA-02-SW","ILDE-SW"],"DDE0":["BALLPLX-ILE"],"AMDP4":["AM-X-PKG-AZ","AM-X-APA","AM-X-PKG"],"AMEP4":["AM-X-PKG-AZ","AM-X-PKG"],"AMCP4":["AM-X-PKG-AZ","AM-X-PKG"],"AMWA4":["AM-X-APA"],"AMDC4":["AM-X-APA"],"AXCP4":["AM-X-PKG-AZ","AM-X-PKG"],"AXDC4":["AM-X-APA"],"AXDP4":["AM-X-PKG-AZ","AM-X-APA","AM-X-PKG"],"AXD4":["AM-X-APA"],"AXWA4":["AM-X-APA"],"AXR4":["BALLPLX-AX"],"AXEP4":["AM-X-PKG-AZ","AM-X-PKG"],"ILDL4":["ILD-APA-02","IL-IK10-AZ","IL-IK10-W","ILB1","ILB2","BALLPLX-ILD","IL-IP65-K","LSYS-B4","LSYS-S4","LSYS-H4"],"ILEL4":["BALLPLX-ILE","LSYS-B4","LSYS-S4","LSYS-H4"],"AMEP5":["AM-X-PKG"],"AIEP5":["AM-X-PKG"],"AMD5":["AM-X-APA"],"AMWA5":["AM-X-APA"],"AMCP5":["AM-X-PKG"],"AMDC5":["AM-X-APA"],"AMW5":["BALLPLX-AM","AM-X-APA"],"AMR5":["BALLPLX-AM"],"AMDP5":["AM-X-APA","AM-X-PKG"],"AXEP5":["AM-X-PKG"],"AXD5":["AM-X-APA"],"AXR5":["BALLPLX-AX"],"ASMU5":["DSA","2PS-EB"],"AXDP5":["AM-X-APA","AM-X-PKG"],"AXCP5":["AM-X-PKG"],"AXDC5":["AM-X-APA"],"KWIW5":["BKW"],"EARL5":["ILD-APA-02"],"WHXD5":["WKO","DSA-Y4M","DSA-Y4M-APA"],"PFW5":["BALL2"],"KMB5":["KME-EB","BALL1","KMBE","BALLPLX-KMB"],"AXW5":["BALLPLX-AX","AM-X-APA"],"AXWA5":["AM-X-APA"],"KSU5":["KME-EB","AWKSU","2PW-EB","KMBE","DSA","KSE-MB-WS","KSE-MB-SI"],"EAQL5":["ILD-APA-02"],"KBU5":["KBK","KBM","KBG","AWX001","BALLPLX-KBE","BALLPLX-KBS","BALLPLX-KBU","2PW-EB","KBBE","DSA"],"FMW5":["FMDA001","FMDA002.AZ","FMDA001.AZ","FMDA002"],"KMU5":["DSA","KME-EB","AWKSU","2PW-EB","KMBE","2PSW-EB","KME-SW"],"KSC5":["DSA","AWKSU","2PW-EB","KMBE","KS4FIRE","KS4HELP","KME","KME-SW"],"ILDL5":["ILD-APA-02","IL-IK10-AZ","IL-IK10-W","ILB1","ILB2","BALLPLX-ILD","IL-IP65-K","LSYS-B4","LSYS-S4"],"FMDS5":["FMDA001","FMDA002","FMDA001.AZ","FMDA002.AZ"],"KWID5":["BKW"],"KDU5":["DSA","BALL1","2PW-EB","BALLPLX-KD"],"KSH5":["DSA","KME-EB","AWKSU","2PW-EB","KMBE"],"PFD5":["2PW-EB","DSA","PFER"],"KLU5":["DSA","BALL2","2PW-EB"],"KSHC5":["DSA","KME-EB","AWKSU","2PW-EB","KMBE"],"ILEL5":["BALLPLX-ILE"],"EARL4":["ILD-APA-02","LSYS-B4","LSYS-S4"],"EAQL4":["ILD-APA-02"],"PMW0":["PME","LSYS-B4","LSYS-H4","LSYS-S4","LSYS-WF4"],"PMD4":["PME"],"PMW4":["PME","LSYS-B4","LSYS-H4","LSYS-S4","LSYS-WF4"],"KMMU0":["DSA","KME-EB","KMBE","AWKSU","2PW-EB"],"PMD0":["PME"],"ILDL0":["ILD-APA-02","IL-IK10-AZ","IL-IK10-W","ILB1","ILB2","BALLPLX-ILD","IL-IP65-K","LSYS-B4","LSYS-S4","LSYS-H4"],"WHGD5":["DSA-Y4M","DSA-Y4M-APA","WKO"],"ILEL0":["BALLPLX-ILE","LSYS-B4","LSYS-S4","LSYS-H4"],"KWID4":["BKW"],"KWIW4":["BKW","LSYS-B4","LSYS-H4","LSYS-S4","LSYS-WF4"],"KAMU4":["AWX001","2PW-EB"],"KAMU0":["AWX001","2PW-EB"],"KAMU5":["AWX001","2PW-EB"],"KBU4":["KBK","KBM","KBG","AWX001","BALLPLX-KBE","BALLPLX-KBS","BALLPLX-KBU","2PW-EB","KBBE","DSA"],"PFW4":["BALL2"],"PMD5":["PME"],"PMW5":["PME","LSYS-B4","LSYS-H4","LSYS-S4","LSYS-WF4"],"PFD4":["2PW-EB","DSA","PFER"],"FMDS4":["FMDA001","FMDA002","FMDA001.AZ","FMDA002.AZ"],"FMW4":["FMDA001","FMDA002.AZ","FMDA001.AZ","FMDA002"],"EAQL0":["ILD-APA-02"],"EARL0":["ILD-APA-02"],"AIDP4":["AM-X-PKG","AM-X-APA-E","AM-X-PKG-WS","AM-X-APA","AM-X-PKG-AZ","AM-X-APA-AZ"],"AIEP4":["AM-X-PKG"],"KLU4":["DSA","BALL2","2PW-EB"],"KDU4":["DSA","BALL1","2PW-EB","BALLPLX-KD"],"KMU4":["DSA","KME-EB","AWKSU","2PW-EB","KMBE","2PSW-EB","KME-SW"],"LSD4":["DSA","2PS-EB"],"LXW4":["BALL2"],"LXD4":["DSA","2PS-EB","2DS-EB"],"LMD4":["DSA","2PS-EB","AWM001-SI"],"LMW4":["BALL1","AWM001-SI"],"KEU4":["DSA","KEE-EB","2PW-EB"],"KXU4":["KXE-EB","AWX001","DSA","2PW-EB"],"KSU4":["KME-EB","AWKSU","2PW-EB","KMBE","DSA","KSE-MB-WS","KSE-MB-SI"],"KSC4":["DSA","AWKSU","2PW-EB","KMBE","KS4FIRE","KS4HELP","KME-EB"],"KMB4":["KME-EB","BALL1","KMBE","BALLPLX-KMB"],"WGD4":["WKO","1PV-EB","DSA-Y4M-APA","DSA-Y4M"],"WGW4":["WKO"],"WKW4":["WKO"],"WKD4":["WKO","1PV-EB","DSA-Y4M","DSA-Y4M-APA"],"WXD4":["WKO","1PV-EB"],"KMMU4":["DSA","KME-EB","KMBE","AWKSU","2PW-EB"],"ASMU4":["DSA","2PS-EB"],"WXW4":["WKO"],"PXDK4":["PXD-AW","PXD-PIKTOSETSONDER.01"],"PXD0":["PXD-AW","PXD-PIKTOSETSONDER.01"],"PXD5":["PXD-AW","PXD-PIKTOSETSONDER.01"],"PXD4":["PXD-AW","PXD-PIKTOSETSONDER.01"],"PMWK4":["PME"],"KSH4":["DSA","KME-EB","AWKSU","2PW-EB","KMBE"],"KWIWK4":["BKW"],"KWIDK4":["BKW"],"KAMK4":["AWX001","2PW-EB"],"PXWK4":["PXD-PIKTOSETSONDER.01"],"PXW0":["PXD-PIKTOSETSONDER.01"],"PXW5":["PXD-PIKTOSETSONDER.01"],"PXW4":["PXD-PIKTOSETSONDER.01"],"XPIU4":["X-KE001","X-MB001","X-KO001","X4N"],"XPMU4":["X-KO001","X-MB001","X-KE001","X4N"],"XPXU4":["X-KO001","X-MB001","X-KE001","X4N"],"KSHC4":["DSA","KME-EB","AWKSU","2PW-EB","KMBE"],"KMMU5":["DSA","KME-EB","KMBE","AWKSU","2PW-EB"],"AIDP0":["AM-X-PKG"]};
+
+const ACC_DETAILS = {"KME-EB":{"cat":"1 Montageart","d":"Einbaurahmen Deckeneinbau Einzelbatterie","ef":"Montageart","fa":"Weiss"},"AWKSU":{"cat":"1 Montageart","d":"Wandausleger/Flagge fuer KSU, KMU, KMUK","ef":"Montageart","fa":""},"2PW-EB":{"cat":"1 Montageart","d":"Starres Pendel 0,5m","ef":"Montageart","fa":"Weiss"},"KMBE":{"cat":"1 Montageart","d":"Betoneinbaurahmen fuer KME","ef":"Montageart","fa":""},"DSA":{"cat":"1 Montageart","d":"Seilaufhaengung in versch. Ausfuehrungen (1/3/5m)","ef":"Montageart","fa":""},"KSE-MB-WS":{"cat":"1 Montageart","d":"Einbaurahmen Deckeneinbau","ef":"Montageart","fa":"Weiss"},"KSE-MB-SI":{"cat":"1 Montageart","d":"Einbaurahmen Deckeneinbau","ef":"Montageart","fa":"Silber"},"KXE-EB":{"cat":"1 Montageart","d":"Einbaurahmen Deckeneinbau Einzelbatterie","ef":"Montageart","fa":"Weiss"},"AWX001":{"cat":"1 Montageart","d":"Wandausleger/Flagge fuer KB, KWI, KWX, LXD","ef":"Montageart","fa":"Weiss"},"KEE-EB":{"cat":"1 Montageart","d":"Einbaurahmen Deckeneinbau Einzelbatterie","ef":"Montageart","fa":"Weiss"},"BALL2":{"cat":"2 Schutzart","d":"Ballschutzgehaeuse Metall","ef":"IK-Stossfestigkeit","fa":""},"BALL1":{"cat":"2 Schutzart","d":"Ballschutzgehaeuse Metall","ef":"IK-Stossfestigkeit","fa":""},"BALLPLX-KD":{"cat":"2 Schutzart","d":"Plexiglas-Ballwurfschutz","ef":"IK-Stossfestigkeit","fa":""},"KBK":{"cat":"4 Leuchtentyp","d":"Scheibe 14m Erkennungsreichweite","ef":"Leuchtentyp","fa":""},"KBM":{"cat":"4 Leuchtentyp","d":"Scheibe 22m Erkennungsreichweite","ef":"Leuchtentyp","fa":""},"KBG":{"cat":"4 Leuchtentyp","d":"Scheibe 30m Erkennungsreichweite","ef":"Leuchtentyp","fa":""},"BALLPLX-KBE":{"cat":"2 Schutzart","d":"Plexiglas-Ballwurfschutz","ef":"IK-Stossfestigkeit","fa":""},"BALLPLX-KBS":{"cat":"2 Schutzart","d":"Plexiglas-Ballwurfschutz","ef":"IK-Stossfestigkeit","fa":""},"BALLPLX-KBU":{"cat":"2 Schutzart","d":"Plexiglas-Ballwurfschutz","ef":"IK-Stossfestigkeit","fa":""},"KBBE":{"cat":"1 Montageart","d":"Betoneinbaurahmen fuer KBU","ef":"Montageart","fa":""},"AWM001-SI":{"cat":"1 Montageart","d":"Wandausleger/Flagge fuer ASMU","ef":"Montageart","fa":"Silber"},"2PS-EB":{"cat":"1 Montageart","d":"Starres Pendel 0,5m","ef":"Montageart","fa":"Silber"},"2DS-EB":{"cat":"1 Montageart","d":"Starres Pendel mit geschlossener Baldachin 0,5m","ef":"Montageart","fa":"Silber"},"PFER":{"cat":"1 Montageart","d":"Einbaurahmen Decken- und Wandeinbau","ef":"Montageart","fa":"Weiss"},"WKO":{"cat":"1 Montageart","d":"Kettenoesen fuer Wuerfel (4 Stk)","ef":"Montageart","fa":""},"1PV-EB":{"cat":"1 Montageart","d":"Starres Pendel (einzeln) fuer Wuerfel oder IL","ef":"Montageart","fa":""},"DSA-Y4M":{"cat":"1 Montageart","d":"Seilaufhaengung fuer Wuerfel","ef":"Montageart","fa":""},"DSA-Y4M-APA":{"cat":"1 Montageart","d":"Seilaufhaengung fuer Wuerfel mit Baldachin","ef":"Montageart","fa":""},"U6BE":{"cat":"1 Montageart","d":"Betoneinbaurahmen fuer U6E","ef":"Montageart","fa":""},"U8BE":{"cat":"1 Montageart","d":"Betoneinbaurahmen fuer U8E","ef":"Montageart","fa":""},"BALLPLX-KMB":{"cat":"2 Schutzart","d":"Plexiglas-Ballwurfschutz","ef":"IK-Stossfestigkeit","fa":""},"KS4FIRE":{"cat":"4 Leuchtentyp","d":"Piktogram fuer Feuerloescher","ef":"Leuchtentyp","fa":""},"KS4HELP":{"cat":"4 Leuchtentyp","d":"Piktogram fuer Erste Hilfe","ef":"Leuchtentyp","fa":""},"KME":{"cat":"1 Montageart","d":"Einbaurahmen Deckeneinbau","ef":"Montageart","fa":"Weiss"},"BALLPLX-AM":{"cat":"2 Schutzart","d":"Plexiglas-Ballwurfschutz","ef":"IK-Stossfestigkeit","fa":""},"AM-X-APA":{"cat":"1 Montageart","d":"Aufbauadapter seitliche Kabelfuehrung","ef":"Montageart","fa":"Weiss"},"BALLPLX-AX":{"cat":"2 Schutzart","d":"Plexiglas-Ballwurfschutz","ef":"IK-Stossfestigkeit","fa":""},"AM-X-PKG":{"cat":"1 Montageart","d":"Kugelgelenk fuer Wandschraege","ef":"Montageart","fa":""},"FMDA001":{"cat":"1 Montageart","d":"Deckenmontageadapter 1-seitig (1 Leuchte)","ef":"Montageart","fa":"Weiss"},"FMDA002":{"cat":"1 Montageart","d":"Deckenmontageadapter 2-seitig (2 Leuchten)","ef":"Montageart","fa":"Weiss"},"FMDA001.AZ":{"cat":"1 Montageart","d":"Deckenmontageadapter 1-seitig (1 Leuchte)","ef":"Montageart","fa":"Anthrazit"},"FMDA002.AZ":{"cat":"1 Montageart","d":"Deckenmontageadapter 2-seitig (2 Leuchten)","ef":"Montageart","fa":"Anthrazit"},"X-KE001":{"cat":"6 EX-Pflichtzubehoer","d":"Kabelverschraubung EX","ef":"Keine Eigenschaftsaenderung","fa":""},"X-KO001":{"cat":"1 Montageart","d":"Kettenoese fuer EX-Leuchte","ef":"Montageart","fa":""},"X-MB001":{"cat":"1 Montageart","d":"Montagebuegel Wand-/Deckenmontage EX","ef":"Montageart","fa":""},"X4N":{"cat":"4 Leuchtentyp","d":"Piktogramset EX Sicherheits- zu Rettungszeichenleuchte","ef":"Leuchtentyp","fa":""},"AM-X-APA-AZ":{"cat":"1 Montageart","d":"Aufbauadapter seitliche Kabelfuehrung","ef":"Montageart","fa":"Anthrazit"},"AM-X-APA-E":{"cat":"1 Montageart","d":"Aufbauadapter seitliche Kabelfuehrung","ef":"Montageart","fa":"Edelstahl"},"BKW":{"cat":"2 Schutzart","d":"Ballschutzgehaeuse Metall","ef":"IK-Stossfestigkeit","fa":""},"LSYS-H4":{"cat":"3 Abstrahlcharakteristik","d":"H-Linse asymmetrisch","ef":"Abstrahlcharakteristik","fa":""},"LSYS-S4":{"cat":"3 Abstrahlcharakteristik","d":"Spot-Linse symmetrisch (4 Stk)","ef":"Abstrahlcharakteristik","fa":""},"LSYS-B4":{"cat":"3 Abstrahlcharakteristik","d":"Beam-Linse","ef":"Abstrahlcharakteristik","fa":""},"2PSW-EB":{"cat":"1 Montageart","d":"Starres Pendel 0,5m","ef":"Montageart","fa":"Schwarz"},"KME-SW":{"cat":"1 Montageart","d":"Einbaurahmen Deckeneinbau","ef":"Montageart","fa":"Schwarz"},"ILD-APA-02":{"cat":"1 Montageart","d":"Aufbauadapter seitliche Kabelfuehrung","ef":"Montageart","fa":"Weiss"},"IL-IK10-AZ":{"cat":"2 Schutzart","d":"Aufbaugehaeuse IK10 fuer IL","ef":"IK-Stossfestigkeit","fa":"Anthrazit"},"IL-IK10-W":{"cat":"2 Schutzart","d":"Aufbaugehaeuse IK10 fuer IL","ef":"IK-Stossfestigkeit","fa":"Weiss"},"ILB1":{"cat":"5 Formaenderung","d":"Rahmen rund zu eckig","ef":"Gehaeuseform","fa":"Weiss"},"ILB2":{"cat":"5 Formaenderung","d":"Rahmen rund zu eckig","ef":"Gehaeuseform","fa":"Weiss"},"BALLPLX-ILD":{"cat":"2 Schutzart","d":"Plexiglas-Ballwurfschutz","ef":"IK-Stossfestigkeit","fa":""},"IL-IP65-K":{"cat":"2 Schutzart","d":"IP65-Kit fuer IL","ef":"IP-Schutzart","fa":"Weiss"},"BALLPLX-ILE":{"cat":"2 Schutzart","d":"Plexiglas-Ballwurfschutz","ef":"IK-Stossfestigkeit","fa":""},"AM-X-PKG-AZ":{"cat":"1 Montageart","d":"Kugelgelenk fuer Wandschraege","ef":"Montageart","fa":"Anthrazit"},"PME":{"cat":"1 Montageart","d":"Einbaurahmen Decken- und Wandeinbau","ef":"Montageart","fa":"Weiss"},"LSYS-WF4":{"cat":"3 Abstrahlcharakteristik","d":"Wandlinse asymmetrisch im Gang","ef":"Abstrahlcharakteristik","fa":""},"AM-X-PKG-WS":{"cat":"1 Montageart","d":"Kugelgelenk fuer Wandschraege","ef":"Montageart","fa":"Weiss"},"ILD-APA-02-SW":{"cat":"1 Montageart","d":"Aufbauadapter seitliche Kabelfuehrung","ef":"Montageart","fa":"Schwarz"},"ILDE-SW":{"cat":"1 Montageart","d":"Einbaurahmen Deckeneinbau","ef":"Montageart","fa":"Schwarz"},"PXD-AW":{"cat":"1 Montageart","d":"Wandmontage fuer PXD","ef":"Montageart","fa":""},"PXD-PIKTOSETSONDER.01":{"cat":"4 Leuchtentyp","d":"Sonderpiktogramm","ef":"Leuchtentyp","fa":""}};
+
+const CAT_LABELS = {
+  de: {
+    '1 Montageart': 'Montage',
+    '2 Schutzart': 'Schutzgehäuse',
+    '3 Abstrahlcharakteristik': 'Abstrahlcharakteristik',
+    '4 Leuchtentyp': 'Leuchtentyp / Piktogramm',
+    '5 Formaenderung': 'Formänderung',
+    '6 EX-Pflichtzubehoer': 'EX Pflichtzubehör',
+  },
+  en: {
+    '1 Montageart': 'Mounting',
+    '2 Schutzart': 'Protection / Housing',
+    '3 Abstrahlcharakteristik': 'Beam Optics',
+    '4 Leuchtentyp': 'Luminaire Type / Pictogram',
+    '5 Formaenderung': 'Shape Modification',
+    '6 EX-Pflichtzubehoer': 'EX Mandatory Accessories',
+  },
+};
+
+// Category sort order: EX-Pflicht first (mandatory safety), then by number
+const CAT_SORT_ORDER = {
+  '6 EX-Pflichtzubehoer': 0,
+  '1 Montageart': 1,
+  '2 Schutzart': 2,
+  '3 Abstrahlcharakteristik': 3,
+  '4 Leuchtentyp': 4,
+  '5 Formaenderung': 5,
+};
+
+function catLabel(cat) {
+  return (CAT_LABELS[currentLang] && CAT_LABELS[currentLang][cat]) || (CAT_LABELS.de && CAT_LABELS.de[cat]) || cat;
+}
+
+// ================================================================
+// STATE
+// ================================================================
+const state = {
+  mode: 'api',
+  apiKey: '',
+  file: null,
+  currentStep: 'config',
+  processing: {
+    phase: null, blobUrl: null, processId: null,
+    startTime: null, timerInterval: null, abortController: null, error: null,
+  },
+  pipelineResponse: null,
+  results: null,
+  selections: {},
+  accessorySelections: {},
+};
+
+// ================================================================
+// HELPERS
+// ================================================================
+function $(id) { return document.getElementById(id); }
+function qsa(sel) { return document.querySelectorAll(sel); }
+
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+  return (b / 1048576).toFixed(1) + ' MB';
+}
+
+function formatElapsed(ms) {
+  const s = Math.floor(ms / 1000);
+  return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+}
+
+function shortField(name) { const p = name.split(':'); return p[p.length - 1]; }
+
+function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+
+function seriesFromArticle(article) {
+  if (!article) return null;
+  const upper = String(article).toUpperCase();
+  let best = null;
+  for (const s of Object.keys(SERIES_MAP)) {
+    // Try exact prefix first (e.g. KSU0 matches KSU003-EB100)
+    if (upper.startsWith(s) && (!best || s.length > best.length)) best = s;
+    // Also try without trailing digit (e.g. XGIU from XGIU0 matches XGIU411CPS)
+    const stem = s.replace(/\d+$/, '');
+    if (stem.length >= 2 && upper.startsWith(stem) && (!best || s.length > (best || '').length)) best = s;
+  }
+  return best;
+}
+
+function buildFeedbackMailto(itemKey, item) {
+  const p93name = (state.file?.name || 'unbekannt').replace(/\.p93$/i, '');
+  const proposals = item.proposals || [];
+  const qf = item.query_fields || [];
+  const excerpt = (item.original_excerpt || '\u2014').slice(0, 200);
+  const qFieldsText = qf.filter(f => f.value != null)
+    .map(f => '  ' + shortField(f.field) + ': ' + f.value).join('\n');
+  const topProps = proposals.slice(0, 3)
+    .map((p, i) => '  #' + (p.rank || i + 1) + ': ' + (p.display_article || p.base_article || '?') + ' (Score: ' + (p.score || 0).toFixed(3) + ')').join('\n');
+  const subject = 'RP Matcher Feedback \u2013 Position ' + itemKey + ' \u2013 ' + p93name;
+  const body = 'Hallo Michael,\n\nIch habe Feedback zu folgender Anfrage-Position:\n\nDatei:       ' + p93name + '\nPosition:    ' + itemKey + '\n\nP93 Original-Text:\n' + excerpt + '\n\nExtrahierte Felder:\n' + (qFieldsText || '  (keine)') + '\n\nKI-Vorschl\u00e4ge:\n' + (topProps || '  (keine)') + '\n\nMein Hinweis / Problem:\n[Bitte hier beschreiben]\n\nMit freundlichen Gr\u00fc\u00dfen';
+  return 'mailto:michael.auth@rp-group.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+
+function renderZubehoerContent(itemKey, proposals, selectedProposalIdx) {
+  const selSet = state.accessorySelections[itemKey] || new Set();
+  let series = null, articleName = null, pairedKeys = new Set();
+  if (typeof selectedProposalIdx === 'number' && proposals[selectedProposalIdx]) {
+    const p = proposals[selectedProposalIdx];
+    articleName = p.display_article || p.base_article || null;
+    series = seriesFromArticle(articleName);
+    // Extract accessory_keys from product_features — these are known pairings
+    const ak = p.product_features?.accessory_keys;
+    if (ak) {
+      (typeof ak === 'string' ? ak.split('|') : Array.isArray(ak) ? ak : []).forEach(k => { if (k) pairedKeys.add(k.trim()); });
+    }
+  }
+  let html = '<div class="zubehoer-header"><span class="zubehoer-title">' + t('zubehoer.title') + '</span>';
+  if (series && articleName) html += '<span class="zubehoer-subtitle">' + escapeHtml(articleName) + ' · Reihe ' + escapeHtml(series) + '</span>';
+  html += '</div>';
+  if (!series || !SERIES_MAP[series]) {
+    html += '<div class="zubehoer-empty">' + (typeof selectedProposalIdx === 'number' ? t('zubehoer.none') : t('zubehoer.select_first')) + '</div>';
+    return html;
+  }
+  const accKeys = SERIES_MAP[series];
+  const byCategory = {};
+  accKeys.forEach(key => {
+    const det = ACC_DETAILS[key]; if (!det) return;
+    const cat = det.cat || 'Sonstige';
+    if (!byCategory[cat]) byCategory[cat] = [];
+    byCategory[cat].push(key);
+  });
+  // Sort categories: EX-Pflicht first (mandatory safety), then by defined order
+  const sortedCats = Object.entries(byCategory).sort(([a], [b]) => {
+    return (CAT_SORT_ORDER[a] ?? 99) - (CAT_SORT_ORDER[b] ?? 99);
+  });
+  const ek = itemKey.replace(/'/g, "\\'");
+  sortedCats.forEach(([cat, keys]) => {
+    // Within each category: paired/known accessories first, then rest
+    const sorted = [...keys].sort((a, b) => {
+      const aPaired = pairedKeys.has(a) ? 0 : 1;
+      const bPaired = pairedKeys.has(b) ? 0 : 1;
+      return aPaired - bPaired;
+    });
+    const isEX = cat === '6 EX-Pflichtzubehoer';
+    const catClass = isEX ? ' zubehoer-cat-mandatory' : '';
+    html += '<div class="zubehoer-cat-block' + catClass + '"><div class="zubehoer-cat-label">' + escapeHtml(catLabel(cat)) + (isEX ? ' ⚠' : '') + '</div><div class="zubehoer-items">';
+    sorted.forEach(key => {
+      const det = ACC_DETAILS[key] || {};
+      const isSel = selSet.has(key);
+      const isPaired = pairedKeys.has(key);
+      const ek2 = key.replace(/'/g, "\\'");
+      html += '<div class="zc-wrapper' + (isSel ? ' zc-wrapper-selected' : '') + '">';
+      html += '<button class="zubehoer-chip' + (isSel ? ' zc-selected' : '') + (isPaired ? ' zc-paired' : '') + '" onclick="toggleAccessory(\'' + ek + '\',\'' + ek2 + '\')" title="' + escapeHtml(det.d || key) + (isPaired ? ' — ' + t('zubehoer.paired') : '') + '">'
+        + '<span class="zc-check">' + (isSel ? '✓' : '') + '</span>'
+        + (isPaired ? '<span class="zc-paired-badge">★</span>' : '')
+        + '<span class="zc-key">' + escapeHtml(key) + '</span>'
+        + '<span class="zc-sep">·</span>'
+        + '<span class="zc-desc">' + escapeHtml(det.d || '') + '</span>'
+        + (det.fa ? '<span class="zc-fa">' + escapeHtml(det.fa) + '</span>' : '')
+        + '</button>';
+      // Show detail panel when selected
+      if (isSel) {
+        html += '<div class="zc-detail">';
+        html += '<div class="zc-detail-row"><span class="zc-detail-label">Key:</span><span class="zc-detail-val">' + escapeHtml(key) + '</span></div>';
+        if (det.d) html += '<div class="zc-detail-row"><span class="zc-detail-label">' + (currentLang === 'de' ? 'Beschreibung' : 'Description') + ':</span><span class="zc-detail-val">' + escapeHtml(det.d) + '</span></div>';
+        if (det.cat) html += '<div class="zc-detail-row"><span class="zc-detail-label">' + (currentLang === 'de' ? 'Kategorie' : 'Category') + ':</span><span class="zc-detail-val">' + escapeHtml(catLabel(det.cat)) + '</span></div>';
+        if (det.fa) html += '<div class="zc-detail-row"><span class="zc-detail-label">' + (currentLang === 'de' ? 'Farbe' : 'Color') + ':</span><span class="zc-detail-val">' + escapeHtml(det.fa) + '</span></div>';
+        if (det.me) html += '<div class="zc-detail-row"><span class="zc-detail-label">' + (currentLang === 'de' ? 'Montageeffekt' : 'Mounting Effect') + ':</span><span class="zc-detail-val">' + escapeHtml(det.me) + '</span></div>';
+        if (isPaired) html += '<div class="zc-detail-row"><span class="zc-detail-label">Status:</span><span class="zc-detail-val" style="color:#15803D">★ ' + t('zubehoer.paired') + '</span></div>';
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  return html;
+}
+
+function toggleAccessory(itemKey, accKey) {
+  if (!state.accessorySelections[itemKey]) state.accessorySelections[itemKey] = new Set();
+  const set = state.accessorySelections[itemKey];
+  if (set.has(accKey)) set.delete(accKey); else set.add(accKey);
+  const panel = document.getElementById('zubehoer-' + itemKey);
+  if (panel) {
+    const item = (state.results?.items || []).find(i => (i.positionsnummer || i.item_id) === itemKey);
+    if (item) panel.innerHTML = renderZubehoerContent(itemKey, item.proposals || [], state.selections[itemKey]);
+  }
+}
+
+// ================================================================
+// NAVIGATION
+// ================================================================
+const STEPS = ['config', 'processing', 'results', 'export'];
+
+function goToStep(step) {
+  state.currentStep = step;
+  qsa('.section').forEach(s => s.classList.remove('active'));
+  $(`section-${step === 'export' ? 'results' : step}`).classList.add('active');
+  qsa('.step-nav-item').forEach(el => {
+    const idx = STEPS.indexOf(el.dataset.step);
+    const curIdx = STEPS.indexOf(step);
+    el.classList.remove('active', 'completed');
+    if (idx === curIdx) el.classList.add('active');
+    else if (idx < curIdx) el.classList.add('completed');
+  });
+  const curIdx = STEPS.indexOf(step);
+  $('line-1-2').classList.toggle('filled', curIdx > 0);
+  $('line-2-3').classList.toggle('filled', curIdx > 1);
+  $('line-3-4').classList.toggle('filled', curIdx > 2);
+}
+
+// ================================================================
+// MODE TOGGLE
+// ================================================================
+function setMode(mode) {
+  state.mode = mode;
+  qsa('.mode-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  $('mode-api').classList.toggle('hidden', mode !== 'api');
+  $('mode-json').classList.toggle('hidden', mode !== 'json');
+}
+
+// ================================================================
+// API KEY
+// ================================================================
+function toggleKeyVis() {
+  const inp = $('api-key-input');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+$('api-key-input').addEventListener('input', function() {
+  state.apiKey = this.value.trim();
+  updateStartBtn();
+  updateSessionDot();
+});
+
+function updateSessionDot() {
+  const active = state.apiKey.length > 10;
+  $('session-dot').classList.toggle('active', active);
+  $('session-label').textContent = active ? t('session.connected') : t('session.none');
+}
+
+// ================================================================
+// FILE UPLOAD / DROP
+// ================================================================
+const dropzone = $('dropzone');
+const fileInput = $('file-input');
+
+['dragenter', 'dragover'].forEach(evt =>
+  dropzone.addEventListener(evt, e => { e.preventDefault(); dropzone.classList.add('dragover'); })
+);
+['dragleave', 'drop'].forEach(evt =>
+  dropzone.addEventListener(evt, e => { e.preventDefault(); dropzone.classList.remove('dragover'); })
+);
+dropzone.addEventListener('drop', e => { if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+function handleFile(f) {
+  state.file = f;
+  $('file-name').textContent = f.name;
+  $('file-size').textContent = formatBytes(f.size);
+  $('dropzone-empty').classList.add('hidden');
+  $('dropzone-filled').classList.remove('hidden');
+  dropzone.classList.add('has-file');
+  updateStartBtn();
+}
+
+function removeFile() {
+  state.file = null;
+  fileInput.value = '';
+  $('dropzone-empty').classList.remove('hidden');
+  $('dropzone-filled').classList.add('hidden');
+  dropzone.classList.remove('has-file');
+  updateStartBtn();
+}
+
+function updateStartBtn() {
+  $('btn-start').disabled = !(state.apiKey.length > 5 && state.file);
+}
+
+// ================================================================
+// API FUNCTIONS
+// ================================================================
+function apiHeaders(contentType) {
+  const h = { 'Authorization': `Bearer ${state.apiKey}`, 'accept': 'application/json' };
+  if (contentType) h['Content-Type'] = contentType;
+  return h;
+}
+
+async function uploadFile(file, signal) {
+  const url = `${API_BASE}/storage/upload/file?storageType=BLOB&spaceId=${SPACE_ID}`;
+  const form = new FormData();
+  form.append('file', file, file.name);
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${state.apiKey}`, 'accept': 'application/json, text/plain, */*' },
+    body: form, signal,
+  });
+  if (!resp.ok) throw new Error(`${t('upload_failed')}: ${resp.status} ${resp.statusText}`);
+  return (await resp.text()).trim();
+}
+
+async function startProcess(blobUrl, signal) {
+  const url = `${API_BASE}/v1/m2m/processes`;
+  const payload = {
+    processTemplate: PROCESS_TEMPLATE_ID, spaceId: SPACE_ID, private: false,
+    inputs: [
+      { name: 'ANFRAGE', value: blobUrl },
+      { name: 'TOP_K', value: $('setting-topk').value },
+      { name: 'MATERIAL_FILTER', value: $('setting-material').value },
+      { name: 'USE_VIRTUAL_ITEMS', value: $('setting-virtual').value },
+      { name: 'SYSTEM_SELECTION', value: $('setting-system').value },
+    ],
+  };
+  const resp = await fetch(url, {
+    method: 'POST', headers: apiHeaders('application/json'),
+    body: JSON.stringify(payload), signal,
+  });
+  if (!resp.ok) throw new Error(`${t('process_failed')}: ${resp.status} ${resp.statusText}`);
+  return (await resp.json()).id;
+}
+
+async function pollOutputs(processId, signal) {
+  const url = `${API_BASE}/processes/${processId}/tasks/outputs`;
+  const resp = await fetch(url, { headers: apiHeaders(), signal });
+  if (!resp.ok) throw new Error(`${t('poll_failed')}: ${resp.status} ${resp.statusText}`);
+  return resp.json();
+}
+
+// ================================================================
+// PIPELINE ORCHESTRATION
+// ================================================================
+function setPipelineNode(id, status) {
+  const node = $(id);
+  node.classList.remove('active', 'done', 'error');
+  if (status) node.classList.add(status);
+}
+
+function setConnector(id, status) {
+  const conn = $(id);
+  conn.classList.remove('filled', 'active');
+  if (status) conn.classList.add(status);
+}
+
+function startTimer() {
+  state.processing.startTime = Date.now();
+  state.processing.timerInterval = setInterval(() => {
+    $('processing-elapsed').textContent = formatElapsed(Date.now() - state.processing.startTime);
+  }, 250);
+}
+
+function stopTimer() {
+  if (state.processing.timerInterval) { clearInterval(state.processing.timerInterval); state.processing.timerInterval = null; }
+}
+
+// ================================================================
+// PHRASE ROTATION — animated status during polling
+// ================================================================
+const POLL_PHRASES = {
+  de: [
+    'KI analysiert Anfrage \u2026',
+    'Produktmerkmale werden aus P93 extrahiert \u2026',
+    'Verkaufstext wird verarbeitet \u2026',
+    'Positionsnummern werden identifiziert \u2026',
+    'Montage-Anforderungen werden erkannt \u2026',
+    'Schutzart und IK-Klasse werden bestimmt \u2026',
+    'Versorgungstyp wird klassifiziert \u2026',
+    'Abmessungen werden extrahiert \u2026',
+    'Monitoring-System wird zugeordnet \u2026',
+    'Katalog mit 2.252 Produkten wird durchsucht \u2026',
+    'Vorfilterung nach System und Material \u2026',
+    'Feature-Vektoren werden berechnet \u2026',
+    'XGBoost-Modell bewertet Kandidaten \u2026',
+    'Ensemble-Routing E9/E10 aktiv \u2026',
+    'Varianten werden verglichen \u2026',
+    'Top-K wird berechnet \u2026',
+    'Zubeh\u00f6r-Kompatibilit\u00e4t wird gepr\u00fcft \u2026',
+    'Konfidenz wird bewertet \u2026',
+    'Vergleichsmatrix wird erstellt \u2026',
+    'Ergebnisse werden aufbereitet \u2026',
+  ],
+  en: [
+    'AI is analyzing inquiry \u2026',
+    'Extracting product features from P93 \u2026',
+    'Processing sales text descriptions \u2026',
+    'Identifying position numbers \u2026',
+    'Detecting mounting requirements \u2026',
+    'Determining IP rating and IK class \u2026',
+    'Classifying supply type \u2026',
+    'Extracting housing dimensions \u2026',
+    'Mapping monitoring system \u2026',
+    'Searching catalog of 2,252 products \u2026',
+    'Pre-filtering by system and material \u2026',
+    'Computing feature vectors \u2026',
+    'XGBoost model scoring candidates \u2026',
+    'Ensemble routing E9/E10 active \u2026',
+    'Comparing variants \u2026',
+    'Computing Top-K ranking \u2026',
+    'Checking accessory compatibility \u2026',
+    'Evaluating confidence scores \u2026',
+    'Building comparison matrix \u2026',
+    'Preparing results \u2026',
+  ],
+};
+let phraseInterval = null;
+let phraseIdx = 0;
+
+function startPhraseRotation() {
+  phraseIdx = 0;
+  stopPhraseRotation();
+  const update = () => {
+    const phrases = POLL_PHRASES[currentLang] || POLL_PHRASES.de;
+    $('processing-status-text').textContent = phrases[phraseIdx % phrases.length];
+    phraseIdx++;
+  };
+  update();
+  phraseInterval = setInterval(update, 5000);
+}
+
+function stopPhraseRotation() {
+  if (phraseInterval) { clearInterval(phraseInterval); phraseInterval = null; }
+}
+
+function addTaskOutput(name, text, status) {
+  const container = $('task-outputs');
+  const statusColor = status === 'done' ? 'var(--green-400)' : status === 'error' ? 'var(--red-400)' : 'var(--text-3)';
+  const truncated = text.length > 2000 ? text.slice(0, 2000) + `\n... ${t('truncated')}` : text;
+  const div = document.createElement('div');
+  div.className = 'task-output-item';
+  div.innerHTML = `
+    <div class="task-output-header" onclick="this.nextElementSibling.classList.toggle('open')">
+      <span style="color:${statusColor};font-size:0.9rem">\u25CF</span>
+      <span class="task-name">${escapeHtml(name)}</span>
+      <span class="label">${text.length > 0 ? formatBytes(text.length) : '\u2014'}</span>
+    </div>
+    <div class="task-output-body"><pre>${escapeHtml(truncated)}</pre></div>`;
+  container.appendChild(div);
+}
+
+async function startPipeline() {
+  state.processing.error = null;
+  state.processing.blobUrl = null;
+  state.processing.processId = null;
+  state.processing.abortController = new AbortController();
+  const signal = state.processing.abortController.signal;
+
+  goToStep('processing');
+  $('task-outputs').innerHTML = '';
+  $('btn-cancel').classList.remove('hidden');
+  ['pipe-upload', 'pipe-start', 'pipe-extract', 'pipe-rank'].forEach(id => setPipelineNode(id, null));
+  ['conn-1', 'conn-2', 'conn-3'].forEach(id => setConnector(id, null));
+  startTimer();
+
+  try {
+    // STEP 1: Upload
+    setPipelineNode('pipe-upload', 'active');
+    $('processing-status-text').textContent = `${t('processing.uploading')}: ${state.file.name}`;
+    $('processing-sub-text').textContent = t('processing.wait');
+    const blobUrl = await uploadFile(state.file, signal);
+    state.processing.blobUrl = blobUrl;
+    setPipelineNode('pipe-upload', 'done');
+    setConnector('conn-1', 'filled');
+    addTaskOutput('Upload', `Blob URL: ${blobUrl}`, 'done');
+
+    // STEP 2: Start process
+    setPipelineNode('pipe-start', 'active');
+    $('processing-status-text').textContent = t('processing.starting');
+    $('processing-sub-text').textContent = `Template ${PROCESS_TEMPLATE_ID}`;
+    const processId = await startProcess(blobUrl, signal);
+    state.processing.processId = processId;
+    setPipelineNode('pipe-start', 'done');
+    setConnector('conn-2', 'active');
+    addTaskOutput('Process Start', `Process ID: ${processId}`, 'done');
+
+    // STEP 3-4: Poll
+    setPipelineNode('pipe-extract', 'active');
+    $('processing-sub-text').textContent = `Process ${processId}`;
+    startPhraseRotation();
+    const deadline = Date.now() + MAX_POLL_TIME;
+    let lastTaskCount = 0;
+
+    while (Date.now() < deadline) {
+      if (signal.aborted) throw new Error('Aborted');
+      await new Promise(r => setTimeout(r, POLL_INTERVAL));
+      const data = await pollOutputs(processId, signal);
+      const tasks = data.outputs || [];
+      const failed = !!data.failed;
+      const done = data.totalExecutionTime != null;
+
+      while (lastTaskCount < tasks.length) {
+        const tk = tasks[lastTaskCount];
+        addTaskOutput(tk.taskName || tk.identifier || '?', tk.outputText || '', 'done');
+        lastTaskCount++;
+      }
+
+      if (tasks.length >= 2) {
+        setPipelineNode('pipe-extract', 'done');
+        setConnector('conn-2', 'filled');
+        setConnector('conn-3', 'active');
+        setPipelineNode('pipe-rank', 'active');
+      }
+
+      if (failed) throw new Error(t('process_error'));
+
+      if (done) {
+        state.pipelineResponse = data;
+        setPipelineNode('pipe-extract', 'done');
+        setPipelineNode('pipe-rank', 'done');
+        setConnector('conn-2', 'filled');
+        setConnector('conn-3', 'filled');
+        stopPhraseRotation();
+        $('processing-status-text').textContent = t('processing.done');
+        $('processing-sub-text').textContent = `${tasks.length} ${t('processing.tasks')} \u2014 ${(data.totalExecutionTime / 1000).toFixed(1)}s ${t('processing.total_time')}`;
+
+        const lastTask = tasks[tasks.length - 1];
+        state.results = JSON.parse(lastTask?.outputText || '{}');
+        stopTimer();
+        $('btn-cancel').classList.add('hidden');
+        await new Promise(r => setTimeout(r, 1200));
+        renderResults(state.results);
+        goToStep('results');
+        return;
+      }
+      $('processing-sub-text').textContent = `Process ${processId} \u2014 ${tasks.length} ${t('processing.tasks_completed')}`;
+    }
+    throw new Error(`${t('timeout_after')} ${MAX_POLL_TIME / 1000}s`);
+
+  } catch (err) {
+    stopTimer();
+    stopPhraseRotation();
+    $('btn-cancel').classList.add('hidden');
+    if (err.name === 'AbortError') {
+      $('processing-status-text').textContent = t('processing.cancelled');
+      $('processing-sub-text').textContent = '';
+      return;
+    }
+    const isCors = err.message.includes('Failed to fetch') || err.message.includes('NetworkError');
+    if (!state.processing.blobUrl) setPipelineNode('pipe-upload', 'error');
+    else if (!state.processing.processId) setPipelineNode('pipe-start', 'error');
+    else setPipelineNode('pipe-rank', 'error');
+
+    $('processing-status-text').textContent = t('processing.error');
+    const errMsg = isCors ? t('processing.cors') : err.message;
+    $('processing-sub-text').innerHTML = `<span style="color:var(--red-400)">${escapeHtml(errMsg)}</span>`;
+    const backBtn = document.createElement('button');
+    backBtn.className = 'btn btn-secondary mt-16';
+    backBtn.textContent = t('btn.back');
+    backBtn.onclick = () => goToStep('config');
+    $('processing-sub-text').appendChild(document.createElement('br'));
+    $('processing-sub-text').appendChild(backBtn);
+  }
+}
+
+function cancelPipeline() {
+  if (state.processing.abortController) state.processing.abortController.abort();
+  stopTimer();
+  stopPhraseRotation();
+  setTimeout(() => goToStep('config'), 500);
+}
+
+// ================================================================
+// JSON PASTE MODE
+// ================================================================
+function parseJsonInput() {
+  const raw = $('json-paste').value.trim();
+  if (!raw) return;
+  try {
+    const parsed = JSON.parse(raw);
+    let finalJson;
+    if (parsed._meta && parsed.items) { finalJson = parsed; }
+    else if (parsed.outputs && Array.isArray(parsed.outputs)) {
+      const last = parsed.outputs[parsed.outputs.length - 1];
+      finalJson = JSON.parse(last?.outputText || '');
+    } else { throw new Error(t('json_unknown')); }
+    state.results = finalJson;
+    state.pipelineResponse = parsed;
+    renderResults(finalJson);
+    goToStep('results');
+  } catch (err) { alert(`${t('json_error')}: ${err.message}`); }
+}
+
+// ================================================================
+// PROGRESS, SEARCH, EXPAND/COLLAPSE
+// ================================================================
+function updateProgressBar() {
+  if (!state.results) return;
+  const items = state.results.items || [];
+  const total = items.length;
+  let reviewed = 0;
+  items.forEach(item => {
+    const key = item.positionsnummer || item.item_id;
+    if (state.selections[key] !== null && state.selections[key] !== undefined) reviewed++;
+  });
+  const pct = total > 0 ? (reviewed / total * 100) : 0;
+  const lbl = $('progress-label');
+  const fill = $('progress-fill');
+  if (lbl) lbl.textContent = `${reviewed} / ${total} ${t('progress.reviewed')}`;
+  if (fill) fill.style.width = pct + '%';
+}
+
+function filterItems(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.item-card').forEach(card => {
+    if (!q) { card.style.display = ''; return; }
+    const text = card.textContent.toLowerCase();
+    card.style.display = text.includes(q) ? '' : 'none';
+  });
+}
+
+function toggleAllItems(open) {
+  document.querySelectorAll('.item-card').forEach(card => {
+    card.classList.toggle('open', open);
+  });
+}
+
+function renderCandidateStats(stats, route) {
+  if (!stats) return '';
+  const steps = [];
+  if (stats.initial != null) steps.push([t('stats.initial'), stats.initial, false]);
+  if (stats.explicit_system != null) steps.push([t('stats.system'), stats.explicit_system, false]);
+  if (stats.internal_supply != null) steps.push([t('stats.supply'), stats.internal_supply, false]);
+  if (stats.internal_luminaire != null) steps.push([t('stats.luminaire'), stats.internal_luminaire, false]);
+  if (stats.internal_mounting != null) steps.push([t('stats.mounting'), stats.internal_mounting, false]);
+  if (stats.scored != null) steps.push([t('stats.scored'), stats.scored, true]);
+  let html = '<div class="stats-funnel">';
+  steps.forEach(([label, count, isFinal], i) => {
+    if (i > 0) html += '<span class="funnel-arrow">\u2192</span>';
+    html += `<span class="funnel-step${isFinal ? ' funnel-final' : ''}"><span class="funnel-count">${count}</span>${label}</span>`;
+  });
+  if (route) html += `<span class="route-badge">${escapeHtml(route)}</span>`;
+  html += '</div>';
+  return html;
+}
+
+// Reason code → human label + category
+const REASON_LABELS = {
+  'base_product_candidate': null, // suppress, it's always present
+  'monitoring_match': ['Monitoring \u2713', 'match'],
+  'monitoring_exact': ['Monitoring \u2713', 'match'],
+  'supply_match': ['Supply \u2713', 'match'],
+  'supply_exact': ['Supply \u2713', 'match'],
+  'mounting_match': ['Montage \u2713', 'match'],
+  'mounting_universal_compatible': ['Montage kompatibel', 'match'],
+  'ip_match': ['IP \u2713', 'match'],
+  'ip_sufficient_upgrade': ['IP Upgrade', 'upgrade'],
+  'ik_match': ['IK \u2713', 'match'],
+  'luminaire_type_exact': ['Leuchtentyp \u2713', 'match'],
+  'article_exact_match': ['Artikel exakt', 'match'],
+  'article_prefix_match': ['Artikelfamilie', 'match'],
+  'article_family_match': ['Artikelverwandt', 'match'],
+  'ex_rated': ['EX/ATEX', 'match'],
+};
+
+function renderReasonCodes(codes, limit = null) {
+  if (!codes || !codes.length) return '';
+  const tags = codes.map(c => {
+    const info = REASON_LABELS[c];
+    if (info === null) return ''; // suppressed
+    const label = info ? info[0] : c.replace(/_/g, ' ');
+    const cls = info && info[1] === 'match' ? 'rc-match' : info && info[1] === 'upgrade' ? 'rc-upgrade' : '';
+    return `<span class="reason-tag ${cls}">${escapeHtml(label)}</span>`;
+  }).filter(Boolean);
+  const visibleTags = limit != null ? tags.slice(0, limit) : tags;
+  if (limit != null && tags.length > limit) {
+    visibleTags.push(`<span class="reason-tag">+${tags.length - limit}</span>`);
+  }
+  return visibleTags.length ? `<div class="ph-reasons">${visibleTags.join('')}</div>` : '';
+}
+
+function renderProductFeatures(features, id, compact = false) {
+  if (!features || !Object.keys(features).length) return '';
+  const SKIP = new Set(['is_virtual', 'base_article']); // redundant with header
+  const toggleCls = compact ? 'ph-feat-toggle compact' : 'ph-feat-toggle';
+  let html = `<button class="${toggleCls}" onclick="document.getElementById('${id}').classList.toggle('open')">\u25B8 ${t('proposal.features')}</button>`;
+  html += `<div class="ph-features" id="${id}">`;
+  Object.entries(features).forEach(([k, v]) => {
+    if (SKIP.has(k) || v === null || v === undefined) return;
+    html += `<div class="ph-feat-row"><span class="ph-feat-key">${escapeHtml(shortField(k))}</span><span class="ph-feat-val">${escapeHtml(String(v))}</span></div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderExtralogicLogs(logs, itemKey) {
+  if (!logs || !logs.length) return '';
+  const id = 'extralogic-' + itemKey.replace(/[^a-zA-Z0-9]/g, '_');
+  let html = '<div class="extralogic-panel">';
+  html += `<button class="extralogic-toggle" onclick="document.getElementById('${id}').classList.toggle('open')">\u2699 ${t('extralogic.title')} (${logs.length})</button>`;
+  html += `<div class="extralogic-list" id="${id}">`;
+  logs.forEach(log => {
+    html += `<div class="extralogic-entry">${escapeHtml(log)}</div>`;
+  });
+  html += '</div></div>';
+  return html;
+}
+
+// ================================================================
+// RENDER RESULTS
+// ================================================================
+function renderResults(data) {
+  const meta = data._meta || {};
+  const items = data.items || [];
+  state.selections = {};
+  items.forEach(item => { state.selections[item.positionsnummer || item.item_id] = null; });
+
+  // Warnings
+  const warningsEl = $('results-warnings');
+  warningsEl.innerHTML = '';
+  (meta.warnings || []).forEach(w => {
+    warningsEl.innerHTML += `<div class="warning-bar">\u26A0 ${escapeHtml(w)}</div>`;
+  });
+
+  // Meta bar
+  const metaEl = $('results-meta');
+  const chips = [];
+  if (meta.catalog_strategy) chips.push([t('results.strategy'), meta.catalog_strategy]);
+  if (meta.catalog_version) chips.push([t('results.catalog'), meta.catalog_version]);
+  if (meta.top_k) chips.push(['Top-K', meta.top_k]);
+  if (meta.item_count) chips.push([t('results.positions'), meta.item_count]);
+  if (meta.timings_ms?.total) chips.push([t('results.time'), `${meta.timings_ms.total.toFixed(0)} ms`]);
+  if (meta.serving_route) chips.push([t('results.route'), meta.serving_route]);
+  if (meta.route_counts) chips.push(['E9/E10', `${meta.route_counts.e9 || 0} / ${meta.route_counts.e10 || 0}`]);
+  if (meta.run_id) chips.push([t('results.run'), meta.run_id.slice(0, 8) + '\u2026']);
+  metaEl.innerHTML = chips.map(([l, v]) =>
+    `<div class="meta-chip"><span class="meta-label">${escapeHtml(l)}</span><span class="meta-value">${escapeHtml(String(v))}</span></div>`
+  ).join('');
+  if (meta.catalog_mode === 'virtual' || (meta.catalog_strategy || '').includes('virtual')) {
+    metaEl.innerHTML += `<div class="meta-chip" style="background:var(--yellow-bg);border:1px solid rgba(251,191,36,0.3)"><span class="meta-value" style="color:var(--yellow-400)">${t('results.experimental')}</span></div>`;
+  }
+
+  state.accessorySelections = {};
+
+  // Show toolbar
+  const toolbar = $('results-toolbar');
+  if (toolbar) {
+    toolbar.style.display = items.length > 0 ? 'flex' : 'none';
+    $('item-search').placeholder = t('search.placeholder');
+    $('expand-label').textContent = t('toolbar.expand');
+    $('collapse-label').textContent = t('toolbar.collapse');
+  }
+
+  // Items
+  const itemsEl = $('results-items');
+  itemsEl.innerHTML = '';
+  items.forEach((item, idx) => {
+    const key = item.positionsnummer || item.item_id;
+    const proposals = item.proposals || [];
+    const qf = item.query_fields || [];
+    const card = document.createElement('div');
+    card.className = 'item-card' + (idx === 0 ? ' open' : '');
+    card.id = `item-${key}`;
+
+    const mailtoHref = buildFeedbackMailto(key, item);
+    const headerHtml = `
+      <div class="item-card-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="item-rank">${idx + 1}</div>
+        <div class="item-card-title">
+          <h3>${t('results.position')} ${escapeHtml(key)}</h3>
+          <span class="item-oz">${escapeHtml(item.original_excerpt?.slice(0, 80) || '\u2014')}${item.original_excerpt?.length > 80 ? ' \u2026' : ''}</span>
+        </div>
+        <div class="item-card-badges">
+          ${proposals.length > 0
+            ? `<span class="badge badge-rp">${proposals.length} ${t('results.proposals')}</span>`
+            : `<span class="badge badge-missing">${t('results.no_proposals')}</span>`}
+          <span class="badge badge-missing item-sel-badge" id="selbadge-${escapeHtml(key)}">${t('export.not_selected')}</span>
+        </div>
+        <a class="feedback-btn" href="${mailtoHref}" onclick="event.stopPropagation()" title="${t('feedback.tooltip')}">\u2709 ${t('feedback.btn')}</a>
+        <span class="item-card-chevron">\u25BE</span>
+      </div>`;
+
+    // Evidence panel: P93 text left, ANFRAGE fields right
+    let bodyHtml = '<div class="item-card-body"><div class="evidence-panel">';
+
+    // Left: P93 original text
+    bodyHtml += '<div class="evidence-col"><div class="evidence-label">' + t('evidence.p93') + '</div>';
+    if (item.original_excerpt) {
+      bodyHtml += `<div class="evidence-text">${escapeHtml(item.original_excerpt)}</div>`;
+    } else {
+      bodyHtml += `<div class="evidence-text" style="color:#9CA3AF;font-style:italic">\u2014</div>`;
+    }
+    bodyHtml += '</div>';
+
+    // Right: extracted ANFRAGE fields (filter internal/verbose fields)
+    const HIDDEN_EV_FIELDS = new Set(['Positionsnummer','Verkaufstext','Artikelnummer','DesiredSupplyType','Mounting:AllowedMethods','Mounting:EnforcedMethods','Warnings','Evidence']);
+    const visibleQf = qf.filter(f => !HIDDEN_EV_FIELDS.has(f.field));
+    bodyHtml += '<div class="evidence-col"><div class="evidence-label">' + t('evidence.fields') + '</div>';
+    if (visibleQf.length > 0) {
+      bodyHtml += '<div class="evidence-fields">';
+      visibleQf.forEach(f => {
+        const srcCls = f.source === 'extracted' ? 'extracted' : f.source === 'derived' ? 'derived' : 'missing';
+        const hasVal = f.value != null;
+        bodyHtml += `<div class="ev-field-row">
+          <span class="ev-fname">${escapeHtml(shortField(f.field))}</span>
+          <span class="ev-fval${hasVal ? '' : ' missing'}">${hasVal ? escapeHtml(String(f.value)) : '\u2014'}</span>
+          <span class="ev-badge ${srcCls}">${escapeHtml(f.source || '?')}</span>
+        </div>`;
+      });
+      bodyHtml += '</div>';
+    } else {
+      bodyHtml += `<div class="zubehoer-empty">${t('no_fields')}</div>`;
+    }
+    bodyHtml += '</div></div>'; // close evidence cols + panel
+
+    // Candidate stats funnel + extralogic logs
+    bodyHtml += renderCandidateStats(item.candidate_stats, item.route);
+    bodyHtml += renderExtralogicLogs(item.extralogic_logs, key);
+
+    // Item-level warnings
+    if (item.warnings?.length) {
+      bodyHtml += '<div style="padding:6px 20px">';
+      item.warnings.forEach(w => {
+        bodyHtml += `<div class="warning-bar" style="margin-bottom:6px">\u26A0 ${escapeHtml(w)}</div>`;
+      });
+      bodyHtml += '</div>';
+    }
+
+    bodyHtml += renderComparisonMatrix(proposals, qf, key);
+
+    // Zubehör panel
+    bodyHtml += `<div class="zubehoer-panel" id="zubehoer-${escapeHtml(key)}">${renderZubehoerContent(key, proposals, null)}</div>`;
+
+    bodyHtml += '</div>';
+    card.innerHTML = headerHtml + bodyHtml;
+    itemsEl.appendChild(card);
+  });
+
+  // Intermediate pipeline results (from pipelineResponse, all tasks except last)
+  renderIntermediatePanel();
+
+  updateExportSummary();
+  updateProgressBar();
+  $('raw-json-output').textContent = JSON.stringify(data, null, 2);
+}
+
+function getFieldGroup(fieldName) {
+  for (const [groupKey, names] of Object.entries(FIELD_GROUPS_MAP)) {
+    if (names.includes(fieldName)) return groupKey;
+  }
+  return 'fg.other';
+}
+
+const HIDDEN_COMP_FIELDS = new Set(['Positionsnummer','Verkaufstext','Artikelnummer','DesiredSupplyType','Mounting:AllowedMethods','Mounting:EnforcedMethods','Warnings','Evidence']);
+
+// ── Frontend comparison normalization ──
+// Re-evaluates "different" statuses from the backend for known equivalences
+const _MATERIAL_EQUIV = {
+  'polycarbonate': 'kunststoff', 'polycarbonat': 'kunststoff', 'abs': 'kunststoff',
+  'pc': 'kunststoff', 'pmma': 'kunststoff',
+  'zinc die-cast': 'metall', 'zinkdruckguss': 'metall',
+  'aluminium': 'metall', 'aluminum': 'metall',
+  'stahl': 'metall', 'steel': 'metall', 'edelstahl': 'metall', 'stainless steel': 'metall',
+};
+const _NUMERIC_FIELDS = new Set([
+  'HousingDimensions:Height', 'HousingDimensions:Length', 'HousingDimension:Width',
+  'RatingsCertifications:RecognitionDistance',
+  'ElectronicPerformanceData:LuminousFluxMains', 'ElectronicPerformanceData:LuminousFluxEmergency',
+  'ElectronicBackupTimes:MaxBackupTime',
+]);
+const _IK_IP_FIELDS = new Set(['RatingsCertifications:IKclass', 'RatingsCertifications:IngressProtection']);
+const _TYPE_FIELDS = new Set(['Produkttyp', 'RatingsCertifications:LuminaireType']);
+const _DIMENSION_FIELDS = ['HousingDimensions:Height', 'HousingDimensions:Length', 'HousingDimension:Width'];
+const _OVERVIEW_SECONDARY_FIELDS = new Set([
+  ..._DIMENSION_FIELDS,
+  'ElectronicBackupTimes:MaxBackupTime',
+  'Produkttyp',
+]);
+const _DIMENSION_PERMUTATIONS = [
+  ['HousingDimensions:Height', 'HousingDimensions:Length', 'HousingDimension:Width'],
+  ['HousingDimensions:Height', 'HousingDimension:Width', 'HousingDimensions:Length'],
+  ['HousingDimensions:Length', 'HousingDimensions:Height', 'HousingDimension:Width'],
+  ['HousingDimensions:Length', 'HousingDimension:Width', 'HousingDimensions:Height'],
+  ['HousingDimension:Width', 'HousingDimensions:Height', 'HousingDimensions:Length'],
+  ['HousingDimension:Width', 'HousingDimensions:Length', 'HousingDimensions:Height'],
+];
+
+function _parseNum(s) {
+  if (s == null) return null;
+  const m = String(s).replace(/,/g, '.').match(/[-+]?\d*\.?\d+/);
+  return m ? parseFloat(m[0]) : null;
+}
+function _parseIkIp(s) {
+  if (s == null) return null;
+  const txt = String(s).trim();
+  const m = txt.match(/(?:I[KP])\s*(\d+)/i);
+  if (m) return parseInt(m[1]);
+  const bare = txt.match(/^(\d+)$/);
+  return bare ? parseInt(bare[1]) : null;
+}
+function _numEq(a, b, epsilon = 0.5) {
+  return a !== null && b !== null && Math.abs(a - b) < epsilon;
+}
+function _sameNumericSet(left, right, epsilon = 0.5) {
+  if (left.length !== right.length) return false;
+  const sortedLeft = [...left].sort((a, b) => a - b);
+  const sortedRight = [...right].sort((a, b) => a - b);
+  return sortedLeft.every((value, idx) => _numEq(value, sortedRight[idx], epsilon));
+}
+function getDimensionAlignmentMap(queryFields, comparisons) {
+  const queryNums = new Map();
+  const candNums = new Map();
+
+  (queryFields || []).forEach(field => {
+    if (_DIMENSION_FIELDS.includes(field.field)) queryNums.set(field.field, _parseNum(field.value));
+  });
+  (comparisons || []).forEach(comp => {
+    if (_DIMENSION_FIELDS.includes(comp.field)) candNums.set(comp.field, _parseNum(comp.candidate_value));
+  });
+
+  if (_DIMENSION_FIELDS.some(field => !queryNums.has(field) || !candNums.has(field))) return null;
+
+  const queryVals = _DIMENSION_FIELDS.map(field => queryNums.get(field));
+  const candVals = _DIMENSION_FIELDS.map(field => candNums.get(field));
+  if (queryVals.some(v => v === null) || candVals.some(v => v === null)) return null;
+  if (!_sameNumericSet(queryVals, candVals)) return null;
+
+  const scorePermutation = perm => _DIMENSION_FIELDS.reduce((score, targetField, idx) => {
+    return score + (_numEq(queryNums.get(targetField), candNums.get(perm[idx])) ? 1 : 0);
+  }, 0);
+
+  const identity = _DIMENSION_FIELDS;
+  const identityScore = scorePermutation(identity);
+  let bestPerm = identity;
+  let bestScore = identityScore;
+
+  _DIMENSION_PERMUTATIONS.forEach(perm => {
+    const score = scorePermutation(perm);
+    if (score > bestScore) {
+      bestScore = score;
+      bestPerm = perm;
+    }
+  });
+
+  if (bestPerm === identity || bestScore !== _DIMENSION_FIELDS.length) return null;
+
+  const aligned = new Map();
+  _DIMENSION_FIELDS.forEach((targetField, idx) => {
+    aligned.set(targetField, bestPerm[idx]);
+  });
+  return aligned;
+}
+function getDisplayProposal(proposal, queryFields) {
+  const rawComparison = proposal.comparison || [];
+  const rawFeatures = proposal.product_features || {};
+  const comparisonByField = new Map(rawComparison.map(comp => [comp.field, comp]));
+  const dimensionAlignment = getDimensionAlignmentMap(queryFields, rawComparison);
+
+  if (!dimensionAlignment) {
+    return { ...proposal, comparisonByField, displayFeatures: rawFeatures };
+  }
+
+  const alignedComparison = rawComparison.map(comp => {
+    if (!_DIMENSION_FIELDS.includes(comp.field)) return comp;
+    const sourceField = dimensionAlignment.get(comp.field);
+    const sourceComp = comparisonByField.get(sourceField);
+    if (!sourceComp) return comp;
+    return {
+      ...sourceComp,
+      field: comp.field,
+      label: comp.label || shortField(comp.field),
+      query_value: comp.query_value,
+      query_source: comp.query_source,
+    };
+  });
+
+  const alignedComparisonByField = new Map(alignedComparison.map(comp => [comp.field, comp]));
+  const alignedFeatures = { ...rawFeatures };
+  _DIMENSION_FIELDS.forEach(targetField => {
+    const sourceField = dimensionAlignment.get(targetField);
+    if (!sourceField) return;
+    if (Object.prototype.hasOwnProperty.call(alignedFeatures, sourceField)) {
+      alignedFeatures[targetField] = rawFeatures[sourceField];
+    }
+  });
+
+  return {
+    ...proposal,
+    comparison: alignedComparison,
+    comparisonByField: alignedComparisonByField,
+    displayFeatures: alignedFeatures,
+    _dimensionAligned: true,
+  };
+}
+
+function normalizeComparison(comp) {
+  if (!comp || comp.status !== 'different') return comp;
+  const f = comp.field;
+  const qv = comp.query_value, cv = comp.candidate_value;
+  if (!qv || !cv) return comp;
+
+  // Numeric fields: strip units, compare numbers
+  if (_NUMERIC_FIELDS.has(f)) {
+    const qn = _parseNum(qv), cn = _parseNum(cv);
+    if (qn !== null && cn !== null && Math.abs(qn - cn) < 0.5) {
+      return { ...comp, status: 'match', note: 'exact match' };
+    }
+    if (qn !== null && cn !== null && cn > qn) {
+      return { ...comp, status: 'upgrade', note: 'candidate value is higher' };
+    }
+  }
+
+  // IK/IP: parse rating with or without prefix
+  if (_IK_IP_FIELDS.has(f)) {
+    const qi = _parseIkIp(qv), ci = _parseIkIp(cv);
+    if (qi !== null && ci !== null) {
+      if (qi === ci) return { ...comp, status: 'match', note: 'exact match' };
+      if (ci > qi) return { ...comp, status: 'upgrade', note: 'candidate is higher' };
+    }
+  }
+
+  // Material equivalence
+  if (f === 'MaterialData:Material') {
+    const ql = qv.toLowerCase(), cl = cv.toLowerCase();
+    const qCat = _MATERIAL_EQUIV[ql] || ql;
+    const cCat = _MATERIAL_EQUIV[cl] || cl;
+    if (qCat === cCat) return { ...comp, status: 'match', note: 'equivalent material' };
+  }
+
+  // Product type / Luminaire type hierarchy
+  if (_TYPE_FIELDS.has(f)) {
+    const ql = qv.toLowerCase(), cl = cv.toLowerCase();
+    if (ql.includes(cl) || cl.includes(ql)) {
+      return { ...comp, status: 'match', note: 'type hierarchy match' };
+    }
+    // Known product type hierarchy
+    const _PT_FAMILY = {
+      'notleuchte': ['rettungszeichenleuchte', 'sicherheitsleuchte', 'notleuchte'],
+      'rettungszeichenleuchte': ['rettungszeichenleuchte', 'notleuchte'],
+      'sicherheitsleuchte': ['sicherheitsleuchte', 'notleuchte'],
+    };
+    const qFam = _PT_FAMILY[ql] || [ql];
+    const cFam = _PT_FAMILY[cl] || [cl];
+    if (qFam.includes(cl) || cFam.includes(ql)) {
+      return { ...comp, status: 'match', note: 'type hierarchy match' };
+    }
+  }
+
+  return comp;
+}
+
+function buildFieldList(queryFields, proposals) {
+  const seen = new Map();
+  (queryFields || []).forEach(qf => { if (!HIDDEN_COMP_FIELDS.has(qf.field) && !seen.has(qf.field)) seen.set(qf.field, qf); });
+  (proposals || []).forEach(p => {
+    (p.comparison || []).forEach(c => { if (!HIDDEN_COMP_FIELDS.has(c.field) && !seen.has(c.field)) seen.set(c.field, null); });
+  });
+  return Array.from(seen.entries()).map(([field, qf]) => ({ field, qf }));
+}
+
+function renderOverviewIssues(issues, limit = 3) {
+  if (!issues || !issues.length) return '';
+  const primary = issues.filter(issue => !_OVERVIEW_SECONDARY_FIELDS.has(issue.field));
+  const visible = (primary.length ? primary : issues).slice(0, limit);
+  const hiddenCount = (primary.length ? primary : issues).length - visible.length;
+  const text = visible.map(issue => `${issue.label}: ${issue.note}`).join(' \u00b7 ');
+  const suffix = hiddenCount > 0 ? ` \u00b7 +${hiddenCount}` : '';
+  return `<div class="ph-issues-mini">${escapeHtml(text + suffix)}</div>`;
+}
+
+function renderComparisonMatrix(proposals, queryFields, itemKey) {
+  if (!proposals || proposals.length === 0) {
+    return `<div class="no-proposals-msg">${t('results.no_proposals')}</div>`;
+  }
+
+  const displayProposals = proposals.map(proposal => getDisplayProposal(proposal, queryFields));
+  const fields = buildFieldList(queryFields, displayProposals);
+  const lang = currentLang;
+  const ek = escapeHtml(itemKey);
+
+  // ── COLGROUP (enforces consistent column widths) ────────────────
+  const COL_FNAME = 160, COL_QUERY = 200, COL_PROP = 230;
+  const fixedWidth = COL_FNAME + COL_QUERY;
+  const tableMinWidth = fixedWidth + displayProposals.length * COL_PROP;
+  const colGroupCols = `<col style="width:${COL_FNAME}px"><col style="width:${COL_QUERY}px">${displayProposals.map(() => `<col style="width:${COL_PROP}px">`).join('')}`;
+
+  // ── THEAD ──────────────────────────────────────────────────────
+  let html = `<div class="matrix-wrapper"><table class="matrix-table" style="min-width:${tableMinWidth}px;width:100%;table-layout:fixed"><colgroup>${colGroupCols}</colgroup><thead><tr>
+    <th class="col-fname"><div class="thead-field-label">${t('table.field')}</div></th>
+    <th class="col-query"><div class="thead-query-label">${lang === 'de' ? 'Ihre Anfrage' : 'Your Inquiry'}</div></th>`;
+
+  // Collect detail row content while building slim headers
+  const detailCells = [];
+
+  displayProposals.forEach((p, pi) => {
+    const score = p.score ?? 0;
+    const pct = Math.min(100, score * 100).toFixed(1);
+    const article = p.display_article || p.base_article || '?';
+    const rank = p.rank ?? (pi + 1);
+    const isSel = state.selections[itemKey] === pi;
+    const typeCls = (p.candidate_type || '').includes('virtual') ? 'virtual' : '';
+    const typeLabel = p.candidate_type ? `<span class="ph-type-badge ${typeCls}">${escapeHtml(p.candidate_type)}</span>` : '';
+
+    // Slim sticky header: only rank + article + score
+    html += `<th class="col-proposal-th${isSel ? ' is-selected' : ''}" id="ph-${ek}-${pi}">
+      <div class="ph-inner ph-inner-slim">
+        <div class="ph-rank-row">
+          <span class="ph-rank">#${rank}</span>${typeLabel}
+        </div>
+        <div class="ph-article">${escapeHtml(article)}</div>
+        <div class="ph-score-row">
+          <div class="ph-score-bar-wrap"><div class="ph-score-bar-fill" style="width:${pct}%"></div></div>
+          <span class="ph-score-num">${score.toFixed(3)} <span style="opacity:0.6;font-size:0.6rem">(${pct}%)</span></span>
+        </div>
+      </div>
+    </th>`;
+
+    // Build detail content for the info row in tbody
+    // Match/diff summary counts (apply frontend normalization)
+    const compCounts = { match: 0, different: 0, upgrade: 0, missing: 0 };
+    (p.comparison || []).forEach(c => {
+      const nc = normalizeComparison(c);
+      if (nc.status === 'match') compCounts.match++;
+      else if (nc.status === 'different') compCounts.different++;
+      else if (nc.status === 'upgrade') compCounts.upgrade++;
+      else compCounts.missing++;
+    });
+    let summaryHtml = '';
+    if (p.comparison?.length) {
+      summaryHtml = '<div class="ph-badges" style="margin-top:2px">';
+      if (compCounts.match) summaryHtml += `<span class="qb qb-match">${compCounts.match} ${lang === 'de' ? 'Treffer' : 'match'}</span>`;
+      if (compCounts.different) summaryHtml += `<span class="qb qb-diff">${compCounts.different} ${lang === 'de' ? 'Abw.' : 'diff'}</span>`;
+      if (compCounts.upgrade) summaryHtml += `<span class="qb qb-upgrade">${compCounts.upgrade} ${lang === 'de' ? 'Upgrade' : 'upgrade'}</span>`;
+      if (compCounts.missing) summaryHtml += `<span class="qb qb-other">${compCounts.missing} ${lang === 'de' ? 'fehlt' : 'N/A'}</span>`;
+      summaryHtml += '</div>';
+    }
+    // Recompute issues from normalized comparisons (backend issues_summary is not normalized)
+    const normalizedIssues = [];
+    (p.comparison || []).forEach(c => {
+      const nc = normalizeComparison(c);
+      if (nc.status !== 'match' && nc.status !== 'missing_query') {
+        normalizedIssues.push({ field: nc.field, label: nc.label || shortField(nc.field), status: nc.status, note: nc.note || nc.status });
+      }
+    });
+    const normIssuesHtml = renderOverviewIssues(normalizedIssues);
+
+    detailCells.push({ isSel, pi, summaryHtml, normIssuesHtml, reasonCodes: p.reason_codes, productFeatures: p.displayFeatures || p.product_features });
+  });
+  html += '</tr></thead><tbody>';
+
+  // ── INFO ROW: badges, summary, issues, features, select button ──
+  html += `<tr class="info-row">
+    <td class="col-fname info-row-label"><div class="col-fname-content" style="font-size:0.65rem;color:#8BA0B8">${lang === 'de' ? '\u00dcbersicht' : 'Overview'}</div></td>
+    <td class="col-query info-row-query"></td>`;
+  detailCells.forEach((d, pi) => {
+    const selCls = d.isSel ? ' col-selected' : '';
+    html += `<td class="info-row-cell${selCls}" data-col="${pi}"><div class="ph-inner">
+      ${d.summaryHtml}${renderReasonCodes(d.reasonCodes, 4)}${d.normIssuesHtml}
+      <div class="ph-overview-actions">
+        ${renderProductFeatures(d.productFeatures, 'pf-' + ek + '-' + pi, true)}
+        <button class="ph-select-btn compact${d.isSel ? ' selected' : ''}"
+          data-item="${ek}" data-pi="${pi}"
+          onclick="selectProposal('${ek}',${pi},this)">
+          ${d.isSel ? (lang === 'de' ? '\u2713\u00a0Ausgew\u00e4hlt' : '\u2713\u00a0Selected') : (lang === 'de' ? 'Ausw\u00e4hlen' : 'Select')}
+        </button>
+      </div>
+    </div></td>`;
+  });
+  html += '</tr>';
+
+  // ── ROWS ───────────────────────────────────────────────────────
+  let lastGroup = null;
+  fields.forEach(({ field, qf }) => {
+    const group = getFieldGroup(field);
+    if (group !== lastGroup) {
+      html += `<tr class="group-row"><td class="group-label-cell" colspan="${proposals.length + 2}">${escapeHtml(t(group))}</td></tr>`;
+      lastGroup = group;
+    }
+    const qVal = qf?.value != null ? String(qf.value) : null;
+    const srcCls = qf?.source === 'extracted' ? 'extracted' : qf?.source === 'derived' ? 'derived' : 'missing';
+    const qDisplay = qVal != null
+      ? `<span class="qval" title="${escapeHtml(qVal)}">${escapeHtml(qVal)}</span><span class="src-dot ${srcCls}" title="${qf?.source || ''}"></span>`
+      : `<span class="qval missing">\u2014</span>`;
+
+    html += `<tr class="field-row">
+      <td class="col-fname"><div class="col-fname-content" title="${escapeHtml(field)}">${escapeHtml(shortField(field))}</div></td>
+      <td class="col-query"><div class="col-query-content">${qDisplay}</div></td>`;
+
+    displayProposals.forEach((p, pi) => {
+      const isSel = state.selections[itemKey] === pi;
+      const selCls = isSel ? ' col-selected' : '';
+      const rawComp = p.comparisonByField?.get(field) || (p.comparison || []).find(c => c.field === field);
+      if (!rawComp) {
+        html += `<td class="cell-nodata${selCls}" data-col="${pi}"><div class="cell-inner"><span class="cell-icon" style="color:#D1D5DB">\u00b7</span><span class="cell-val" style="color:#D1D5DB" title="${lang === 'de' ? 'Kein Vergleichswert' : 'No comparison data'}">\u2014</span></div></td>`;
+      } else {
+        const comp = normalizeComparison(rawComp);
+        const sc = comp.status === 'match' ? 'cell-match' : comp.status === 'different' ? 'cell-diff' : comp.status === 'upgrade' ? 'cell-upgrade' : 'cell-missing';
+        const icon = comp.status === 'match' ? '\u2713' : comp.status === 'different' ? '\u2717' : comp.status === 'upgrade' ? '\u2191' : '\u00b7';
+        const cVal = comp.candidate_value != null ? String(comp.candidate_value) : '\u2014';
+        html += `<td class="${sc}${selCls}" data-col="${pi}"><div class="cell-inner"><span class="cell-icon">${icon}</span><span class="cell-val" title="${escapeHtml(cVal + (comp.note ? ' (' + comp.note + ')' : ''))}">${escapeHtml(cVal)}</span></div></td>`;
+      }
+    });
+    html += '</tr>';
+  });
+
+  // ── SELECT NONE ROW ────────────────────────────────────────────
+  const isNone = state.selections[itemKey] === 'none';
+  html += `</tbody><tfoot><tr class="snone-row">
+    <td colspan="2">
+      <button class="snone-btn${isNone ? ' selected' : ''}" onclick="selectProposal('${ek}','none',this)">
+        ${isNone ? '\u2713\u00a0' : ''}${t('results.select_none')}
+      </button>
+    </td>`;
+  displayProposals.forEach((_, pi) => {
+    const isSel = state.selections[itemKey] === pi;
+    html += `<td style="background:#FAFAFA;border-top:2px solid #D8E2F0 !important"><div style="padding:10px 12px">
+      <button class="ph-select-btn${isSel ? ' selected' : ''}" style="font-size:0.72rem"
+        data-item="${ek}" data-pi="${pi}"
+        onclick="selectProposal('${ek}',${pi},this)">
+        ${isSel ? (currentLang === 'de' ? '\u2713\u00a0Ausgew\u00e4hlt' : '\u2713\u00a0Selected') : (currentLang === 'de' ? 'Ausw\u00e4hlen' : 'Select')}
+      </button>
+    </div></td>`;
+  });
+  html += '</tr></tfoot></table></div>';
+  return html;
+}
+
+// ================================================================
+// SELECTION
+// ================================================================
+function selectProposal(itemKey, value, el) {
+  state.selections[itemKey] = (state.selections[itemKey] === value) ? null : value;
+  const sel = state.selections[itemKey];
+  const itemCard = el.closest('.item-card');
+  if (!itemCard) { updateExportSummary(); return; }
+
+  // Update proposal column headers
+  itemCard.querySelectorAll('.col-proposal-th').forEach((th, pi) => {
+    th.classList.toggle('is-selected', sel === pi);
+  });
+
+  // Highlight full column body cells
+  itemCard.querySelectorAll('td[data-col]').forEach(td => {
+    td.classList.toggle('col-selected', sel === parseInt(td.dataset.col));
+  });
+
+  // Update Zubehör panel
+  const zubehoerPanel = document.getElementById('zubehoer-' + itemKey);
+  if (zubehoerPanel) {
+    const itm = (state.results?.items || []).find(i => (i.positionsnummer || i.item_id) === itemKey);
+    if (itm) zubehoerPanel.innerHTML = renderZubehoerContent(itemKey, itm.proposals || [], sel);
+  }
+
+  // Update all select buttons (header + footer)
+  itemCard.querySelectorAll('.ph-select-btn').forEach(btn => {
+    const pi = btn.dataset.pi !== undefined ? parseInt(btn.dataset.pi) : -1;
+    const isSel = sel === pi;
+    btn.classList.toggle('selected', isSel);
+    btn.textContent = isSel
+      ? (currentLang === 'de' ? '\u2713\u00a0Ausgew\u00e4hlt' : '\u2713\u00a0Selected')
+      : (currentLang === 'de' ? 'Ausw\u00e4hlen' : 'Select');
+  });
+
+  // Update select-none button
+  itemCard.querySelectorAll('.snone-btn').forEach(btn => {
+    const isSel = sel === 'none';
+    btn.classList.toggle('selected', isSel);
+    btn.textContent = (isSel ? '\u2713\u00a0' : '') + t('results.select_none');
+  });
+
+  // Update selection badge in header
+  const selBadge = document.getElementById('selbadge-' + itemKey);
+  if (selBadge) {
+    if (sel === null || sel === undefined) {
+      selBadge.className = 'badge badge-missing item-sel-badge';
+      selBadge.textContent = t('export.not_selected');
+    } else if (sel === 'none') {
+      selBadge.className = 'badge item-sel-badge';
+      selBadge.style.cssText = 'background:#FEF2F2;color:#991B1B;border:1px solid #FECACA';
+      selBadge.textContent = t('export.none');
+    } else {
+      const proposals = (state.results?.items || []).find(i => (i.positionsnummer || i.item_id) === itemKey)?.proposals || [];
+      const p = proposals[sel];
+      selBadge.className = 'badge badge-extracted item-sel-badge';
+      selBadge.textContent = '\u2713 ' + (p?.display_article || p?.base_article || '#' + (sel + 1));
+    }
+  }
+
+  // Update progress bar
+  updateProgressBar();
+
+  updateExportSummary();
+}
+
+function updateExportSummary() {
+  if (!state.results) return;
+  const items = state.results.items || [];
+  let selected = 0;
+  let rowsHtml = '';
+  items.forEach(item => {
+    const key = item.positionsnummer || item.item_id;
+    const sel = state.selections[key];
+    const proposals = item.proposals || [];
+    let selText, selArticle = '';
+    if (sel === null || sel === undefined) { selText = `<span class="text-muted">${t('export.not_selected')}</span>`; }
+    else if (sel === 'none') { selText = `<span style="color:#DC2626">${t('export.none')}</span>`; selected++; }
+    else { const p = proposals[sel]; selText = `${t('export.proposal')} #${p?.rank || sel + 1}`; selArticle = p?.display_article || p?.base_article || '?'; selected++; }
+    rowsHtml += `<div class="export-row"><span class="export-oz">${escapeHtml(key)}</span><span class="export-selection">${selText}</span><span class="export-article">${escapeHtml(selArticle)}</span></div>`;
+  });
+  $('selection-count').textContent = `${selected} / ${items.length} ${t('export.selected')}`;
+  $('export-summary').innerHTML = `<div class="export-summary-header"><span class="card-title">${t('export.summary')}</span></div><div class="export-summary-body">${rowsHtml}</div>`;
+}
+
+// ================================================================
+// EXPORT
+// ================================================================
+function downloadExport(format) {
+  if (!state.results) return;
+  const items = state.results.items || [];
+  const meta = state.results._meta || {};
+  const rows = [];
+  items.forEach(item => {
+    const key = item.positionsnummer || item.item_id;
+    const sel = state.selections[key];
+    const proposals = item.proposals || [];
+    const accSet = state.accessorySelections[key];
+    const row = {
+      positionsnummer: key, item_id: item.item_id || '', run_id: meta.run_id || '',
+      decision: sel === null ? '' : sel === 'none' ? 'NONE' : 'SELECTED',
+      selected_rank: sel !== null && sel !== 'none' ? (proposals[sel]?.rank || sel + 1) : '',
+      selected_article: '', selected_score: '',
+      selected_accessories: accSet && accSet.size > 0 ? Array.from(accSet).join('|') : '',
+    };
+    if (sel !== null && sel !== 'none' && proposals[sel]) {
+      row.selected_article = proposals[sel].display_article || proposals[sel].base_article || '';
+      row.selected_score = proposals[sel].score ?? '';
+    }
+    rows.push(row);
+  });
+
+  let content, mime, ext;
+  if (format === 'csv') {
+    const headers = Object.keys(rows[0] || {});
+    content = [headers.join(';'), ...rows.map(r => headers.map(h => String(r[h] ?? '')).join(';'))].join('\n');
+    mime = 'text/csv;charset=utf-8'; ext = 'csv';
+  } else {
+    content = JSON.stringify({ _export_meta: { ...meta, exported_at: new Date().toISOString() }, selections: rows }, null, 2);
+    mime = 'application/json'; ext = 'json';
+  }
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `rp-matcher-export-${new Date().toISOString().slice(0, 10)}.${ext}`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+function _copyToClipboard(text, btnId) {
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(btnId);
+    if (btn) { btn.classList.add('copied'); btn.textContent = '\u2713 Copied'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 1500); }
+  });
+}
+function _downloadText(text, filename) {
+  const ext = filename.endsWith('.json') ? 'application/json' : 'text/plain';
+  const blob = new Blob([text], { type: ext + ';charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 100);
+}
+
+function renderIntermediatePanel() {
+  const pr = state.pipelineResponse;
+  const container = $('intermediate-container');
+  if (!container) return;
+
+  const allTasks = (pr && pr.outputs) ? pr.outputs : [];
+  if (allTasks.length === 0 && !state.results) return;
+
+  // Split: intermediate = all but last, lambda = last task
+  const intermediate = allTasks.length > 1 ? allTasks.slice(0, -1) : [];
+  const lambdaTask = allTasks.length > 0 ? allTasks[allTasks.length - 1] : null;
+
+  const totalCount = intermediate.length + (lambdaTask ? 1 : 0) + (state.results ? 1 : 0);
+  let html = `<button class="intermediate-toggle" onclick="document.getElementById('intermediate-body').classList.toggle('open')">\u25B8 ${t('intermediate.show')} (${totalCount})</button>`;
+  html += '<div class="intermediate-body" id="intermediate-body">';
+
+  // Render intermediate pipeline tasks
+  intermediate.forEach((task, i) => {
+    const name = task.taskName || task.identifier || ('Task ' + (i + 1));
+    const text = task.outputText || '';
+    let display = text;
+    try { display = JSON.stringify(JSON.parse(text), null, 2); } catch(e) {}
+    const btnId = 'imcp-' + i;
+    html += `<div class="intermediate-task">
+      <div class="intermediate-task-header">
+        <div class="intermediate-task-name">${escapeHtml(name)}</div>
+        <div class="intermediate-actions">
+          <button id="${btnId}" onclick="_copyToClipboard(document.getElementById('impre-${i}').textContent, '${btnId}')">Copy</button>
+          <button onclick="_downloadText(document.getElementById('impre-${i}').textContent, '${escapeHtml(name).replace(/\s+/g, '_')}.json')">Download</button>
+        </div>
+      </div>
+      <pre class="intermediate-task-body" id="impre-${i}">${escapeHtml(display)}</pre>
+    </div>`;
+  });
+
+  // Lambda output (last task from pipeline)
+  if (lambdaTask) {
+    const lambdaText = lambdaTask.outputText || '';
+    let lambdaDisplay = lambdaText;
+    try { lambdaDisplay = JSON.stringify(JSON.parse(lambdaText), null, 2); } catch(e) {}
+    const lambdaName = lambdaTask.taskName || lambdaTask.identifier || 'Lambda Output';
+    html += `<div class="intermediate-task">
+      <div class="intermediate-task-header">
+        <div class="intermediate-task-name" style="color:#15803D">\u2713 ${escapeHtml(lambdaName)} (${currentLang === 'de' ? 'Endausgabe' : 'Final Output'})</div>
+        <div class="intermediate-actions">
+          <button id="imcp-lambda" onclick="_copyToClipboard(document.getElementById('impre-lambda').textContent, 'imcp-lambda')">Copy</button>
+          <button onclick="_downloadText(document.getElementById('impre-lambda').textContent, 'lambda_output.json')">Download</button>
+        </div>
+      </div>
+      <pre class="intermediate-task-body" id="impre-lambda">${escapeHtml(lambdaDisplay)}</pre>
+    </div>`;
+  }
+
+  // Final parsed WP5 JSON (the data we display in the UI)
+  if (state.results) {
+    const resultsJson = JSON.stringify(state.results, null, 2);
+    html += `<div class="intermediate-task">
+      <div class="intermediate-task-header">
+        <div class="intermediate-task-name" style="color:#1032CF">WP5 ${currentLang === 'de' ? 'Ergebnis-JSON' : 'Result JSON'}</div>
+        <div class="intermediate-actions">
+          <button id="imcp-wp5" onclick="_copyToClipboard(document.getElementById('impre-wp5').textContent, 'imcp-wp5')">Copy</button>
+          <button onclick="_downloadText(document.getElementById('impre-wp5').textContent, 'wp5_result.json')">Download</button>
+        </div>
+      </div>
+      <pre class="intermediate-task-body" id="impre-wp5">${escapeHtml(resultsJson)}</pre>
+    </div>`;
+  }
+
+  html += '</div>';
+  container.innerHTML = html;
+  container.style.display = 'block';
+}
+
+function toggleRawJson() { $('raw-json-output').classList.toggle('hidden'); }
+
+// ================================================================
+// INIT
+// ================================================================
+goToStep('config');
+applyLang();
+</script>
+</body>
+</html>

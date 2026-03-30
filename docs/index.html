@@ -2782,14 +2782,14 @@
             <label class="label" data-i18n="settings.system"></label>
             <select class="input-field" id="setting-system">
               <option value="auto" data-i18n="settings.system.auto"></option>
-              <optgroup id="optgroup-supply" label="Versorgung">
-                <option value="EB" data-i18n="settings.system.option.eb"></option>
-                <option value="ZB" data-i18n="settings.system.option.zb"></option>
-              </optgroup>
-              <optgroup id="optgroup-monitoring" label="Monitoring">
+              <option value="EB" data-i18n="settings.system.option.eb"></option>
+              <option value="ZB" data-i18n="settings.system.option.zb"></option>
+              <optgroup id="optgroup-eb" label="Einzelbatterie">
                 <option value="SC" data-i18n="settings.system.option.sc"></option>
                 <option value="WL" data-i18n="settings.system.option.wl"></option>
                 <option value="WB" data-i18n="settings.system.option.wb"></option>
+              </optgroup>
+              <optgroup id="optgroup-zb" label="Zentralbatterie">
                 <option value="ML" data-i18n="settings.system.option.ml"></option>
                 <option value="CC" data-i18n="settings.system.option.cc"></option>
                 <option value="CPS" data-i18n="settings.system.option.cps"></option>
@@ -2968,9 +2968,9 @@ const I18N = {
     'settings.virtual.yes': 'Ja',
     'settings.system': 'Systemauswahl',
     'settings.system.auto': 'Automatisch (empfohlen)',
-    'settings.system.hint': 'EB/ZB filtern nach Versorgung. SC/WL/WB/ML/CC/CPS filtern nach Monitoring. DL wird vom Backend nicht unterst\u00fctzt.',
-    'settings.system.group.supply': 'Versorgung',
-    'settings.system.group.monitoring': 'Monitoring',
+    'settings.system.hint': 'EB/ZB filtern nach Versorgung. SC/WL/WB/ML/CC/CPS filtern gezielt nach Monitoring.',
+    'settings.system.group.eb': 'Einzelbatterie',
+    'settings.system.group.zb': 'Zentralbatterie',
     'settings.system.option.eb': 'EB — Einzelbatterie',
     'settings.system.option.zb': 'ZB — Zentralbatterie',
     'settings.system.option.sc': 'SC — Self-Contained',
@@ -3108,9 +3108,9 @@ const I18N = {
     'settings.virtual.yes': 'Yes',
     'settings.system': 'System Selection',
     'settings.system.auto': 'Automatic (recommended)',
-    'settings.system.hint': 'EB/ZB filter by Supply. SC/WL/WB/ML/CC/CPS filter by Monitoring. DL is not supported by the backend.',
-    'settings.system.group.supply': 'Supply',
-    'settings.system.group.monitoring': 'Monitoring',
+    'settings.system.hint': 'EB/ZB filter by Supply. SC/WL/WB/ML/CC/CPS filter by specific Monitoring values.',
+    'settings.system.group.eb': 'Self-contained',
+    'settings.system.group.zb': 'Central battery',
     'settings.system.option.eb': 'EB — Self-contained',
     'settings.system.option.zb': 'ZB — Central battery',
     'settings.system.option.sc': 'SC — Self-contained',
@@ -3237,10 +3237,10 @@ function applyLang() {
     el.title = t(el.getAttribute('data-i18n-title'));
   });
   // Update optgroup labels for system selection
-  const ogSupply = document.getElementById('optgroup-supply');
-  const ogMonitoring = document.getElementById('optgroup-monitoring');
-  if (ogSupply) ogSupply.label = t('settings.system.group.supply');
-  if (ogMonitoring) ogMonitoring.label = t('settings.system.group.monitoring');
+  const ogEb = document.getElementById('optgroup-eb');
+  const ogZb = document.getElementById('optgroup-zb');
+  if (ogEb) ogEb.label = t('settings.system.group.eb');
+  if (ogZb) ogZb.label = t('settings.system.group.zb');
   // Re-render dynamic parts if results exist (preserve selections)
   if (state.results) {
     const savedSel = { ...state.selections };

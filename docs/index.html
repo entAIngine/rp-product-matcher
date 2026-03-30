@@ -1441,6 +1441,14 @@
     }
     .matrix-table thead { position: sticky; top: 0; z-index: 10; }
     .matrix-table thead th { box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+    .matrix-table thead tr.matrix-head-gap th {
+      padding: 0;
+      height: 0;
+      line-height: 0;
+      border: none;
+      box-shadow: none;
+      background: transparent;
+    }
     .matrix-table th, .matrix-table td {
       border: 1px solid #E8EDF5;
       vertical-align: top;
@@ -4158,7 +4166,7 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
     const typeLabel = p.candidate_type ? `<span class="ph-type-badge ${typeCls}">${escapeHtml(p.candidate_type)}</span>` : '';
 
     // Slim sticky header: only rank + article + score
-    html += `<th class="col-proposal-th${isSel ? ' is-selected' : ''}" id="ph-${ek}-${pi}">
+    html += `<th class="col-proposal-th${isSel ? ' is-selected' : ''}" id="ph-${ek}-${pi}" rowspan="2">
       <div class="ph-inner ph-inner-slim">
         <div class="ph-rank-row">
           <span class="ph-rank">#${rank}</span>${typeLabel}
@@ -4202,7 +4210,10 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
 
     detailCells.push({ isSel, pi, summaryHtml, normIssuesHtml, reasonCodes: p.reason_codes, productFeatures: p.displayFeatures || p.product_features });
   });
-  html += '</tr></thead><tbody>';
+  html += `</tr><tr class="matrix-head-gap">
+    <th class="col-fname" aria-hidden="true"></th>
+    <th class="col-query" aria-hidden="true"></th>
+  </tr></thead><tbody>`;
 
   // ── INFO ROW: badges, summary, issues, features, select button ──
   html += `<tr class="info-row">

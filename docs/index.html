@@ -3891,6 +3891,14 @@ const _NUMERIC_FIELDS = new Set([
 const _IK_IP_FIELDS = new Set(['RatingsCertifications:IKclass', 'RatingsCertifications:IngressProtection']);
 const _TYPE_FIELDS = new Set(['Produkttyp', 'RatingsCertifications:LuminaireType']);
 const _DIMENSION_FIELDS = ['HousingDimensions:Height', 'HousingDimensions:Length', 'HousingDimension:Width'];
+function _normalizeTypeValue(value) {
+  if (value === null || value === undefined) return '';
+  return String(value)
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .replace(/\brettungszeichen\s*-?\s*\/\s*sicherheitsleuchte\b/g, 'rettungszeichenleuchte')
+    .trim();
+}
 const _OVERVIEW_SECONDARY_FIELDS = new Set([
   ..._DIMENSION_FIELDS,
   'ElectronicBackupTimes:MaxBackupTime',
@@ -4049,7 +4057,7 @@ function normalizeComparison(comp) {
 
   // Product type / Luminaire type hierarchy
   if (_TYPE_FIELDS.has(f)) {
-    const ql = qv.toLowerCase(), cl = cv.toLowerCase();
+    const ql = _normalizeTypeValue(qv), cl = _normalizeTypeValue(cv);
     if (ql.includes(cl) || cl.includes(ql)) {
       return { ...comp, status: 'match', note: 'type hierarchy match' };
     }

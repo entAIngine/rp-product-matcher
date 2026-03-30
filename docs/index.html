@@ -1441,14 +1441,6 @@
     }
     .matrix-table thead { position: sticky; top: 0; z-index: 10; }
     .matrix-table thead th { box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
-    .matrix-table thead tr.matrix-head-gap th {
-      padding: 0;
-      height: 0;
-      line-height: 0;
-      border: none;
-      box-shadow: none;
-      background: transparent;
-    }
     .matrix-table th, .matrix-table td {
       border: 1px solid #E8EDF5;
       vertical-align: top;
@@ -1564,15 +1556,106 @@
       padding: 6px 10px;
       gap: 3px;
     }
-    /* Info row: non-sticky detail row below header */
-    .info-row td {
+    /* Overview strip above the matrix rows */
+    .matrix-overview {
+      display: grid;
+      align-items: stretch;
       background: #FAFBFE;
-      border-bottom: 2px solid #D8E2F0 !important;
-      vertical-align: top;
+      border-bottom: 2px solid #D8E2F0;
     }
-    .info-row-label { background: #F1F5FB !important; }
-    .info-row-query { background: #F8FAFD !important; }
-    .info-row-cell { background: #FAFBFE; }
+    .matrix-overview-cell {
+      min-width: 0;
+      border-top: 1px solid #E8EDF5;
+      border-right: 1px solid #E8EDF5;
+      border-left: 1px solid #E8EDF5;
+      background: #FAFBFE;
+    }
+    .matrix-overview-cell[data-col] {
+      border-left: 2px solid #D8E2F0;
+    }
+    .matrix-overview-cell.col-selected {
+      background: #EBF0FF;
+    }
+    .matrix-overview-label {
+      position: sticky;
+      left: 0;
+      z-index: 4;
+      background: #F1F5FB;
+      border-right: 2px solid #D8E2F0;
+    }
+    .matrix-overview-query {
+      position: sticky;
+      left: 160px;
+      z-index: 4;
+      background: #F8FAFD;
+      border-right: 2px solid #D8E2F0;
+    }
+    .matrix-overview-label .col-fname-content {
+      color: #8BA0B8;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .query-overview {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .query-overview-title {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #8BA0B8;
+    }
+    .query-overview-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .query-overview-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .query-overview-key {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: #8BA0B8;
+    }
+    .query-overview-val {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #1A2B40;
+      font-weight: 600;
+      line-height: 1.35;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+    .overview-product-head {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+    .overview-product-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+    .overview-product-article {
+      font-family: var(--font-mono);
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #1A2B40;
+      line-height: 1.2;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
     .ph-head-top {
       display: flex;
       align-items: center;
@@ -3722,6 +3805,30 @@ function renderReasonCodes(codes, limit = null) {
   return visibleTags.length ? `<div class="ph-reasons">${visibleTags.join('')}</div>` : '';
 }
 
+function renderQueryOverview(queryFields) {
+  const visibleFields = (queryFields || [])
+    .filter(qf => qf && qf.value != null && !HIDDEN_COMP_FIELDS.has(qf.field))
+    .slice(0, 5);
+
+  if (!visibleFields.length) {
+    return `<div class="query-overview">
+      <div class="query-overview-title">${currentLang === 'de' ? 'Anfrageprofil' : 'Query Profile'}</div>
+      <div class="query-overview-val">${currentLang === 'de' ? 'Keine Vergleichsfelder erkannt' : 'No comparison fields detected'}</div>
+    </div>`;
+  }
+
+  return `<div class="query-overview">
+    <div class="query-overview-title">${currentLang === 'de' ? 'Anfrageprofil' : 'Query Profile'}</div>
+    <div class="query-overview-list">
+      ${visibleFields.map(qf => `
+        <div class="query-overview-row">
+          <span class="query-overview-key">${escapeHtml(shortField(qf.field))}</span>
+          <span class="query-overview-val">${escapeHtml(String(qf.value))}</span>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
 function renderProductFeatures(features, id, compact = false) {
   if (!features || !Object.keys(features).length) return '';
   const SKIP = new Set(['is_virtual', 'base_article']); // redundant with header
@@ -4162,14 +4269,14 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
   const fixedWidth = COL_FNAME + COL_QUERY;
   const tableMinWidth = fixedWidth + displayProposals.length * COL_PROP;
   const colGroupCols = `<col style="width:${COL_FNAME}px"><col style="width:${COL_QUERY}px">${displayProposals.map(() => `<col style="width:${COL_PROP}px">`).join('')}`;
+  const overviewGridCols = `${COL_FNAME}px ${COL_QUERY}px ${displayProposals.map(() => `${COL_PROP}px`).join(' ')}`;
 
   // ── THEAD ──────────────────────────────────────────────────────
-  let html = `<div class="matrix-wrapper"><table class="matrix-table" style="min-width:${tableMinWidth}px;width:100%;table-layout:fixed"><colgroup>${colGroupCols}</colgroup><thead><tr>
+  let html = '';
+  let overviewCellsHtml = '';
+  html += `<table class="matrix-table" style="min-width:${tableMinWidth}px;width:100%;table-layout:fixed"><colgroup>${colGroupCols}</colgroup><thead><tr>
     <th class="col-fname"><div class="thead-field-label">${t('table.field')}</div></th>
     <th class="col-query"><div class="thead-query-label">${lang === 'de' ? 'Ihre Anfrage' : 'Your Inquiry'}</div></th>`;
-
-  // Collect detail row content while building slim headers
-  const detailCells = [];
 
   displayProposals.forEach((p, pi) => {
     const score = p.score ?? 0;
@@ -4181,7 +4288,7 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
     const typeLabel = p.candidate_type ? `<span class="ph-type-badge ${typeCls}">${escapeHtml(p.candidate_type)}</span>` : '';
 
     // Slim sticky header: only rank + article + score
-    html += `<th class="col-proposal-th${isSel ? ' is-selected' : ''}" id="ph-${ek}-${pi}" rowspan="2">
+    html += `<th class="col-proposal-th${isSel ? ' is-selected' : ''}" id="ph-${ek}-${pi}">
       <div class="ph-inner ph-inner-slim">
         <div class="ph-head-top">
           <div class="ph-rank-row">
@@ -4224,33 +4331,32 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
       }
     });
     const normIssuesHtml = renderOverviewIssues(normalizedIssues);
-
-    detailCells.push({ isSel, pi, summaryHtml, normIssuesHtml, reasonCodes: p.reason_codes, productFeatures: p.displayFeatures || p.product_features });
-  });
-  html += `</tr><tr class="matrix-head-gap">
-    <th class="col-fname" aria-hidden="true"></th>
-    <th class="col-query" aria-hidden="true"></th>
-  </tr></thead><tbody>`;
-
-  // ── INFO ROW: badges, summary, issues, features, select button ──
-  html += `<tr class="info-row">
-    <td class="col-fname info-row-label"><div class="col-fname-content" style="font-size:0.65rem;color:#8BA0B8">${lang === 'de' ? '\u00dcbersicht' : 'Overview'}</div></td>
-    <td class="col-query info-row-query"></td>`;
-  detailCells.forEach((d, pi) => {
-    const selCls = d.isSel ? ' col-selected' : '';
-    html += `<td class="info-row-cell${selCls}" data-col="${pi}"><div class="ph-inner">
-      ${d.summaryHtml}${renderReasonCodes(d.reasonCodes, 4)}${d.normIssuesHtml}
+    const selCls = isSel ? ' col-selected' : '';
+    overviewCellsHtml += `<div class="matrix-overview-cell${selCls}" data-col="${pi}"><div class="ph-inner">
+      <div class="overview-product-head">
+        <div class="overview-product-meta">
+          <span class="ph-rank">#${rank}</span>${typeLabel}
+        </div>
+        <div class="overview-product-article">${escapeHtml(article)}</div>
+      </div>
+      ${summaryHtml}${renderReasonCodes(p.reason_codes, 4)}${normIssuesHtml}
       <div class="ph-overview-actions">
-        ${renderProductFeatures(d.productFeatures, 'pf-' + ek + '-' + pi, true)}
-        <button class="ph-select-btn compact${d.isSel ? ' selected' : ''}"
+        ${renderProductFeatures(p.displayFeatures || p.product_features, 'pf-' + ek + '-' + pi, true)}
+        <button class="ph-select-btn compact${isSel ? ' selected' : ''}"
           data-item="${ek}" data-pi="${pi}"
           onclick="selectProposal('${ek}',${pi},this)">
-          ${d.isSel ? (lang === 'de' ? '\u2713\u00a0Ausgew\u00e4hlt' : '\u2713\u00a0Selected') : (lang === 'de' ? 'Ausw\u00e4hlen' : 'Select')}
+          ${isSel ? (lang === 'de' ? '\u2713\u00a0Ausgew\u00e4hlt' : '\u2713\u00a0Selected') : (lang === 'de' ? 'Ausw\u00e4hlen' : 'Select')}
         </button>
       </div>
-    </div></td>`;
+    </div></div>`;
   });
-  html += '</tr>';
+  html += `</tr></thead><tbody>`;
+  html = `<div class="matrix-wrapper">
+    <div class="matrix-overview" style="min-width:${tableMinWidth}px;grid-template-columns:${overviewGridCols}">
+      <div class="matrix-overview-cell matrix-overview-label"><div class="col-fname-content">${lang === 'de' ? '\u00dcbersicht' : 'Overview'}</div></div>
+      <div class="matrix-overview-cell matrix-overview-query">${renderQueryOverview(queryFields)}</div>
+      ${overviewCellsHtml}
+    </div>${html}`;
 
   // ── ROWS ───────────────────────────────────────────────────────
   let lastGroup = null;
@@ -4324,8 +4430,8 @@ function selectProposal(itemKey, value, el) {
   });
 
   // Highlight full column body cells
-  itemCard.querySelectorAll('td[data-col]').forEach(td => {
-    td.classList.toggle('col-selected', sel === parseInt(td.dataset.col));
+  itemCard.querySelectorAll('[data-col]').forEach(el => {
+    el.classList.toggle('col-selected', sel === parseInt(el.dataset.col));
   });
 
   // Update Zubehör panel

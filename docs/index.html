@@ -1498,41 +1498,55 @@
     .processing-status .sub-text { color: #5A7FA0; }
 
     .process-ribbon {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin: 10px 0 24px;
-      padding: 14px 18px;
-      border-radius: 18px;
-      border: 1px solid rgba(96, 165, 250, 0.16);
-      background:
-        linear-gradient(135deg, rgba(16, 50, 207, 0.2), rgba(1, 25, 60, 0.84)),
-        radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 32%);
-      box-shadow: 0 12px 30px rgba(1, 25, 60, 0.18);
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      width: fit-content;
+      max-width: 100%;
+      margin: 6px 0 18px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(96, 165, 250, 0.12);
+      box-shadow: none;
+    }
+
+    #section-processing .process-ribbon {
+      background: rgba(7, 31, 61, 0.56);
+    }
+
+    #section-results .process-ribbon {
+      background: rgba(244, 247, 252, 0.96);
+      border-color: #D8E2F0;
     }
 
     .process-ribbon.hidden { display: none; }
 
     .process-ribbon-copy {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      align-items: center;
+      gap: 6px 10px;
+      flex-wrap: wrap;
       min-width: 0;
     }
 
     .process-ribbon-kicker {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: #8BA0B8;
+    }
+
+    #section-results .process-ribbon-kicker {
+      color: #6B7E95;
     }
 
     .process-ribbon-line {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
@@ -1540,26 +1554,32 @@
       display: inline-flex;
       align-items: center;
       max-width: 100%;
-      padding: 7px 12px;
+      padding: 5px 10px;
       border-radius: 999px;
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 700;
       color: #FFFFFF;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
+    #section-results .process-pill {
+      color: #1A2B40;
+      background: #FFFFFF;
+      border-color: #D8E2F0;
+    }
+
     .process-state-badge {
       display: inline-flex;
       align-items: center;
-      padding: 6px 10px;
+      padding: 4px 8px;
       border-radius: 999px;
       font-family: var(--font-mono);
-      font-size: 0.68rem;
+      font-size: 0.62rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -1585,17 +1605,29 @@
     }
 
     .process-share-btn {
-      border: 1px solid rgba(216, 226, 240, 0.18);
+      margin-left: auto;
+      border: 1px solid transparent;
       border-radius: 999px;
-      padding: 10px 16px;
-      color: #E8F0FC;
-      background: rgba(255, 255, 255, 0.03);
+      padding: 5px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #9FB7D2;
+      background: transparent;
       white-space: nowrap;
     }
 
+    #section-results .process-share-btn {
+      color: #5E7594;
+    }
+
     .process-share-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.06);
       color: #FFFFFF;
+    }
+
+    #section-results .process-share-btn:hover {
+      background: #EEF2F8;
+      color: #1A2B40;
     }
     .task-output-item { background: #0D2A4D; border-color: #1E3E6A; }
     .task-output-header .task-name { color: #A4C8E4; }
@@ -2634,11 +2666,14 @@
         width: 100%;
       }
       .process-ribbon {
+        width: 100%;
         flex-direction: column;
         align-items: flex-start;
       }
       .process-share-btn {
-        width: 100%;
+        width: auto;
+        margin-left: 0;
+        padding-left: 0;
       }
       .evidence-col {
         padding: 14px 16px;

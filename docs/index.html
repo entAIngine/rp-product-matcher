@@ -8,6 +8,13 @@
   <meta name="color-scheme" content="light"/>
   <meta name="description" content="Static RP Product Matcher frontend for GitHub Pages and local customer use."/>
   <script>
+    // LLM-NAV: Asset bootstrap and branding fallback.
+    // Search anchors in this file:
+    // - LLM-NAV: CSS INDEX
+    // - LLM-NAV: HTML APP SHELL
+    // - LLM-NAV: JS I18N
+    // - LLM-NAV: JS PIPELINE
+    // - LLM-NAV: JS RESULTS
     const RP_REMOTE_ASSETS = {
       logo: 'https://www.rp-group.com/Webseite/bilder/Logos/rp-group/279078/image-thumb__279078__NavLogo/RP-Group-2019-Logo-Claim-WHITE@2x.b67af279.png',
       favicon16: 'https://www.rp-group.com/bundles/renderbackend/img/website/favicon-16x16.png',
@@ -53,6 +60,13 @@
     if (prefersRemoteAssets) useRemoteBrandingAssets();
   </script>
   <style>
+    /* LLM-NAV: CSS INDEX
+       1. Base tokens and resets
+       2. App shell and config UI
+       3. Processing pipeline
+       4. Results cards and comparison matrix
+       5. Export, utility, and responsive overrides
+    */
     /* ================================================================
        CSS CUSTOM PROPERTIES — RP Group Brand Theme
        ================================================================ */
@@ -1481,7 +1495,8 @@
       overflow-y: auto;
       scrollbar-gutter: stable both-edges;
       background: #FFFFFF;
-      overscroll-behavior: contain;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: auto;
       scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     }
     .matrix-table {
@@ -1788,6 +1803,12 @@
       color: #3D5170;
       white-space: nowrap;
     }
+    .ph-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
     .ph-badges {
       display: flex;
       flex-wrap: wrap;
@@ -1919,6 +1940,16 @@
       padding: 5px 10px;
       font-size: 0.72rem;
       flex: 0 0 auto;
+    }
+    .ph-select-btn.top-cta {
+      width: 100%;
+      margin-top: 0;
+      padding: 8px 12px;
+      font-size: 0.74rem;
+      border-color: #B8CAF0;
+      background: linear-gradient(180deg, #F7FAFF 0%, #EEF4FF 100%);
+      color: #1032CF;
+      box-shadow: 0 1px 0 rgba(16,50,207,0.08), inset 0 0 0 1px rgba(255,255,255,0.55);
     }
     .ph-select-btn:hover { border-color: #1032CF; color: #1032CF; background: #EBF0FF; }
     .ph-select-btn.selected { border-color: #1032CF; background: #1032CF; color: #FFFFFF; }
@@ -2147,8 +2178,8 @@
     .feedback-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 5px 10px;
+      gap: 8px;
+      padding: 6px 11px;
       border-radius: 6px;
       border: 1px solid #D8E2F0;
       background: #FFFFFF;
@@ -2162,7 +2193,26 @@
       transition: all 0.18s;
       white-space: nowrap;
     }
+    .feedback-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: #FFF5F0;
+      color: #DC4A1A;
+      font-size: 0.95rem;
+      line-height: 1;
+      box-shadow: inset 0 0 0 1px rgba(220, 74, 26, 0.12);
+      flex-shrink: 0;
+    }
+    .feedback-label { font-weight: 700; letter-spacing: 0.02em; }
     .feedback-btn:hover { border-color: #DC4A1A; color: #DC4A1A; background: #FFF5F0; }
+    .feedback-btn:hover .feedback-icon {
+      background: #DC4A1A;
+      color: #FFFFFF;
+    }
 
     /* ================================================================
        FULL COLUMN HIGHLIGHT
@@ -2636,6 +2686,10 @@
 </head>
 <body>
 
+<!-- LLM-NAV: HTML APP SHELL.
+     The UI flows through config -> processing -> results.
+     Export lives inside the results section and is exposed as step 4 in the step nav.
+-->
 <div class="app">
   <!-- ============================================================
        HEADER
@@ -2722,7 +2776,7 @@
           <div class="card-header">
             <span class="card-title" data-i18n="file.title"></span>
           </div>
-          <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+          <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-controls="file-input" onclick="openFilePicker(event)" onkeydown="handleDropzoneKeydown(event)">
             <div id="dropzone-empty">
               <div class="dropzone-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2740,7 +2794,7 @@
                   <div class="file-info-name" id="file-name"></div>
                   <div class="file-info-size" id="file-size"></div>
                 </div>
-                <button class="file-info-remove" onclick="event.stopPropagation(); removeFile()" data-i18n-title="file.remove">&#10005;</button>
+                <button type="button" class="file-info-remove" onclick="event.preventDefault(); event.stopPropagation(); removeFile()" data-i18n-title="file.remove">&#10005;</button>
               </div>
             </div>
             <input type="file" id="file-input" accept=".p93"/>
@@ -2932,6 +2986,8 @@
      JAVASCRIPT
      ============================================================== -->
 <script>
+// LLM-NAV: JS I18N.
+// This section owns translations plus language-triggered rerender logic.
 // ================================================================
 // I18N
 // ================================================================
@@ -3220,6 +3276,109 @@ const I18N = {
 
 let currentLang = 'de';
 
+const UI_TERM_MAP = {
+  de: {
+    extracted: 'extrahiert',
+    derived: 'abgeleitet',
+    missing: 'fehlt',
+    base_product: 'Basisprodukt',
+    base_product_candidate: 'Basisprodukt',
+    virtual_bundle: 'Virtuelles Bündel',
+    virtual_product: 'Virtuelles Produkt',
+    Type: 'Produkttyp',
+    Luminaire: 'Leuchtentyp',
+    IP: 'IP',
+    Ip: 'IP',
+    Mounting: 'Montage',
+    Monitoring: 'Überwachung',
+    Supply: 'Versorgung',
+    'Flux Main': 'Lichtstrom Netzbetrieb',
+    'Flux Emergency': 'Lichtstrom Notbetrieb',
+    IK: 'IK-Klasse',
+    'Recognition Distance': 'Erkennungsweite',
+    Color: 'Farbe',
+    Material: 'Material',
+    Height: 'Höhe',
+    Length: 'Länge',
+    Width: 'Breite',
+    'Backup Time': 'Überbrückungszeit',
+    IngressProtection: 'IP-Schutzart',
+    MountingMethod: 'Montageart',
+    LuminousFluxMains: 'Lichtstrom Netzbetrieb',
+    LuminousFluxEmergency: 'Lichtstrom Notbetrieb',
+    IKclass: 'IK-Klasse',
+    RecognitionDistance: 'Erkennungsweite',
+    MaxBackupTime: 'Überbrückungszeit',
+    DesiredSupplyType: 'Gewünschte Versorgung',
+    AllowedMethods: 'Erlaubte Montagearten',
+    EnforcedMethods: 'Erzwungene Montagearten',
+    Warnings: 'Hinweise',
+    Evidence: 'Nachweise',
+    Polycarbonate: 'Polycarbonat',
+    'Zinc die-cast': 'Zinkdruckguss',
+    Plastic: 'Kunststoff',
+    Metal: 'Metall',
+    'Central battery': 'Zentralbatterie',
+    'Single battery': 'Einzelbatterie',
+    different: 'abweichend',
+    'exact match': 'exakte Übereinstimmung',
+    'query did not specify this field': 'Anfrage enthält dieses Feld nicht',
+    'candidate has no value for this field': 'Kandidat hat keinen Wert für dieses Feld',
+    'candidate uses universal mounting compatibility': 'universelle Montagekompatibilität',
+    'candidate IP is higher than query': 'IP-Schutzart des Kandidaten ist höher',
+    'candidate IK is higher than query': 'IK-Klasse des Kandidaten ist höher',
+    'candidate value is higher': 'Kandidatenwert ist höher',
+    'candidate is higher': 'Kandidat ist höher',
+    'equivalent material': 'äquivalentes Material',
+    'type hierarchy match': 'kompatible Typ-Hierarchie',
+    'no comparable value': 'kein Vergleichswert',
+  },
+};
+
+const FIELD_LABEL_MAP = {
+  de: {
+    Produkttyp: 'Produkttyp',
+    'RatingsCertifications:LuminaireType': 'Leuchtentyp',
+    LuminaireType: 'Leuchtentyp',
+    'RatingsCertifications:IngressProtection': 'IP-Schutzart',
+    IngressProtection: 'IP-Schutzart',
+    'Mounting:MountingMethod': 'Montageart',
+    MountingMethod: 'Montageart',
+    Monitoring: 'Überwachung',
+    Supply: 'Versorgung',
+    'ElectronicPerformanceData:LuminousFluxMains': 'Lichtstrom Netzbetrieb',
+    LuminousFluxMains: 'Lichtstrom Netzbetrieb',
+    'ElectronicPerformanceData:LuminousFluxEmergency': 'Lichtstrom Notbetrieb',
+    LuminousFluxEmergency: 'Lichtstrom Notbetrieb',
+    'RatingsCertifications:IKclass': 'IK-Klasse',
+    IKclass: 'IK-Klasse',
+    'RatingsCertifications:RecognitionDistance': 'Erkennungsweite',
+    RecognitionDistance: 'Erkennungsweite',
+    'HousingColorInformation:Color': 'Farbe',
+    Color: 'Farbe',
+    'MaterialData:Material': 'Material',
+    Material: 'Material',
+    'HousingDimensions:Height': 'Höhe',
+    Height: 'Höhe',
+    'HousingDimensions:Length': 'Länge',
+    Length: 'Länge',
+    'HousingDimension:Width': 'Breite',
+    Width: 'Breite',
+    'ElectronicBackupTimes:MaxBackupTime': 'Überbrückungszeit',
+    MaxBackupTime: 'Überbrückungszeit',
+    Artikelnummer: 'Artikelnummer',
+    Positionsnummer: 'Positionsnummer',
+    Verkaufstext: 'Verkaufstext',
+    DesiredSupplyType: 'Gewünschte Versorgung',
+    'Mounting:AllowedMethods': 'Erlaubte Montagearten',
+    AllowedMethods: 'Erlaubte Montagearten',
+    'Mounting:EnforcedMethods': 'Erzwungene Montagearten',
+    EnforcedMethods: 'Erzwungene Montagearten',
+    Warnings: 'Hinweise',
+    Evidence: 'Nachweise',
+  },
+};
+
 function t(key) { return (I18N[currentLang] && I18N[currentLang][key]) || key; }
 
 function applyLang() {
@@ -3241,46 +3400,9 @@ function applyLang() {
   const ogZb = document.getElementById('optgroup-zb');
   if (ogEb) ogEb.label = t('settings.system.group.eb');
   if (ogZb) ogZb.label = t('settings.system.group.zb');
-  // Re-render dynamic parts if results exist (preserve selections)
+  // Re-render dynamic parts while keeping interactive review state intact.
   if (state.results) {
-    const savedSel = { ...state.selections };
-    const savedAcc = {};
-    Object.entries(state.accessorySelections).forEach(([k, v]) => { savedAcc[k] = new Set(v); });
-    renderResults(state.results);
-    state.selections = savedSel;
-    state.accessorySelections = savedAcc;
-    // Re-apply selection visuals
-    Object.entries(savedSel).forEach(([itemKey, sel]) => {
-      if (sel !== null && sel !== undefined) {
-        const card = document.getElementById('item-' + itemKey);
-        if (!card) return;
-        card.querySelectorAll('.col-proposal-th').forEach((th, pi) => th.classList.toggle('is-selected', sel === pi));
-        card.querySelectorAll('.ph-select-btn').forEach((btn, pi) => {
-          btn.classList.toggle('selected', sel === pi);
-          if (sel === pi) btn.innerHTML = '✓ ' + (currentLang === 'de' ? 'Ausgewählt' : 'Selected');
-        });
-        // Update header selection badge
-        const selBadge = document.getElementById('selbadge-' + itemKey);
-        if (selBadge) {
-          if (sel === 'none') {
-            selBadge.className = 'badge item-sel-badge';
-            selBadge.style.cssText = 'background:#FEF2F2;color:#991B1B;border:1px solid #FECACA';
-            selBadge.textContent = t('export.none');
-          } else {
-            const proposals = (state.results?.items || []).find(i => (i.positionsnummer || i.item_id) === itemKey)?.proposals || [];
-            const p = proposals[sel];
-            selBadge.className = 'badge badge-extracted item-sel-badge';
-            selBadge.textContent = '\u2713 ' + (p?.display_article || p?.base_article || '#' + (sel + 1));
-          }
-        }
-        const zuPanel = document.getElementById('zubehoer-' + itemKey);
-        if (zuPanel) {
-          const itm = (state.results?.items || []).find(i => (i.positionsnummer || i.item_id) === itemKey);
-          if (itm) zuPanel.innerHTML = renderZubehoerContent(itemKey, itm.proposals || [], sel);
-        }
-      }
-    });
-    updateProgressBar();
+    renderResults(state.results, { preserveState: true });
   }
   updateExportSummary();
   updateSessionDot();
@@ -3394,6 +3516,14 @@ const state = {
   accessorySelections: {},
 };
 
+function cloneAccessorySelections(selections) {
+  const cloned = {};
+  Object.entries(selections || {}).forEach(([itemKey, values]) => {
+    cloned[itemKey] = new Set(values || []);
+  });
+  return cloned;
+}
+
 // ================================================================
 // HELPERS
 // ================================================================
@@ -3412,6 +3542,83 @@ function formatElapsed(ms) {
 }
 
 function shortField(name) { const p = name.split(':'); return p[p.length - 1]; }
+
+function translateUiTerm(value) {
+  if (currentLang !== 'de' || value === null || value === undefined) return value;
+  return UI_TERM_MAP.de[value] || value;
+}
+
+function formatFieldLabel(name) {
+  if (name === null || name === undefined) return '';
+  if (currentLang !== 'de') return shortField(String(name));
+  const fullName = String(name);
+  return FIELD_LABEL_MAP.de[fullName] || FIELD_LABEL_MAP.de[shortField(fullName)] || shortField(fullName);
+}
+
+function formatLabelText(label) {
+  if (label === null || label === undefined) return '';
+  return translateUiTerm(label);
+}
+
+function formatCandidateType(candidateType) {
+  if (!candidateType) return '';
+  const normalized = String(candidateType);
+  return formatLabelText(normalized) || normalized.replace(/_/g, ' ');
+}
+
+function formatDisplayValue(fieldName, value) {
+  if (value === null || value === undefined || currentLang !== 'de') return value;
+  const text = String(value);
+  if (fieldName === 'MaterialData:Material' || fieldName === 'Material') {
+    return translateUiTerm(text);
+  }
+  if (fieldName === 'Supply' || fieldName === 'DesiredSupplyType') {
+    return translateUiTerm(text);
+  }
+  return translateUiTerm(text);
+}
+
+function isVerticallyScrollable(element) {
+  if (!element) return false;
+  const styles = getComputedStyle(element);
+  return /(auto|scroll|overlay)/.test(styles.overflowY) && element.scrollHeight > element.clientHeight + 1;
+}
+
+function findOuterScrollTarget(element) {
+  let current = element?.parentElement || null;
+  while (current) {
+    if (isVerticallyScrollable(current)) return current;
+    current = current.parentElement;
+  }
+  return document.scrollingElement || document.documentElement;
+}
+
+function forwardMatrixScroll(deltaY, source) {
+  const target = findOuterScrollTarget(source);
+  if (!target) return false;
+  const before = target === (document.scrollingElement || document.documentElement)
+    ? window.scrollY
+    : target.scrollTop;
+  if (target === (document.scrollingElement || document.documentElement)) {
+    window.scrollBy({ top: deltaY, behavior: 'auto' });
+    return window.scrollY !== before;
+  }
+  target.scrollTop += deltaY;
+  return target.scrollTop !== before;
+}
+
+function handleMatrixWheelChaining(event) {
+  const wrapper = event.target.closest('.matrix-wrapper');
+  if (!wrapper || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+  const maxScrollTop = wrapper.scrollHeight - wrapper.clientHeight;
+  if (maxScrollTop <= 0) return;
+  const atTop = wrapper.scrollTop <= 1;
+  const atBottom = wrapper.scrollTop >= maxScrollTop - 1;
+  const pushingPastTop = event.deltaY < 0 && atTop;
+  const pushingPastBottom = event.deltaY > 0 && atBottom;
+  if (!pushingPastTop && !pushingPastBottom) return;
+  if (forwardMatrixScroll(event.deltaY, wrapper)) event.preventDefault();
+}
 
 function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
 
@@ -3435,7 +3642,7 @@ function buildFeedbackMailto(itemKey, item) {
   const qf = item.query_fields || [];
   const excerpt = (item.original_excerpt || '\u2014').slice(0, 200);
   const qFieldsText = qf.filter(f => f.value != null)
-    .map(f => '  ' + shortField(f.field) + ': ' + f.value).join('\n');
+    .map(f => '  ' + formatFieldLabel(f.field) + ': ' + formatDisplayValue(f.field, f.value)).join('\n');
   const topProps = proposals.slice(0, 3)
     .map((p, i) => '  #' + (p.rank || i + 1) + ': ' + (p.display_article || p.base_article || '?') + ' (Score: ' + (p.score || 0).toFixed(3) + ')').join('\n');
   const subject = 'RP Matcher Feedback \u2013 Position ' + itemKey + ' \u2013 ' + p93name;
@@ -3596,6 +3803,18 @@ const fileInput = $('file-input');
 dropzone.addEventListener('drop', e => { if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
 fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
 
+function openFilePicker(event) {
+  if (event?.target?.closest('.file-info-remove')) return;
+  if (typeof fileInput.showPicker === 'function') fileInput.showPicker();
+  else fileInput.click();
+}
+
+function handleDropzoneKeydown(event) {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  event.preventDefault();
+  openFilePicker(event);
+}
+
 function handleFile(f) {
   state.file = f;
   $('file-name').textContent = f.name;
@@ -3679,6 +3898,8 @@ async function pollOutputs(processId, signal) {
   return resp.json();
 }
 
+// LLM-NAV: JS PIPELINE.
+// Upload, process start, polling, JSON paste fallback, and processing-state UI live here.
 // ================================================================
 // PIPELINE ORCHESTRATION
 // ================================================================
@@ -4010,7 +4231,7 @@ function renderReasonCodes(codes, limit = null) {
     if (info === null) return ''; // suppressed
     const label = info ? info[0] : c.replace(/_/g, ' ');
     const cls = info && info[1] === 'match' ? 'rc-match' : info && info[1] === 'upgrade' ? 'rc-upgrade' : '';
-    return `<span class="reason-tag ${cls}">${escapeHtml(label)}</span>`;
+    return `<span class="reason-tag ${cls}">${escapeHtml(formatLabelText(label))}</span>`;
   }).filter(Boolean);
   const visibleTags = limit != null ? tags.slice(0, limit) : tags;
   if (limit != null && tags.length > limit) {
@@ -4036,8 +4257,8 @@ function renderQueryOverview(queryFields) {
     <div class="query-overview-list">
       ${visibleFields.map(qf => `
         <div class="query-overview-row">
-          <span class="query-overview-key">${escapeHtml(shortField(qf.field))}</span>
-          <span class="query-overview-val">${escapeHtml(String(qf.value))}</span>
+          <span class="query-overview-key">${escapeHtml(formatFieldLabel(qf.field))}</span>
+          <span class="query-overview-val">${escapeHtml(String(formatDisplayValue(qf.field, qf.value)))}</span>
         </div>`).join('')}
     </div>
   </div>`;
@@ -4051,7 +4272,7 @@ function renderProductFeatures(features, id, compact = false) {
   html += `<div class="ph-features" id="${id}">`;
   Object.entries(features).forEach(([k, v]) => {
     if (SKIP.has(k) || v === null || v === undefined) return;
-    html += `<div class="ph-feat-row"><span class="ph-feat-key">${escapeHtml(shortField(k))}</span><span class="ph-feat-val">${escapeHtml(String(v))}</span></div>`;
+    html += `<div class="ph-feat-row"><span class="ph-feat-key">${escapeHtml(formatFieldLabel(k))}</span><span class="ph-feat-val">${escapeHtml(String(formatDisplayValue(k, v)))}</span></div>`;
   });
   html += '</div>';
   return html;
@@ -4070,14 +4291,25 @@ function renderExtralogicLogs(logs, itemKey) {
   return html;
 }
 
+// LLM-NAV: JS RESULTS.
+// Comparison normalization, matrix rendering, selection state, and export summary live here.
 // ================================================================
 // RENDER RESULTS
 // ================================================================
-function renderResults(data) {
+function renderResults(data, options = {}) {
+  const preserveState = options.preserveState === true;
   const meta = data._meta || {};
   const items = data.items || [];
+  const previousSelections = preserveState ? { ...state.selections } : {};
+  const previousAccessorySelections = preserveState ? cloneAccessorySelections(state.accessorySelections) : {};
+
   state.selections = {};
-  items.forEach(item => { state.selections[item.positionsnummer || item.item_id] = null; });
+  items.forEach(item => {
+    const key = item.positionsnummer || item.item_id;
+    state.selections[key] = Object.prototype.hasOwnProperty.call(previousSelections, key)
+      ? previousSelections[key]
+      : null;
+  });
 
   // Warnings
   const warningsEl = $('results-warnings');
@@ -4105,6 +4337,12 @@ function renderResults(data) {
   }
 
   state.accessorySelections = {};
+  items.forEach(item => {
+    const key = item.positionsnummer || item.item_id;
+    if (previousAccessorySelections[key]) {
+      state.accessorySelections[key] = new Set(previousAccessorySelections[key]);
+    }
+  });
 
   // Show toolbar
   const toolbar = $('results-toolbar');
@@ -4140,7 +4378,7 @@ function renderResults(data) {
             : `<span class="badge badge-missing">${t('results.no_proposals')}</span>`}
           <span class="badge badge-missing item-sel-badge" id="selbadge-${escapeHtml(key)}">${t('export.not_selected')}</span>
         </div>
-        <a class="feedback-btn" href="${mailtoHref}" onclick="event.stopPropagation()" title="${t('feedback.tooltip')}">\u2709 ${t('feedback.btn')}</a>
+        <a class="feedback-btn" href="${mailtoHref}" onclick="event.stopPropagation()" title="${t('feedback.tooltip')}"><span class="feedback-icon">\u2709</span><span class="feedback-label">${t('feedback.btn')}</span></a>
         <span class="item-card-chevron">\u25BE</span>
       </div>`;
 
@@ -4166,9 +4404,9 @@ function renderResults(data) {
         const srcCls = f.source === 'extracted' ? 'extracted' : f.source === 'derived' ? 'derived' : 'missing';
         const hasVal = f.value != null;
         bodyHtml += `<div class="ev-field-row">
-          <span class="ev-fname">${escapeHtml(shortField(f.field))}</span>
-          <span class="ev-fval${hasVal ? '' : ' missing'}">${hasVal ? escapeHtml(String(f.value)) : '\u2014'}</span>
-          <span class="ev-badge ${srcCls}">${escapeHtml(f.source || '?')}</span>
+          <span class="ev-fname">${escapeHtml(formatFieldLabel(f.field))}</span>
+          <span class="ev-fval${hasVal ? '' : ' missing'}">${hasVal ? escapeHtml(String(formatDisplayValue(f.field, f.value))) : '\u2014'}</span>
+          <span class="ev-badge ${srcCls}">${escapeHtml(formatLabelText(f.source || '?'))}</span>
         </div>`;
       });
       bodyHtml += '</div>';
@@ -4193,7 +4431,7 @@ function renderResults(data) {
     bodyHtml += renderComparisonMatrix(proposals, qf, key);
 
     // Zubehör panel
-    bodyHtml += `<div class="zubehoer-panel" id="zubehoer-${escapeHtml(key)}">${renderZubehoerContent(key, proposals, null)}</div>`;
+    bodyHtml += `<div class="zubehoer-panel" id="zubehoer-${escapeHtml(key)}">${renderZubehoerContent(key, proposals, state.selections[key])}</div>`;
 
     bodyHtml += '</div>';
     card.innerHTML = headerHtml + bodyHtml;
@@ -4507,8 +4745,8 @@ function renderOverviewIssues(issues) {
     <li class="ph-issues-item">
       <span class="ph-issues-tag ${escapeHtml(issue.status || 'different')}">${escapeHtml(getIssueStatusLabel(issue.status))}</span>
       <div class="ph-issues-text">
-        <strong>${escapeHtml(issue.label || shortField(issue.field || ''))}</strong>
-        <span>${escapeHtml(issue.note || issue.status || '')}</span>
+        <strong>${escapeHtml(formatLabelText(issue.label || formatFieldLabel(issue.field || '')))}</strong>
+        <span>${escapeHtml(formatLabelText(issue.note || issue.status || ''))}</span>
       </div>
     </li>`).join('');
   return `<details class="ph-issues-panel">
@@ -4552,7 +4790,10 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
     const rank = p.rank ?? (pi + 1);
     const isSel = state.selections[itemKey] === pi;
     const typeCls = (p.candidate_type || '').includes('virtual') ? 'virtual' : '';
-    const typeLabel = p.candidate_type ? `<span class="ph-type-badge ${typeCls}">${escapeHtml(p.candidate_type)}</span>` : '';
+    const typeLabel = p.candidate_type ? `<span class="ph-type-badge ${typeCls}">${escapeHtml(formatCandidateType(p.candidate_type))}</span>` : '';
+    const topSelectLabel = isSel
+      ? (lang === 'de' ? '\u2713\u00a0Ausgewählt' : '\u2713\u00a0Selected')
+      : (lang === 'de' ? 'Auswählen' : 'Select');
 
     // Slim sticky header: only rank + article + score
     html += `<th class="col-proposal-th${isSel ? ' is-selected' : ''}" id="ph-${ek}-${pi}">
@@ -4566,6 +4807,13 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
         <div class="ph-score-row">
           <div class="ph-score-bar-wrap"><div class="ph-score-bar-fill" style="width:${pct}%"></div></div>
           <span class="ph-score-num">${score.toFixed(3)} <span style="opacity:0.6;font-size:0.6rem">(${pct}%)</span></span>
+        </div>
+        <div class="ph-header-actions">
+          <button class="ph-select-btn top-cta${isSel ? ' selected' : ''}"
+            data-item="${ek}" data-pi="${pi}"
+            onclick="selectProposal('${ek}',${pi},this)">
+            ${topSelectLabel}
+          </button>
         </div>
       </div>
     </th>`;
@@ -4609,11 +4857,6 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
       ${summaryHtml}${renderReasonCodes(p.reason_codes, 4)}${normIssuesHtml}
       <div class="ph-overview-actions">
         ${renderProductFeatures(p.displayFeatures || p.product_features, 'pf-' + ek + '-' + pi, true)}
-        <button class="ph-select-btn compact${isSel ? ' selected' : ''}"
-          data-item="${ek}" data-pi="${pi}"
-          onclick="selectProposal('${ek}',${pi},this)">
-          ${isSel ? (lang === 'de' ? '\u2713\u00a0Ausgew\u00e4hlt' : '\u2713\u00a0Selected') : (lang === 'de' ? 'Ausw\u00e4hlen' : 'Select')}
-        </button>
       </div>
     </div></div>`;
   });
@@ -4636,11 +4879,11 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
     const qVal = qf?.value != null ? String(qf.value) : null;
     const srcCls = qf?.source === 'extracted' ? 'extracted' : qf?.source === 'derived' ? 'derived' : 'missing';
     const qDisplay = qVal != null
-      ? `<span class="qval" title="${escapeHtml(qVal)}">${escapeHtml(qVal)}</span><span class="src-dot ${srcCls}" title="${qf?.source || ''}"></span>`
+      ? `<span class="qval" title="${escapeHtml(String(formatDisplayValue(field, qVal)))}">${escapeHtml(String(formatDisplayValue(field, qVal)))}</span><span class="src-dot ${srcCls}" title="${escapeHtml(String(formatLabelText(qf?.source || '')))}"></span>`
       : `<span class="qval missing">\u2014</span>`;
 
     html += `<tr class="field-row">
-      <td class="col-fname"><div class="col-fname-content" title="${escapeHtml(field)}">${escapeHtml(shortField(field))}</div></td>
+      <td class="col-fname"><div class="col-fname-content" title="${escapeHtml(formatFieldLabel(field))}">${escapeHtml(formatFieldLabel(field))}</div></td>
       <td class="col-query"><div class="col-query-content">${qDisplay}</div></td>`;
 
     displayProposals.forEach((p, pi) => {
@@ -4653,8 +4896,9 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
         const comp = normalizeComparison(rawComp);
         const sc = comp.status === 'match' ? 'cell-match' : comp.status === 'different' ? 'cell-diff' : comp.status === 'upgrade' ? 'cell-upgrade' : 'cell-missing';
         const icon = comp.status === 'match' ? '\u2713' : comp.status === 'different' ? '\u2717' : comp.status === 'upgrade' ? '\u2191' : '\u00b7';
-        const cVal = comp.candidate_value != null ? String(comp.candidate_value) : '\u2014';
-        html += `<td class="${sc}${selCls}" data-col="${pi}"><div class="cell-inner"><span class="cell-icon">${icon}</span><span class="cell-val" title="${escapeHtml(cVal + (comp.note ? ' (' + comp.note + ')' : ''))}">${escapeHtml(cVal)}</span></div></td>`;
+        const cVal = comp.candidate_value != null ? String(formatDisplayValue(field, comp.candidate_value)) : '\u2014';
+        const note = comp.note ? String(formatLabelText(comp.note)) : '';
+        html += `<td class="${sc}${selCls}" data-col="${pi}"><div class="cell-inner"><span class="cell-icon">${icon}</span><span class="cell-val" title="${escapeHtml(cVal + (note ? ' (' + note + ')' : ''))}">${escapeHtml(cVal)}</span></div></td>`;
       }
     });
     html += '</tr>';
@@ -4912,8 +5156,9 @@ function toggleRawJson() { $('raw-json-output').classList.toggle('hidden'); }
 // INIT
 // ================================================================
 window.addEventListener('resize', debounce(() => {
-  if (state.results) renderResults(state.results);
+  if (state.results) renderResults(state.results, { preserveState: true });
 }, 120));
+document.addEventListener('wheel', handleMatrixWheelChaining, { passive: false });
 
 goToStep('config');
 applyLang();

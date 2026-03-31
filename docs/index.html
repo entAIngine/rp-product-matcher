@@ -553,6 +553,76 @@
 
     .mode-toggle-btn:hover:not(.active) { color: var(--text-2); background: var(--bg-2); }
 
+    .resume-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .resume-shell::before {
+      content: '';
+      position: absolute;
+      inset: 12px 0 auto;
+      height: 220px;
+      background:
+        radial-gradient(circle at 12% 20%, rgba(96, 165, 250, 0.2), transparent 36%),
+        linear-gradient(135deg, rgba(16, 50, 207, 0.18), transparent 62%);
+      filter: blur(10px);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .resume-card {
+      background:
+        linear-gradient(145deg, rgba(7, 31, 61, 0.92), rgba(9, 42, 77, 0.92)),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.15), transparent 35%);
+      border-color: rgba(46, 136, 213, 0.22);
+      box-shadow: 0 18px 40px rgba(1, 25, 60, 0.22);
+    }
+
+    .resume-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .resume-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .resume-status {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(255, 255, 255, 0.03);
+      color: #A4C8E4;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .resume-status.hidden { display: none; }
+
+    .resume-status.error {
+      color: #FCA5A5;
+      border-color: rgba(248, 113, 113, 0.26);
+      background: rgba(127, 29, 29, 0.18);
+    }
+
+    .resume-status.success {
+      color: #BFDBFE;
+      border-color: rgba(96, 165, 250, 0.22);
+      background: rgba(30, 64, 175, 0.16);
+    }
+
+    .process-id-input {
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+
     /* ================================================================
        DROPZONE
        ================================================================ */
@@ -1426,6 +1496,107 @@
     .processing-status .status-text { color: #FFFFFF; }
     .processing-status .elapsed { color: #2E88D5; }
     .processing-status .sub-text { color: #5A7FA0; }
+
+    .process-ribbon {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 10px 0 24px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(96, 165, 250, 0.16);
+      background:
+        linear-gradient(135deg, rgba(16, 50, 207, 0.2), rgba(1, 25, 60, 0.84)),
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 32%);
+      box-shadow: 0 12px 30px rgba(1, 25, 60, 0.18);
+    }
+
+    .process-ribbon.hidden { display: none; }
+
+    .process-ribbon-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .process-ribbon-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8BA0B8;
+    }
+
+    .process-ribbon-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .process-pill {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .process-state-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+
+    .process-state-badge.live {
+      color: #DBEAFE;
+      background: rgba(59, 130, 246, 0.18);
+      border-color: rgba(96, 165, 250, 0.28);
+    }
+
+    .process-state-badge.cached {
+      color: #FEF3C7;
+      background: rgba(251, 191, 36, 0.16);
+      border-color: rgba(251, 191, 36, 0.24);
+    }
+
+    .process-state-badge.idle {
+      color: #CBD5E1;
+      background: rgba(148, 163, 184, 0.16);
+      border-color: rgba(148, 163, 184, 0.22);
+    }
+
+    .process-share-btn {
+      border: 1px solid rgba(216, 226, 240, 0.18);
+      border-radius: 999px;
+      padding: 10px 16px;
+      color: #E8F0FC;
+      background: rgba(255, 255, 255, 0.03);
+      white-space: nowrap;
+    }
+
+    .process-share-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+    }
     .task-output-item { background: #0D2A4D; border-color: #1E3E6A; }
     .task-output-header .task-name { color: #A4C8E4; }
     .task-output-body pre { background: #071F3D; color: #7BAAE8; }
@@ -2456,6 +2627,19 @@
         flex: 1 1 140px;
         text-align: center;
       }
+      .resume-actions {
+        justify-content: stretch;
+      }
+      .resume-actions .btn {
+        width: 100%;
+      }
+      .process-ribbon {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .process-share-btn {
+        width: 100%;
+      }
       .evidence-col {
         padding: 14px 16px;
       }
@@ -2750,6 +2934,7 @@
 
     <div class="mode-toggle">
       <button class="mode-toggle-btn active" data-mode="api" onclick="setMode('api')" data-i18n="mode.api"></button>
+      <button class="mode-toggle-btn" data-mode="resume" onclick="setMode('resume')" data-i18n="mode.resume"></button>
       <button class="mode-toggle-btn" data-mode="json" onclick="setMode('json')" data-i18n="mode.json"></button>
     </div>
 
@@ -2766,7 +2951,7 @@
               <input type="password" class="input-field" id="api-key-input"
                      data-i18n-placeholder="auth.placeholder"
                      autocomplete="off" spellcheck="false"/>
-              <button class="toggle-vis" onclick="toggleKeyVis()" data-i18n-title="auth.toggle">&#9673;</button>
+              <button class="toggle-vis" onclick="toggleKeyVis('api-key-input')" data-i18n-title="auth.toggle">&#9673;</button>
             </div>
             <div class="security-note" data-i18n="auth.security"></div>
           </div>
@@ -2859,6 +3044,43 @@
       </div>
     </div>
 
+    <!-- RESUME MODE -->
+    <div id="mode-resume" class="hidden">
+      <div class="resume-shell">
+        <div class="card resume-card">
+          <div class="card-header">
+            <span class="card-title" data-i18n="resume.title"></span>
+            <span class="label" data-i18n="resume.subtitle"></span>
+          </div>
+          <div class="resume-grid">
+            <div class="input-group">
+              <label class="label" data-i18n="auth.label"></label>
+              <div class="input-wrapper">
+                <input type="password" class="input-field" id="api-key-resume-input"
+                       data-i18n-placeholder="auth.placeholder"
+                       autocomplete="off" spellcheck="false"/>
+                <button class="toggle-vis" onclick="toggleKeyVis('api-key-resume-input')" data-i18n-title="auth.toggle">&#9673;</button>
+              </div>
+              <div class="security-note" data-i18n="auth.security"></div>
+            </div>
+
+            <div class="input-group">
+              <label class="label" data-i18n="resume.process_label"></label>
+              <input type="text" class="input-field process-id-input" id="resume-process-input"
+                     data-i18n-placeholder="resume.process_placeholder"
+                     autocomplete="off" spellcheck="false"/>
+              <div class="security-note" data-i18n="resume.process_hint"></div>
+            </div>
+          </div>
+          <div class="resume-actions">
+            <button class="btn btn-primary" id="btn-resume" onclick="startResumeFromInput()" disabled data-i18n="resume.cta"></button>
+            <button class="btn btn-ghost" onclick="fillResumeFromRoute()" data-i18n="resume.use_link"></button>
+          </div>
+          <div class="resume-status hidden" id="resume-status"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- JSON PASTE MODE -->
     <div id="mode-json" class="hidden">
       <div class="card">
@@ -2880,6 +3102,16 @@
        STEP 2: PROCESSING
        ============================================================ -->
   <section class="section" id="section-processing">
+    <div class="process-ribbon hidden" id="processing-process-ribbon">
+      <div class="process-ribbon-copy">
+        <div class="process-ribbon-kicker" data-i18n="process.ribbon"></div>
+        <div class="process-ribbon-line">
+          <span class="process-pill" id="processing-process-pill"></span>
+          <span class="process-state-badge" id="processing-process-state"></span>
+        </div>
+      </div>
+      <button class="btn btn-ghost process-share-btn" id="processing-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
+    </div>
 
     <div class="pipeline">
       <div class="pipeline-node" id="pipe-upload">
@@ -2939,6 +3171,16 @@
        STEP 3: RESULTS
        ============================================================ -->
   <section class="section" id="section-results">
+    <div class="process-ribbon hidden" id="results-process-ribbon">
+      <div class="process-ribbon-copy">
+        <div class="process-ribbon-kicker" data-i18n="process.ribbon"></div>
+        <div class="process-ribbon-line">
+          <span class="process-pill" id="results-process-pill"></span>
+          <span class="process-state-badge" id="results-process-state"></span>
+        </div>
+      </div>
+      <button class="btn btn-ghost process-share-btn" id="results-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
+    </div>
     <div id="results-warnings"></div>
     <div class="meta-bar" id="results-meta"></div>
 
@@ -2968,7 +3210,7 @@
       <div class="export-actions">
         <button class="btn btn-primary" onclick="downloadExport('csv')" data-i18n="export.csv"></button>
         <button class="btn btn-secondary" onclick="downloadExport('json')" data-i18n="export.json"></button>
-        <button class="btn btn-ghost" onclick="goToStep('config')" data-i18n="btn.new"></button>
+        <button class="btn btn-ghost" onclick="startFreshAnalysis()" data-i18n="btn.new"></button>
       </div>
     </div>
 
@@ -3001,12 +3243,23 @@ const I18N = {
     'nav.results': 'Ergebnisse',
     'nav.export': 'Export',
     'mode.api': 'API-Modus',
+    'mode.resume': 'Prozess fortsetzen',
     'mode.json': 'JSON einf\u00fcgen',
     'auth.title': 'Authentifizierung',
     'auth.label': 'Entaingine API-Schl\u00fcssel',
     'auth.placeholder': 'Schl\u00fcssel hier einf\u00fcgen \u2026',
     'auth.toggle': 'Schl\u00fcssel anzeigen/verbergen',
     'auth.security': '\u26A1 Wird nur im Sitzungsspeicher gehalten \u2014 kein persistenter Speicher',
+    'resume.title': 'Mission Replay',
+    'resume.subtitle': 'Vorhandenen Lauf laden',
+    'resume.process_label': 'Process ID',
+    'resume.process_placeholder': 'z. B. 5d60fd40-df55-4342-9575-97827f057263',
+    'resume.process_hint': 'Nur die Process ID wird im Link geteilt. Der API-Schl\u00fcssel bleibt lokal im Sitzungsspeicher.',
+    'resume.cta': 'Prozess laden',
+    'resume.use_link': 'Link erneut lesen',
+    'resume.prefilled': 'Process ID aus URL \u00fcbernommen',
+    'resume.enter_process': 'Bitte eine Process ID eingeben.',
+    'resume.resume_failed': 'Prozess konnte nicht geladen werden',
     'file.title': 'P93-Datei',
     'file.drop': 'P93-Datei hierher ziehen',
     'file.click': 'oder zum Ausw\u00e4hlen klicken',
@@ -3045,6 +3298,8 @@ const I18N = {
     'json.raw': 'Roh-JSON anzeigen/verbergen',
     'pipeline.upload': 'Upload',
     'pipeline.process': 'Prozess',
+    'pipeline.watch': 'Replay',
+    'pipeline.sync': 'Sync',
     'pipeline.extraction': 'Extraktion',
     'pipeline.ranking': 'Ranking',
     'processing.init': 'Initialisierung \u2026',
@@ -3060,6 +3315,10 @@ const I18N = {
     'processing.tasks_completed': 'Aufgabe(n) abgeschlossen',
     'processing.tasks': 'Aufgaben',
     'processing.total_time': 'Gesamtzeit',
+    'processing.resume_connecting': 'Verbinde mit vorhandenem Prozess \u2026',
+    'processing.resume_cached': 'Zwischengespeicherte Ergebnisse geladen',
+    'processing.resume_waiting_key': 'Process ID erkannt \u2014 API-Schl\u00fcssel eingeben, um Live-Daten zu laden.',
+    'processing.resume_watch': 'Vorhandenen Lauf beobachten',
     'results.proposals': 'Vorschl\u00e4ge',
     'results.no_proposals': 'Keine Vorschl\u00e4ge',
     'results.position': 'Position',
@@ -3072,6 +3331,7 @@ const I18N = {
     'results.time': 'Zeit',
     'results.route': 'Route',
     'results.run': 'Run-ID',
+    'results.process': 'Process',
     'results.experimental': 'EXPERIMENTELL \u2014 Virtuell',
     'summary.match_label': 'Merkmaltreffer',
     'summary.match_tooltip': 'Anzahl der Anfrage-Merkmale, die mit diesem Vorschlag \u00fcbereinstimmen.',
@@ -3089,6 +3349,14 @@ const I18N = {
     'export.proposal': 'Vorschlag',
     'export.csv': 'CSV herunterladen',
     'export.json': 'JSON herunterladen',
+    'share.copy': 'Link kopieren',
+    'share.copied': 'Link kopiert',
+    'share.failed': 'Kopieren fehlgeschlagen',
+    'share.manual': 'Link manuell kopieren',
+    'process.ribbon': 'Process Link',
+    'process.state.live': 'LIVE',
+    'process.state.cached': 'CACHE',
+    'process.state.idle': 'BEREIT',
     'fg.identity': 'Produktidentit\u00e4t',
     'fg.mounting': 'Montage & System',
     'fg.protection': 'Schutz & Sicherheit',
@@ -3141,12 +3409,23 @@ const I18N = {
     'nav.results': 'Results',
     'nav.export': 'Export',
     'mode.api': 'API Mode',
+    'mode.resume': 'Resume Process',
     'mode.json': 'Paste JSON',
     'auth.title': 'Authentication',
     'auth.label': 'Entaingine API Key',
     'auth.placeholder': 'Paste key here \u2026',
     'auth.toggle': 'Show/hide key',
     'auth.security': '\u26A1 Stored in session memory only \u2014 no persistent storage',
+    'resume.title': 'Mission Replay',
+    'resume.subtitle': 'Reconnect to an existing run',
+    'resume.process_label': 'Process ID',
+    'resume.process_placeholder': 'e.g. 5d60fd40-df55-4342-9575-97827f057263',
+    'resume.process_hint': 'Only the process ID is shared in the link. The API key stays local in session storage.',
+    'resume.cta': 'Load process',
+    'resume.use_link': 'Read link again',
+    'resume.prefilled': 'Process ID loaded from link',
+    'resume.enter_process': 'Enter a process ID first.',
+    'resume.resume_failed': 'Unable to load process',
     'file.title': 'P93 File',
     'file.drop': 'Drop P93 file here',
     'file.click': 'or click to browse',
@@ -3185,6 +3464,8 @@ const I18N = {
     'json.raw': 'Show/hide raw JSON',
     'pipeline.upload': 'Upload',
     'pipeline.process': 'Process',
+    'pipeline.watch': 'Replay',
+    'pipeline.sync': 'Sync',
     'pipeline.extraction': 'Extraction',
     'pipeline.ranking': 'Ranking',
     'processing.init': 'Initializing \u2026',
@@ -3200,6 +3481,10 @@ const I18N = {
     'processing.tasks_completed': 'task(s) completed',
     'processing.tasks': 'tasks',
     'processing.total_time': 'total time',
+    'processing.resume_connecting': 'Connecting to existing process \u2026',
+    'processing.resume_cached': 'Loaded cached results',
+    'processing.resume_waiting_key': 'Process ID detected \u2014 enter an API key to fetch live data.',
+    'processing.resume_watch': 'Watching existing run',
     'results.proposals': 'Proposals',
     'results.no_proposals': 'No proposals',
     'results.position': 'Line Item',
@@ -3212,6 +3497,7 @@ const I18N = {
     'results.time': 'Time',
     'results.route': 'Route',
     'results.run': 'Run ID',
+    'results.process': 'Process',
     'results.experimental': 'EXPERIMENTAL \u2014 Virtual',
     'summary.match_label': 'Feature matches',
     'summary.match_tooltip': 'Number of inquiry features that match this proposal.',
@@ -3229,6 +3515,14 @@ const I18N = {
     'export.proposal': 'Proposal',
     'export.csv': 'Download CSV',
     'export.json': 'Download JSON',
+    'share.copy': 'Copy link',
+    'share.copied': 'Link copied',
+    'share.failed': 'Copy failed',
+    'share.manual': 'Copy link manually',
+    'process.ribbon': 'Process Link',
+    'process.state.live': 'LIVE',
+    'process.state.cached': 'CACHE',
+    'process.state.idle': 'READY',
     'fg.identity': 'Product Identity',
     'fg.mounting': 'Mounting & System',
     'fg.protection': 'Protection & Safety',
@@ -3405,6 +3699,8 @@ function applyLang() {
     renderResults(state.results, { preserveState: true });
   }
   updateExportSummary();
+  updatePipelineModeLabels();
+  updateProcessRibbon();
   updateSessionDot();
 }
 
@@ -3448,6 +3744,8 @@ const PROCESS_TEMPLATE_ID = 11738;
 const SPACE_ID = '.eai.rp-group';
 const POLL_INTERVAL = 8000;
 const MAX_POLL_TIME = 600000;
+const SESSION_API_KEY_KEY = 'rp-matcher:api-key';
+const SESSION_PROCESS_CACHE_PREFIX = 'rp-matcher:process-cache:';
 
 const FIELD_GROUPS_MAP = {
   'fg.identity': ['Produkttyp', 'RatingsCertifications:LuminaireType', 'Betriebsart'],
@@ -3506,15 +3804,25 @@ const state = {
   apiKey: '',
   file: null,
   currentStep: 'config',
+  activeProcessId: '',
   processing: {
-    phase: null, blobUrl: null, processId: null,
-    startTime: null, timerInterval: null, abortController: null, error: null,
+    phase: null,
+    blobUrl: null,
+    processId: null,
+    source: 'api',
+    liveState: 'idle',
+    startTime: null,
+    timerInterval: null,
+    abortController: null,
+    error: null,
   },
   pipelineResponse: null,
   results: null,
   selections: {},
   accessorySelections: {},
 };
+
+let suppressRouteSync = false;
 
 function cloneAccessorySelections(selections) {
   const cloned = {};
@@ -3576,6 +3884,196 @@ function formatDisplayValue(fieldName, value) {
     return translateUiTerm(text);
   }
   return translateUiTerm(text);
+}
+
+function sanitizeProcessId(value) {
+  return String(value || '').trim();
+}
+
+function getRouteState() {
+  const url = new URL(window.location.href);
+  const rawStep = url.hash.replace(/^#/, '').trim();
+  return {
+    processId: sanitizeProcessId(url.searchParams.get('process')),
+    step: STEPS.includes(rawStep) ? rawStep : 'config',
+  };
+}
+
+function getRouteProcessId() {
+  return getRouteState().processId;
+}
+
+function getRoutableProcessId() {
+  return sanitizeProcessId(state.activeProcessId || $('resume-process-input')?.value || '');
+}
+
+function buildRouteUrl(step = state.currentStep, processId = getRoutableProcessId()) {
+  const url = new URL(window.location.href);
+  if (processId) url.searchParams.set('process', processId);
+  else url.searchParams.delete('process');
+  url.hash = `#${step}`;
+  return url;
+}
+
+function syncRoute({ step = state.currentStep, processId = getRoutableProcessId(), replace = false } = {}) {
+  if (suppressRouteSync) return;
+  const nextUrl = buildRouteUrl(step, processId);
+  const next = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`;
+  const current = `${window.location.pathname}${window.location.search}${window.location.hash || ''}`;
+  if (next === current) return;
+  window.history[replace ? 'replaceState' : 'pushState']({}, '', next);
+}
+
+function getProcessCacheKey(processId) {
+  return `${SESSION_PROCESS_CACHE_PREFIX}${sanitizeProcessId(processId)}`;
+}
+
+function loadProcessCache(processId) {
+  const normalized = sanitizeProcessId(processId);
+  if (!normalized) return null;
+  try {
+    const raw = window.sessionStorage.getItem(getProcessCacheKey(normalized));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || parsed.processId !== normalized) return null;
+    return parsed;
+  } catch (err) {
+    return null;
+  }
+}
+
+function persistProcessCache(processId, pipelineResponse = state.pipelineResponse, results = state.results) {
+  const normalized = sanitizeProcessId(processId);
+  if (!normalized) return;
+  try {
+    window.sessionStorage.setItem(getProcessCacheKey(normalized), JSON.stringify({
+      processId: normalized,
+      pipelineResponse: pipelineResponse || null,
+      results: results || null,
+      savedAt: new Date().toISOString(),
+    }));
+  } catch (err) {
+    // Ignore session storage write failures.
+  }
+}
+
+function persistApiKey() {
+  try {
+    if (state.apiKey) window.sessionStorage.setItem(SESSION_API_KEY_KEY, state.apiKey);
+    else window.sessionStorage.removeItem(SESSION_API_KEY_KEY);
+  } catch (err) {
+    // Ignore session storage write failures.
+  }
+}
+
+function getStoredApiKey() {
+  try {
+    return window.sessionStorage.getItem(SESSION_API_KEY_KEY) || '';
+  } catch (err) {
+    return '';
+  }
+}
+
+function syncApiKeyInputs() {
+  ['api-key-input', 'api-key-resume-input'].forEach(id => {
+    const input = $(id);
+    if (input && input.value !== state.apiKey) input.value = state.apiKey;
+  });
+}
+
+function setResumeStatus(message = '', tone = 'info') {
+  const el = $('resume-status');
+  if (!el) return;
+  el.classList.remove('hidden', 'error', 'success');
+  if (!message) {
+    el.textContent = '';
+    el.classList.add('hidden');
+    return;
+  }
+  el.textContent = message;
+  if (tone === 'error') el.classList.add('error');
+  else if (tone === 'success') el.classList.add('success');
+}
+
+function setApiKey(value, { persist = true } = {}) {
+  state.apiKey = String(value || '').trim();
+  syncApiKeyInputs();
+  if (persist) persistApiKey();
+  updateStartBtn();
+  updateResumeBtn();
+  updateSessionDot();
+}
+
+function setActiveProcessId(processId, { syncInput = true } = {}) {
+  const normalized = sanitizeProcessId(processId);
+  state.activeProcessId = normalized;
+  state.processing.processId = normalized || null;
+  if (syncInput && $('resume-process-input') && $('resume-process-input').value !== normalized) {
+    $('resume-process-input').value = normalized;
+  }
+  updateResumeBtn();
+  updateProcessRibbon();
+}
+
+function updatePipelineModeLabels() {
+  const uploadLabel = document.querySelector('#pipe-upload .pipeline-label');
+  const startLabel = document.querySelector('#pipe-start .pipeline-label');
+  if (uploadLabel) uploadLabel.textContent = state.processing.source === 'resume' ? t('pipeline.watch') : t('pipeline.upload');
+  if (startLabel) startLabel.textContent = state.processing.source === 'resume' ? t('pipeline.sync') : t('pipeline.process');
+}
+
+function updateProcessRibbon(forceState = null) {
+  const processId = getRoutableProcessId();
+  const liveState = forceState || state.processing.liveState || 'idle';
+  ['processing', 'results'].forEach(section => {
+    const ribbon = $(`${section}-process-ribbon`);
+    const pill = $(`${section}-process-pill`);
+    const badge = $(`${section}-process-state`);
+    if (!ribbon || !pill || !badge) return;
+    ribbon.classList.toggle('hidden', !processId);
+    pill.textContent = processId || '';
+    badge.classList.remove('live', 'cached', 'idle');
+    badge.classList.add(liveState === 'live' ? 'live' : liveState === 'cached' ? 'cached' : 'idle');
+    badge.textContent = t(`process.state.${liveState === 'live' ? 'live' : liveState === 'cached' ? 'cached' : 'idle'}`);
+  });
+}
+
+function copyShareLink(buttonEl) {
+  const processId = getRoutableProcessId();
+  if (!processId) return;
+  const shareUrl = buildRouteUrl('results', processId).toString();
+  const original = t('share.copy');
+  navigator.clipboard.writeText(shareUrl).then(() => {
+    if (!buttonEl) return;
+    buttonEl.textContent = t('share.copied');
+    window.setTimeout(() => { buttonEl.textContent = original; }, 1400);
+  }).catch(() => {
+    if (buttonEl) {
+      buttonEl.textContent = t('share.failed');
+      window.setTimeout(() => { buttonEl.textContent = original; }, 1800);
+    }
+    window.prompt(t('share.manual'), shareUrl);
+  });
+}
+
+function parseResultPayload(parsed) {
+  if (parsed && parsed._meta && Array.isArray(parsed.items)) return parsed;
+  if (parsed && Array.isArray(parsed.outputs)) {
+    const last = parsed.outputs[parsed.outputs.length - 1];
+    return JSON.parse(last?.outputText || '');
+  }
+  throw new Error(t('json_unknown'));
+}
+
+function hydrateCachedProcess(cache, { render = true } = {}) {
+  if (!cache) return false;
+  setActiveProcessId(cache.processId);
+  state.pipelineResponse = cache.pipelineResponse || null;
+  state.results = cache.results || null;
+  state.processing.liveState = cache.results ? 'cached' : 'idle';
+  if (render && cache.results) renderResults(cache.results);
+  updateProcessRibbon(cache.results ? 'cached' : 'idle');
+  return true;
 }
 
 function isVerticallyScrollable(element) {
@@ -3741,7 +4239,7 @@ function toggleAccessory(itemKey, accKey) {
 // ================================================================
 const STEPS = ['config', 'processing', 'results', 'export'];
 
-function goToStep(step) {
+function goToStep(step, options = {}) {
   state.currentStep = step;
   qsa('.section').forEach(s => s.classList.remove('active'));
   $(`section-${step === 'export' ? 'results' : step}`).classList.add('active');
@@ -3756,34 +4254,44 @@ function goToStep(step) {
   $('line-1-2').classList.toggle('filled', curIdx > 0);
   $('line-2-3').classList.toggle('filled', curIdx > 1);
   $('line-3-4').classList.toggle('filled', curIdx > 2);
+  if (options.updateHistory !== false) {
+    syncRoute({ step, processId: getRoutableProcessId(), replace: options.replaceHistory === true });
+  }
 }
 
 // ================================================================
 // MODE TOGGLE
 // ================================================================
-function setMode(mode) {
+function setMode(mode, options = {}) {
   state.mode = mode;
   qsa('.mode-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
   $('mode-api').classList.toggle('hidden', mode !== 'api');
+  $('mode-resume').classList.toggle('hidden', mode !== 'resume');
   $('mode-json').classList.toggle('hidden', mode !== 'json');
+  if (options.updateHistory !== false) {
+    syncRoute({ step: state.currentStep, processId: mode === 'resume' ? getRoutableProcessId() : '', replace: true });
+  }
 }
 
 // ================================================================
 // API KEY
 // ================================================================
-function toggleKeyVis() {
-  const inp = $('api-key-input');
+function toggleKeyVis(inputId = 'api-key-input') {
+  const inp = $(inputId);
+  if (!inp) return;
   inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 
-$('api-key-input').addEventListener('input', function() {
-  state.apiKey = this.value.trim();
-  updateStartBtn();
-  updateSessionDot();
+['api-key-input', 'api-key-resume-input'].forEach(id => {
+  const input = $(id);
+  if (!input) return;
+  input.addEventListener('input', function() {
+    setApiKey(this.value);
+  });
 });
 
 function updateSessionDot() {
-  const active = state.apiKey.length > 10;
+  const active = state.apiKey.length > 5;
   $('session-dot').classList.toggle('active', active);
   $('session-label').textContent = active ? t('session.connected') : t('session.none');
 }
@@ -3836,6 +4344,28 @@ function removeFile() {
 
 function updateStartBtn() {
   $('btn-start').disabled = !(state.apiKey.length > 5 && state.file);
+}
+
+function updateResumeBtn() {
+  const processId = sanitizeProcessId($('resume-process-input')?.value);
+  $('btn-resume').disabled = !processId;
+}
+
+$('resume-process-input').addEventListener('input', function() {
+  const processId = sanitizeProcessId(this.value);
+  if (state.mode === 'resume') {
+    setActiveProcessId(processId, { syncInput: false });
+    syncRoute({ step: state.currentStep, processId, replace: true });
+  }
+  updateResumeBtn();
+});
+
+function fillResumeFromRoute() {
+  const routeProcessId = getRouteProcessId();
+  if (!routeProcessId) return;
+  setMode('resume', { updateHistory: false });
+  setActiveProcessId(routeProcessId);
+  setResumeStatus(t('resume.prefilled'), 'success');
 }
 
 // ================================================================
@@ -3916,6 +4446,7 @@ function setConnector(id, status) {
 }
 
 function startTimer() {
+  stopTimer();
   state.processing.startTime = Date.now();
   state.processing.timerInterval = setInterval(() => {
     $('processing-elapsed').textContent = formatElapsed(Date.now() - state.processing.startTime);
@@ -4011,18 +4542,160 @@ function addTaskOutput(name, text, status) {
 }
 
 async function startPipeline() {
-  state.processing.error = null;
-  state.processing.blobUrl = null;
-  state.processing.processId = null;
-  state.processing.abortController = new AbortController();
-  const signal = state.processing.abortController.signal;
+  return startNewProcess();
+}
 
-  goToStep('processing');
+function resetPipelineUi() {
   $('task-outputs').innerHTML = '';
   $('btn-cancel').classList.remove('hidden');
   ['pipe-upload', 'pipe-start', 'pipe-extract', 'pipe-rank'].forEach(id => setPipelineNode(id, null));
   ['conn-1', 'conn-2', 'conn-3'].forEach(id => setConnector(id, null));
+  updatePipelineModeLabels();
+}
+
+function prepareProcessingRun({ source = 'api', processId = '', replaceHistory = false } = {}) {
+  if (state.processing.abortController) state.processing.abortController.abort();
+  state.processing.error = null;
+  state.processing.blobUrl = null;
+  state.processing.processId = processId || null;
+  state.processing.source = source;
+  state.processing.liveState = processId ? 'live' : 'idle';
+  state.processing.abortController = new AbortController();
+  resetPipelineUi();
+  goToStep('processing', { replaceHistory });
   startTimer();
+  updateProcessRibbon(processId ? 'live' : 'idle');
+  return state.processing.abortController.signal;
+}
+
+function applyResumePipelineSnapshot(data) {
+  const tasks = data.outputs || [];
+  setPipelineNode('pipe-upload', 'done');
+  setConnector('conn-1', 'filled');
+  setPipelineNode('pipe-start', 'done');
+  setConnector('conn-2', 'filled');
+  if (tasks.length >= 2) {
+    setPipelineNode('pipe-extract', 'done');
+    setConnector('conn-3', data.totalExecutionTime != null ? 'filled' : 'active');
+    setPipelineNode('pipe-rank', data.totalExecutionTime != null ? 'done' : 'active');
+  } else {
+    setPipelineNode('pipe-extract', 'active');
+  }
+}
+
+function renderProcessingSnapshot(processId, data, { liveState = 'cached' } = {}) {
+  stopTimer();
+  stopPhraseRotation();
+  resetPipelineUi();
+  state.processing.source = 'resume';
+  state.processing.processId = processId || null;
+  state.processing.liveState = liveState;
+  updatePipelineModeLabels();
+  updateProcessRibbon(liveState);
+
+  if (!data) {
+    $('processing-status-text').textContent = t('processing.resume_waiting_key');
+    $('processing-sub-text').textContent = processId ? `Process ${processId}` : '';
+    return;
+  }
+
+  const tasks = data.outputs || [];
+  applyResumePipelineSnapshot(data);
+  tasks.forEach(task => {
+    addTaskOutput(task.taskName || task.identifier || '?', task.outputText || '', 'done');
+  });
+
+  if (data.totalExecutionTime != null) {
+    $('processing-status-text').textContent = t('processing.resume_cached');
+    $('processing-sub-text').textContent = `${tasks.length} ${t('processing.tasks')} \u2014 ${(data.totalExecutionTime / 1000).toFixed(1)}s ${t('processing.total_time')}`;
+    $('btn-cancel').classList.add('hidden');
+    return;
+  }
+
+  $('processing-status-text').textContent = t('processing.resume_watch');
+  $('processing-sub-text').textContent = `Process ${processId} \u2014 ${tasks.length} ${t('processing.tasks_completed')}`;
+}
+
+function finalizeProcessResults(processId, data, { liveState = 'live', targetStep = 'results' } = {}) {
+  const finalJson = parseResultPayload(data);
+  state.pipelineResponse = data;
+  state.results = finalJson;
+  state.processing.liveState = liveState;
+  setActiveProcessId(processId);
+  persistProcessCache(processId, data, finalJson);
+  renderResults(finalJson);
+  updateProcessRibbon(liveState);
+  goToStep(targetStep === 'export' ? 'export' : 'results');
+}
+
+async function watchExistingProcess(processId, { initialData = null, replaceHistory = false } = {}) {
+  const normalized = sanitizeProcessId(processId);
+  const signal = prepareProcessingRun({ source: 'resume', processId: normalized, replaceHistory });
+  let data = initialData;
+  let lastTaskCount = 0;
+
+  $('processing-status-text').textContent = t('processing.resume_connecting');
+  $('processing-sub-text').textContent = `Process ${normalized}`;
+
+  try {
+    startPhraseRotation();
+    const deadline = Date.now() + MAX_POLL_TIME;
+
+    while (Date.now() < deadline) {
+      if (signal.aborted) throw new Error('Aborted');
+      if (!data) {
+        await new Promise(r => setTimeout(r, POLL_INTERVAL));
+        data = await pollOutputs(normalized, signal);
+      }
+
+      const tasks = data.outputs || [];
+      while (lastTaskCount < tasks.length) {
+        const tk = tasks[lastTaskCount];
+        addTaskOutput(tk.taskName || tk.identifier || '?', tk.outputText || '', 'done');
+        lastTaskCount++;
+      }
+
+      applyResumePipelineSnapshot(data);
+      persistProcessCache(normalized, data, null);
+
+      if (data.failed) throw new Error(t('process_error'));
+
+      if (data.totalExecutionTime != null) {
+        stopPhraseRotation();
+        $('processing-status-text').textContent = t('processing.done');
+        $('processing-sub-text').textContent = `${tasks.length} ${t('processing.tasks')} \u2014 ${(data.totalExecutionTime / 1000).toFixed(1)}s ${t('processing.total_time')}`;
+        stopTimer();
+        $('btn-cancel').classList.add('hidden');
+        finalizeProcessResults(normalized, data, { liveState: 'live' });
+        return;
+      }
+
+      $('processing-status-text').textContent = t('processing.resume_watch');
+      $('processing-sub-text').textContent = `Process ${normalized} \u2014 ${tasks.length} ${t('processing.tasks_completed')}`;
+      data = null;
+    }
+
+    throw new Error(`${t('timeout_after')} ${MAX_POLL_TIME / 1000}s`);
+  } catch (err) {
+    stopTimer();
+    stopPhraseRotation();
+    $('btn-cancel').classList.add('hidden');
+    if (err.name === 'AbortError') {
+      $('processing-status-text').textContent = t('processing.cancelled');
+      $('processing-sub-text').textContent = '';
+      return;
+    }
+    setPipelineNode('pipe-rank', 'error');
+    $('processing-status-text').textContent = t('processing.error');
+    $('processing-sub-text').innerHTML = `<span style="color:var(--red-400)">${escapeHtml(err.message)}</span>`;
+  }
+}
+
+async function startNewProcess() {
+  setActiveProcessId('');
+  state.pipelineResponse = null;
+  state.results = null;
+  const signal = prepareProcessingRun({ source: 'api' });
 
   try {
     // STEP 1: Upload
@@ -4040,10 +4713,14 @@ async function startPipeline() {
     $('processing-status-text').textContent = t('processing.starting');
     $('processing-sub-text').textContent = `Template ${PROCESS_TEMPLATE_ID}`;
     const processId = await startProcess(blobUrl, signal);
+    setActiveProcessId(processId);
     state.processing.processId = processId;
+    state.processing.liveState = 'live';
     setPipelineNode('pipe-start', 'done');
     setConnector('conn-2', 'active');
     addTaskOutput('Process Start', `Process ID: ${processId}`, 'done');
+    persistProcessCache(processId, null, null);
+    syncRoute({ step: 'processing', processId, replace: true });
 
     // STEP 3-4: Poll
     setPipelineNode('pipe-extract', 'active');
@@ -4073,10 +4750,11 @@ async function startPipeline() {
         setPipelineNode('pipe-rank', 'active');
       }
 
+      persistProcessCache(processId, data, state.results);
+
       if (failed) throw new Error(t('process_error'));
 
       if (done) {
-        state.pipelineResponse = data;
         setPipelineNode('pipe-extract', 'done');
         setPipelineNode('pipe-rank', 'done');
         setConnector('conn-2', 'filled');
@@ -4084,14 +4762,9 @@ async function startPipeline() {
         stopPhraseRotation();
         $('processing-status-text').textContent = t('processing.done');
         $('processing-sub-text').textContent = `${tasks.length} ${t('processing.tasks')} \u2014 ${(data.totalExecutionTime / 1000).toFixed(1)}s ${t('processing.total_time')}`;
-
-        const lastTask = tasks[tasks.length - 1];
-        state.results = JSON.parse(lastTask?.outputText || '{}');
         stopTimer();
         $('btn-cancel').classList.add('hidden');
-        await new Promise(r => setTimeout(r, 1200));
-        renderResults(state.results);
-        goToStep('results');
+        finalizeProcessResults(processId, data, { liveState: 'live' });
         return;
       }
       $('processing-sub-text').textContent = `Process ${processId} \u2014 ${tasks.length} ${t('processing.tasks_completed')}`;
@@ -4139,17 +4812,89 @@ function parseJsonInput() {
   if (!raw) return;
   try {
     const parsed = JSON.parse(raw);
-    let finalJson;
-    if (parsed._meta && parsed.items) { finalJson = parsed; }
-    else if (parsed.outputs && Array.isArray(parsed.outputs)) {
-      const last = parsed.outputs[parsed.outputs.length - 1];
-      finalJson = JSON.parse(last?.outputText || '');
-    } else { throw new Error(t('json_unknown')); }
+    const finalJson = parseResultPayload(parsed);
+    setActiveProcessId('');
+    state.processing.liveState = 'idle';
     state.results = finalJson;
     state.pipelineResponse = parsed;
     renderResults(finalJson);
     goToStep('results');
   } catch (err) { alert(`${t('json_error')}: ${err.message}`); }
+}
+
+function startFreshAnalysis() {
+  if (state.processing.abortController) state.processing.abortController.abort();
+  state.pipelineResponse = null;
+  state.results = null;
+  state.processing.liveState = 'idle';
+  setActiveProcessId('');
+  setResumeStatus('');
+  setMode('api', { updateHistory: false });
+  goToStep('config');
+}
+
+async function startResumeFromInput(options = {}) {
+  const processId = sanitizeProcessId(options.processId || $('resume-process-input')?.value);
+  if (!processId) {
+    setResumeStatus(t('resume.enter_process'), 'error');
+    return;
+  }
+
+  const previousProcessId = state.activeProcessId;
+  setMode('resume', { updateHistory: false });
+  setActiveProcessId(processId);
+  setResumeStatus('');
+  if (options.syncHistory !== false) syncRoute({ step: 'config', processId, replace: true });
+
+  const targetStep = options.targetStep || getRouteState().step;
+  const cached = loadProcessCache(processId);
+  const hasCachedResults = Boolean(cached?.results);
+  const switchedProcess = Boolean(previousProcessId && previousProcessId !== processId);
+
+  if (switchedProcess && !hasCachedResults) {
+    state.pipelineResponse = null;
+    state.results = null;
+  }
+
+  if (hasCachedResults && targetStep === 'processing') {
+    hydrateCachedProcess(cached, { render: false });
+    renderProcessingSnapshot(processId, cached.pipelineResponse, { liveState: 'cached' });
+    goToStep('processing', { updateHistory: false });
+  } else if (hasCachedResults) {
+    hydrateCachedProcess(cached);
+    goToStep(targetStep === 'export' ? 'export' : 'results', { updateHistory: false });
+  }
+
+  if (!state.apiKey) {
+    if (!hasCachedResults) {
+      state.processing.liveState = 'idle';
+      updateProcessRibbon('idle');
+      setResumeStatus(t('processing.resume_waiting_key'), 'success');
+      goToStep('config', { updateHistory: false, replaceHistory: true });
+    }
+    return;
+  }
+
+  try {
+    const snapshot = options.initialData || await pollOutputs(processId, new AbortController().signal);
+    persistProcessCache(processId, snapshot, cached?.results || null);
+
+    if (snapshot.failed) throw new Error(t('process_error'));
+
+    if (snapshot.totalExecutionTime != null) {
+      state.processing.liveState = 'live';
+      finalizeProcessResults(processId, snapshot, { liveState: 'live', targetStep });
+      return;
+    }
+
+    await watchExistingProcess(processId, { initialData: snapshot, replaceHistory: true });
+  } catch (err) {
+    if (hasCachedResults) return;
+    state.processing.liveState = 'idle';
+    updateProcessRibbon('idle');
+    goToStep('config', { updateHistory: false, replaceHistory: true });
+    setResumeStatus(`${t('resume.resume_failed')}: ${err.message}`, 'error');
+  }
 }
 
 // ================================================================
@@ -4300,6 +5045,7 @@ function renderResults(data, options = {}) {
   const preserveState = options.preserveState === true;
   const meta = data._meta || {};
   const items = data.items || [];
+  if (state.activeProcessId) persistProcessCache(state.activeProcessId, state.pipelineResponse, data);
   const previousSelections = preserveState ? { ...state.selections } : {};
   const previousAccessorySelections = preserveState ? cloneAccessorySelections(state.accessorySelections) : {};
 
@@ -4329,6 +5075,7 @@ function renderResults(data, options = {}) {
   if (meta.serving_route) chips.push([t('results.route'), meta.serving_route]);
   if (meta.route_counts) chips.push(['E9/E10', `${meta.route_counts.e9 || 0} / ${meta.route_counts.e10 || 0}`]);
   if (meta.run_id) chips.push([t('results.run'), meta.run_id.slice(0, 8) + '\u2026']);
+  if (state.activeProcessId) chips.push([t('results.process'), state.activeProcessId]);
   metaEl.innerHTML = chips.map(([l, v]) =>
     `<div class="meta-chip"><span class="meta-label">${escapeHtml(l)}</span><span class="meta-value">${escapeHtml(String(v))}</span></div>`
   ).join('');
@@ -4444,6 +5191,7 @@ function renderResults(data, options = {}) {
   updateExportSummary();
   updateProgressBar();
   $('raw-json-output').textContent = JSON.stringify(data, null, 2);
+  updateProcessRibbon(state.processing.liveState || (state.activeProcessId ? 'cached' : 'idle'));
 }
 
 function getFieldGroup(fieldName) {
@@ -5152,6 +5900,51 @@ function renderIntermediatePanel() {
 
 function toggleRawJson() { $('raw-json-output').classList.toggle('hidden'); }
 
+async function restoreFromRoute({ revalidate = true, replaceHistory = true } = {}) {
+  const { processId, step } = getRouteState();
+  const cached = processId ? loadProcessCache(processId) : null;
+
+  suppressRouteSync = true;
+  try {
+    if (processId) {
+      setMode('resume', { updateHistory: false });
+      setActiveProcessId(processId);
+
+      if (cached?.results) {
+        if (step === 'processing') {
+          hydrateCachedProcess(cached, { render: false });
+          renderProcessingSnapshot(processId, cached.pipelineResponse, { liveState: 'cached' });
+          goToStep('processing', { updateHistory: false, replaceHistory });
+        } else {
+          hydrateCachedProcess(cached);
+          goToStep(step === 'export' ? 'export' : 'results', { updateHistory: false, replaceHistory });
+        }
+      } else {
+        state.processing.liveState = 'idle';
+        updateProcessRibbon('idle');
+        if (!state.apiKey) setResumeStatus(t('processing.resume_waiting_key'), 'success');
+        goToStep('config', { updateHistory: false, replaceHistory });
+      }
+    } else {
+      if (!state.results) {
+        setActiveProcessId('');
+        state.processing.liveState = 'idle';
+        setResumeStatus('');
+        setMode(state.mode === 'json' ? 'json' : 'api', { updateHistory: false });
+        goToStep('config', { updateHistory: false, replaceHistory });
+      } else {
+        goToStep(step === 'export' ? 'export' : step === 'config' ? 'config' : 'results', { updateHistory: false, replaceHistory });
+      }
+    }
+  } finally {
+    suppressRouteSync = false;
+  }
+
+  if (revalidate && processId && state.apiKey) {
+    startResumeFromInput({ processId, targetStep: step, syncHistory: false }).catch(() => {});
+  }
+}
+
 // ================================================================
 // INIT
 // ================================================================
@@ -5159,9 +5952,16 @@ window.addEventListener('resize', debounce(() => {
   if (state.results) renderResults(state.results, { preserveState: true });
 }, 120));
 document.addEventListener('wheel', handleMatrixWheelChaining, { passive: false });
+window.addEventListener('popstate', () => {
+  restoreFromRoute({ revalidate: true, replaceHistory: true }).catch(() => {});
+});
 
-goToStep('config');
+setApiKey(getStoredApiKey(), { persist: false });
+updateStartBtn();
+updateResumeBtn();
+goToStep('config', { updateHistory: false });
 applyLang();
+restoreFromRoute({ revalidate: true, replaceHistory: true }).catch(() => {});
 </script>
 </body>
 </html>

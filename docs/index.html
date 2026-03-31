@@ -2472,7 +2472,8 @@
     }
     .zubehoer-header {
       display: flex;
-      align-items: center;
+      align-items: baseline;
+      flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 10px;
     }
@@ -2495,26 +2496,68 @@
       color: #3D5170;
       margin-bottom: 5px;
     }
-    .zubehoer-items { display: flex; flex-wrap: wrap; gap: 6px; }
-    .zubehoer-chip {
+    .zubehoer-items {
       display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .zubehoer-chip {
+      display: grid;
+      grid-template-columns: 12px auto minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 4px 8px;
+      padding: 7px 10px;
       border: 1.5px solid #D8E2F0;
       border-radius: 8px;
       background: #FFFFFF;
       cursor: pointer;
       transition: all 0.15s;
       text-align: left;
+      max-width: 100%;
     }
     .zubehoer-chip:hover { border-color: #1032CF; background: #EBF0FF; }
     .zubehoer-chip.zc-selected { border-color: #1032CF; background: #EBF0FF; }
-    .zc-check { font-size: 0.7rem; color: #1032CF; width: 12px; text-align: center; }
+    .zc-check {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      font-size: 0.7rem;
+      color: #1032CF;
+      width: 12px;
+      text-align: center;
+      line-height: 1.5;
+      padding-top: 1px;
+    }
+    .zc-keyline {
+      grid-column: 2 / 4;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }
     .zc-key { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: #1A2B40; white-space: nowrap; }
-    .zc-sep { color: #C8D8EE; }
-    .zc-desc { font-size: 0.72rem; color: #4A6080; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .zc-fa { font-family: var(--font-mono); font-size: 0.6rem; color: #8BA0B8; background: #F4F7FC; padding: 1px 4px; border-radius: 3px; white-space: nowrap; }
+    .zc-desc {
+      grid-column: 2 / 4;
+      font-size: 0.72rem;
+      color: #4A6080;
+      line-height: 1.35;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .zc-fa {
+      grid-column: 4;
+      grid-row: 1 / span 2;
+      align-self: center;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: #8BA0B8;
+      background: #F4F7FC;
+      padding: 2px 6px;
+      border-radius: 999px;
+      white-space: nowrap;
+      margin-left: 2px;
+    }
     .zubehoer-empty { font-size: 0.8rem; color: #8BA0B8; padding: 2px 0; }
     .zubehoer-cat-mandatory {
       background: rgba(239, 68, 68, 0.04);
@@ -2532,23 +2575,33 @@
     .zc-paired-badge {
       font-size: 0.6rem;
       color: #22C55E;
-      margin-right: -2px;
     }
-    .zc-wrapper { display: contents; }
-    .zc-wrapper-selected { display: block; }
+    .zc-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 0 1 auto;
+      max-width: 100%;
+      min-width: 0;
+    }
+    .zc-wrapper-selected {
+      flex: 1 1 320px;
+      min-width: min(100%, 260px);
+    }
     .zc-detail {
       background: #F4F7FC;
       border: 1px solid #D8E2F0;
       border-top: none;
       border-radius: 0 0 6px 6px;
-      padding: 6px 10px;
+      padding: 8px 10px;
       margin-top: -1px;
       font-size: 0.68rem;
     }
     .zc-detail-row {
-      display: flex;
-      gap: 6px;
-      padding: 1px 0;
+      display: grid;
+      grid-template-columns: 78px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      padding: 2px 0;
     }
     .zc-detail-label {
       font-family: var(--font-mono);
@@ -2562,6 +2615,31 @@
       font-size: 0.6rem;
       color: #1A2B40;
       font-weight: 600;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 640px) {
+      .zubehoer-chip {
+        width: 100%;
+        grid-template-columns: 12px minmax(0, 1fr);
+      }
+      .zc-keyline,
+      .zc-desc {
+        grid-column: 2;
+      }
+      .zc-fa {
+        grid-column: 2;
+        grid-row: auto;
+        justify-self: start;
+        align-self: start;
+        margin-left: 0;
+      }
+      .zc-wrapper,
+      .zc-wrapper-selected {
+        flex-basis: 100%;
+        min-width: 100%;
+      }
     }
 
     /* ================================================================
@@ -4223,17 +4301,26 @@ function seriesFromArticle(article) {
   return best;
 }
 
+function buildFeedbackProcessUrl(processId = getRoutableProcessId()) {
+  const normalized = sanitizeProcessId(processId);
+  if (!normalized) return '';
+  return 'https://rp-group.entaingine.com/?process=' + encodeURIComponent(normalized) + '#results';
+}
+
 function buildFeedbackMailto(itemKey, item) {
   const p93name = (state.file?.name || 'unbekannt').replace(/\.p93$/i, '');
   const proposals = item.proposals || [];
   const qf = item.query_fields || [];
   const excerpt = (item.original_excerpt || '\u2014').slice(0, 200);
+  const processUrl = buildFeedbackProcessUrl();
   const qFieldsText = qf.filter(f => f.value != null)
     .map(f => '  ' + formatFieldLabel(f.field) + ': ' + formatDisplayValue(f.field, f.value)).join('\n');
   const topProps = proposals.slice(0, 3)
     .map((p, i) => '  #' + (p.rank || i + 1) + ': ' + (p.display_article || p.base_article || '?') + ' (Score: ' + (p.score || 0).toFixed(3) + ')').join('\n');
   const subject = 'RP Matcher Feedback \u2013 Position ' + itemKey + ' \u2013 ' + p93name;
-  const body = 'Hallo Michael,\n\nIch habe Feedback zu folgender Anfrage-Position:\n\nDatei:       ' + p93name + '\nPosition:    ' + itemKey + '\n\nP93 Original-Text:\n' + excerpt + '\n\nExtrahierte Felder:\n' + (qFieldsText || '  (keine)') + '\n\nKI-Vorschl\u00e4ge:\n' + (topProps || '  (keine)') + '\n\nMein Hinweis / Problem:\n[Bitte hier beschreiben]\n\nMit freundlichen Gr\u00fc\u00dfen';
+  const body = 'Hallo Michael,\n\nIch habe Feedback zu folgender Anfrage-Position:\n\nDatei:       ' + p93name + '\nPosition:    ' + itemKey
+    + (processUrl ? '\nAusf\u00fchrung: ' + processUrl : '')
+    + '\n\nP93 Original-Text:\n' + excerpt + '\n\nExtrahierte Felder:\n' + (qFieldsText || '  (keine)') + '\n\nKI-Vorschl\u00e4ge:\n' + (topProps || '  (keine)') + '\n\nMein Hinweis / Problem:\n[Bitte hier beschreiben]\n\nMit freundlichen Gr\u00fc\u00dfen';
   return 'mailto:michael.auth@rp-group.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
 
@@ -4288,9 +4375,10 @@ function renderZubehoerContent(itemKey, proposals, selectedProposalIdx) {
       html += '<div class="zc-wrapper' + (isSel ? ' zc-wrapper-selected' : '') + '">';
       html += '<button class="zubehoer-chip' + (isSel ? ' zc-selected' : '') + (isPaired ? ' zc-paired' : '') + '" onclick="toggleAccessory(\'' + ek + '\',\'' + ek2 + '\')" title="' + escapeHtml(det.d || key) + (isPaired ? ' — ' + t('zubehoer.paired') : '') + '">'
         + '<span class="zc-check">' + (isSel ? '✓' : '') + '</span>'
-        + (isPaired ? '<span class="zc-paired-badge">★</span>' : '')
+        + '<span class="zc-keyline">'
         + '<span class="zc-key">' + escapeHtml(key) + '</span>'
-        + '<span class="zc-sep">·</span>'
+        + (isPaired ? '<span class="zc-paired-badge">★</span>' : '')
+        + '</span>'
         + '<span class="zc-desc">' + escapeHtml(det.d || '') + '</span>'
         + (det.fa ? '<span class="zc-fa">' + escapeHtml(det.fa) + '</span>' : '')
         + '</button>';
@@ -5369,8 +5457,14 @@ function _normalizeTypeValue(value) {
   if (value === null || value === undefined) return '';
   return String(value)
     .toLowerCase()
+    .replace(/[_-]+/g, ' ')
     .replace(/\s+/g, ' ')
+    .replace(/\bled\s+/g, '')
     .replace(/\brettungszeichen\s*-?\s*\/\s*sicherheitsleuchte\b/g, 'rettungszeichenleuchte')
+    .replace(/\brettungszeichen\s+leuchte\b/g, 'rettungszeichenleuchte')
+    .replace(/\bsicherheits\s+leuchte\b/g, 'sicherheitsleuchte')
+    .replace(/\bnot\s+leuchte\b/g, 'notleuchte')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 const _OVERVIEW_SECONDARY_FIELDS = new Set([

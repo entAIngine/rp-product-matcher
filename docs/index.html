@@ -944,6 +944,13 @@
     /* ================================================================
        RESULTS — META BAR
        ================================================================ */
+    .results-summary {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
     .meta-bar {
       display: flex;
       flex-wrap: wrap;
@@ -952,7 +959,8 @@
       background: var(--bg-2);
       border: 1px solid var(--border-1);
       border-radius: var(--radius-lg);
-      margin-bottom: 32px;
+      flex: 1 1 640px;
+      min-width: 0;
     }
 
     .meta-chip {
@@ -968,6 +976,38 @@
 
     .meta-chip .meta-label { color: var(--text-3); }
     .meta-chip .meta-value { color: var(--text-1); font-weight: 600; }
+
+    .results-process-dock {
+      flex: 0 0 auto;
+      align-self: stretch;
+      margin: 0;
+      padding: 10px 14px;
+      border-radius: var(--radius-lg);
+      background: #FFFFFF;
+      border: 1px solid #D8E2F0;
+      box-shadow: 0 2px 8px rgba(30,50,90,0.06);
+    }
+
+    .results-process-dock .process-ribbon-kicker {
+      display: none;
+    }
+
+    .results-process-dock .process-ribbon-copy {
+      gap: 8px;
+    }
+
+    .results-process-dock .process-ribbon-line {
+      gap: 6px;
+    }
+
+    .results-process-dock .process-pill {
+      background: #F4F7FC;
+      border-color: #D8E2F0;
+    }
+
+    .results-process-dock .process-share-btn {
+      padding-right: 2px;
+    }
 
     /* ================================================================
        RESULTS — ITEM CARD
@@ -2644,9 +2684,21 @@
         padding-left: var(--app-gutter);
         padding-right: var(--app-gutter);
       }
+      .results-summary {
+        flex-direction: column;
+      }
       .meta-bar {
         gap: 8px;
         padding: 14px;
+      }
+      .results-process-dock {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+      }
+      .results-process-dock .process-share-btn {
+        margin-left: auto;
+        padding-left: 10px;
       }
       .item-card-header {
         padding: 16px;
@@ -3206,18 +3258,20 @@
        STEP 3: RESULTS
        ============================================================ -->
   <section class="section" id="section-results">
-    <div class="process-ribbon hidden" id="results-process-ribbon">
-      <div class="process-ribbon-copy">
-        <div class="process-ribbon-kicker" data-i18n="process.ribbon"></div>
-        <div class="process-ribbon-line">
-          <span class="process-pill" id="results-process-pill"></span>
-          <span class="process-state-badge" id="results-process-state"></span>
-        </div>
-      </div>
-      <button class="btn btn-ghost process-share-btn" id="results-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
-    </div>
     <div id="results-warnings"></div>
-    <div class="meta-bar" id="results-meta"></div>
+    <div class="results-summary">
+      <div class="meta-bar" id="results-meta"></div>
+      <div class="process-ribbon hidden results-process-dock" id="results-process-ribbon">
+        <div class="process-ribbon-copy">
+          <div class="process-ribbon-kicker" data-i18n="process.ribbon"></div>
+          <div class="process-ribbon-line">
+            <span class="process-pill" id="results-process-pill"></span>
+            <span class="process-state-badge" id="results-process-state"></span>
+          </div>
+        </div>
+        <button class="btn btn-ghost process-share-btn" id="results-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
+      </div>
+    </div>
 
     <!-- Toolbar: progress + controls -->
     <div class="results-toolbar" id="results-toolbar" style="display:none">
@@ -5110,7 +5164,6 @@ function renderResults(data, options = {}) {
   if (meta.serving_route) chips.push([t('results.route'), meta.serving_route]);
   if (meta.route_counts) chips.push(['E9/E10', `${meta.route_counts.e9 || 0} / ${meta.route_counts.e10 || 0}`]);
   if (meta.run_id) chips.push([t('results.run'), meta.run_id.slice(0, 8) + '\u2026']);
-  if (state.activeProcessId) chips.push([t('results.process'), state.activeProcessId]);
   metaEl.innerHTML = chips.map(([l, v]) =>
     `<div class="meta-chip"><span class="meta-label">${escapeHtml(l)}</span><span class="meta-value">${escapeHtml(String(v))}</span></div>`
   ).join('');

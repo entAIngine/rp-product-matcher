@@ -1618,28 +1618,49 @@
 
     .process-share-btn {
       margin-left: auto;
-      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid rgba(159, 183, 210, 0.35);
       border-radius: 999px;
-      padding: 5px 10px;
+      padding: 5px 12px;
       font-size: 0.72rem;
       font-weight: 600;
       color: #9FB7D2;
       background: transparent;
       white-space: nowrap;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
 
     #section-results .process-share-btn {
       color: #5E7594;
+      border-color: rgba(94, 117, 148, 0.3);
     }
 
     .process-share-btn:hover {
       background: rgba(255, 255, 255, 0.06);
       color: #FFFFFF;
+      border-color: rgba(255, 255, 255, 0.2);
     }
 
     #section-results .process-share-btn:hover {
       background: #EEF2F8;
       color: #1A2B40;
+      border-color: rgba(94, 117, 148, 0.45);
+    }
+
+    .process-share-btn.copied {
+      color: #16a34a;
+      border-color: rgba(22, 163, 74, 0.35);
+    }
+
+    #section-results .process-share-btn.copied {
+      color: #16a34a;
+      border-color: rgba(22, 163, 74, 0.35);
+    }
+
+    .process-share-btn svg {
+      flex-shrink: 0;
     }
     .task-output-item { background: #0D2A4D; border-color: #1E3E6A; }
     .task-output-header .task-name { color: #A4C8E4; }
@@ -2339,6 +2360,61 @@
       font-family: var(--font-mono);
     }
     .p93-body.open { display: block; }
+
+    /* ================================================================
+       ANFRAGE PANEL
+       ================================================================ */
+    .anfrage-panel {
+      border-top: 1px solid #E0E8F4;
+      background: #FAFBFD;
+    }
+    .anfrage-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #4A6080;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      width: 100%;
+      text-align: left;
+    }
+    .anfrage-toggle:hover { color: #1032CF; }
+    .anfrage-body { display: none; padding: 0 20px 12px; }
+    .anfrage-body.open { display: block; }
+
+    .anfrage-confidence { font-size: 0.72rem; font-family: var(--font-mono); margin-bottom: 8px; }
+    .anfrage-confidence.high { color: #15803D; }
+    .anfrage-confidence.mid  { color: #D97706; }
+    .anfrage-confidence.low  { color: #DC2626; }
+
+    .anfrage-constraints { margin-bottom: 8px; font-size: 0.72rem; }
+    .anfrage-constraint-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; margin-bottom: 3px; }
+    .anfrage-constraint-label { font-family: var(--font-mono); color: #4A6080; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; min-width: 120px; }
+    .constraint-badge {
+      display: inline-block;
+      font-size: 0.65rem; font-weight: 700; font-family: var(--font-mono);
+      padding: 2px 7px; border-radius: 999px;
+      white-space: nowrap;
+    }
+    .constraint-badge-hard { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+    .constraint-badge-soft { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+
+    .anfrage-evidence { font-size: 0.72rem; color: #1E40AF; font-family: var(--font-mono); margin-bottom: 8px; }
+    .anfrage-evidence-label { font-size: 0.65rem; color: #4A6080; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+
+    .anfrage-field-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 6px; }
+    .anfrage-field-table .afr-group td { background: #F4F7FC; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: #4A6080; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 6px; border-bottom: 1px solid #E0E8F4; }
+    .anfrage-field-table td { padding: 3px 6px; border-bottom: 1px solid #EEF2F8; vertical-align: middle; }
+    .anfrage-field-table .afr-fname { font-family: var(--font-mono); color: #4A6080; width: 40%; }
+    .anfrage-field-table .afr-fval  { color: #1A2B40; font-weight: 500; }
+    .anfrage-field-table .afr-fval.missing { color: #9CA3AF; font-style: italic; }
+    .afr-badge { font-size: 0.58rem; padding: 1px 5px; border-radius: 3px; font-family: var(--font-mono); font-weight: 600; text-transform: uppercase; margin-left: 4px; }
+    .afr-badge.extracted { background: #DCFCE7; color: #15803D; }
+    .afr-badge.derived   { background: #DBEAFE; color: #1E40AF; }
 
     /* ================================================================
        FEEDBACK BUTTON
@@ -3146,7 +3222,10 @@
           <span class="process-state-badge" id="processing-process-state"></span>
         </div>
       </div>
-      <button class="btn btn-ghost process-share-btn" id="processing-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
+      <button class="btn btn-ghost process-share-btn" id="processing-share-btn" onclick="copyShareLink(this)">
+        <span class="share-btn-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+        <span class="share-btn-label" data-i18n="share.copy"></span>
+      </button>
     </div>
 
     <div class="pipeline">
@@ -3232,7 +3311,10 @@
         <input type="text" class="item-search" id="item-search" placeholder="" oninput="filterItems(this.value)"/>
         <button class="btn-ghost toolbar-btn" onclick="toggleAllItems(true)" title=""><span id="expand-label"></span></button>
         <button class="btn-ghost toolbar-btn" onclick="toggleAllItems(false)" title=""><span id="collapse-label"></span></button>
-        <button class="btn btn-ghost process-share-btn" id="results-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
+        <button class="btn btn-ghost process-share-btn" id="results-share-btn" onclick="copyShareLink(this)">
+          <span class="share-btn-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          <span class="share-btn-label" data-i18n="share.copy"></span>
+        </button>
       </div>
     </div>
 
@@ -3402,6 +3484,13 @@ const I18N = {
     'fg.electrical': 'Elektrik & Backup',
     'fg.material': 'Material & Farbe',
     'fg.other': 'Weitere',
+    'fg.anfrage_extra': 'Produktionsdetails',
+    'anfrage.toggle': 'Extrahierte Anfrage-Daten',
+    'anfrage.confidence': 'Konfidenz',
+    'anfrage.hard': 'Harte Anforderungen',
+    'anfrage.soft': 'Weiche Pr\u00e4ferenzen',
+    'anfrage.evidence': 'Nachweise',
+    'anfrage.no_data': 'Keine Anfrage-Daten verf\u00fcgbar',
     'table.field': 'Feld',
     'table.query': 'Anfrage',
     'table.catalog': 'Katalog',
@@ -3562,6 +3651,13 @@ const I18N = {
     'fg.electrical': 'Electrical & Backup',
     'fg.material': 'Material & Color',
     'fg.other': 'Other',
+    'fg.anfrage_extra': 'Product Details',
+    'anfrage.toggle': 'Extracted Inquiry Data',
+    'anfrage.confidence': 'Confidence',
+    'anfrage.hard': 'Hard Constraints',
+    'anfrage.soft': 'Soft Preferences',
+    'anfrage.evidence': 'Evidence',
+    'anfrage.no_data': 'No inquiry data available',
     'table.field': 'Field',
     'table.query': 'Query',
     'table.catalog': 'Catalog',
@@ -4067,15 +4163,24 @@ function copyShareLink(buttonEl) {
   const processId = getRoutableProcessId();
   if (!processId) return;
   const shareUrl = buildRouteUrl('results', processId).toString();
-  const original = t('share.copy');
+  const labelEl = buttonEl && buttonEl.querySelector('.share-btn-label');
+  const iconEl = buttonEl && buttonEl.querySelector('.share-btn-icon');
+  const linkSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+  const checkSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   navigator.clipboard.writeText(shareUrl).then(() => {
     if (!buttonEl) return;
-    buttonEl.textContent = t('share.copied');
-    window.setTimeout(() => { buttonEl.textContent = original; }, 1400);
+    if (labelEl) labelEl.textContent = t('share.copied');
+    if (iconEl) iconEl.innerHTML = checkSvg;
+    buttonEl.classList.add('copied');
+    window.setTimeout(() => {
+      if (labelEl) labelEl.textContent = t('share.copy');
+      if (iconEl) iconEl.innerHTML = linkSvg;
+      buttonEl.classList.remove('copied');
+    }, 1400);
   }).catch(() => {
     if (buttonEl) {
-      buttonEl.textContent = t('share.failed');
-      window.setTimeout(() => { buttonEl.textContent = original; }, 1800);
+      if (labelEl) labelEl.textContent = t('share.failed');
+      window.setTimeout(() => { if (labelEl) labelEl.textContent = t('share.copy'); }, 1800);
     }
     window.prompt(t('share.manual'), shareUrl);
   });
@@ -5053,6 +5158,125 @@ function renderExtralogicLogs(logs, itemKey) {
   return html;
 }
 
+// ================================================================
+// ANFRAGE INDEX + PANEL RENDER
+// ================================================================
+function getAnfrageIndex() {
+  const outputs = state.pipelineResponse?.outputs || [];
+  for (const task of outputs) {
+    try {
+      const parsed = JSON.parse(task.outputText || '');
+      if (Array.isArray(parsed?.Produkte)) {
+        return Object.fromEntries(
+          parsed.Produkte.map(p => [String(p.Positionsnummer), p])
+        );
+      }
+    } catch {}
+  }
+  return null;
+}
+
+function renderAnfragePanel(key, queryFields, anfrageIndex) {
+  const anfrageItem = anfrageIndex?.[String(key)] || null;
+  const panelId = 'anfrage-' + String(key).replace(/[^a-zA-Z0-9]/g, '_');
+  const qf = queryFields || [];
+
+  // Top metadata (only available from full anfrage)
+  const conf = anfrageItem?.ExtractionConfidence ?? null;
+  const hard = Array.isArray(anfrageItem?.['ConstraintProfile:Hard']) ? anfrageItem['ConstraintProfile:Hard'] : [];
+  const soft = Array.isArray(anfrageItem?.['ConstraintProfile:Soft']) ? anfrageItem['ConstraintProfile:Soft'] : [];
+  const evidenceQf = qf.find(f => f.field === 'Evidence');
+  let evidence = [];
+  if (Array.isArray(anfrageItem?.Evidence)) {
+    evidence = anfrageItem.Evidence;
+  } else if (anfrageItem?.Evidence) {
+    evidence = String(anfrageItem.Evidence).split(',').map(s => s.trim()).filter(Boolean);
+  } else if (evidenceQf?.value) {
+    evidence = String(evidenceQf.value).split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  let topHtml = '';
+  if (conf !== null && conf !== undefined) {
+    const confClass = conf >= 90 ? 'high' : conf >= 70 ? 'mid' : 'low';
+    topHtml += `<div class="anfrage-confidence ${confClass}">\u25CF ${t('anfrage.confidence')}: ${conf}%</div>`;
+  }
+  if (hard.length > 0 || soft.length > 0) {
+    topHtml += '<div class="anfrage-constraints">';
+    if (hard.length > 0) {
+      topHtml += `<div class="anfrage-constraint-row"><span class="anfrage-constraint-label">${t('anfrage.hard')}</span>`;
+      hard.forEach(v => { topHtml += `<span class="constraint-badge constraint-badge-hard">${escapeHtml(String(v))}</span>`; });
+      topHtml += '</div>';
+    }
+    if (soft.length > 0) {
+      topHtml += `<div class="anfrage-constraint-row"><span class="anfrage-constraint-label">${t('anfrage.soft')}</span>`;
+      soft.forEach(v => { topHtml += `<span class="constraint-badge constraint-badge-soft">${escapeHtml(String(v))}</span>`; });
+      topHtml += '</div>';
+    }
+    topHtml += '</div>';
+  }
+  if (evidence.length > 0) {
+    topHtml += `<div class="anfrage-evidence-label">${t('anfrage.evidence')}</div>`;
+    topHtml += `<div class="anfrage-evidence">${evidence.map(e => escapeHtml(String(e))).join(' \u00B7 ')}</div>`;
+  }
+
+  // Field table
+  const EXCLUDED = new Set(['Positionsnummer', 'Verkaufstext', 'Evidence', 'Warnings']);
+  const fieldMap = {};
+  qf.forEach(f => {
+    if (!EXCLUDED.has(f.field)) {
+      fieldMap[f.field] = { value: f.value, source: f.source };
+    }
+  });
+  // Augment with extra fields from full anfrage not present in query_fields
+  const EXTRA_FIELDS = ['Menge', 'Batterietechnologie', 'Lichtquelle', 'MaxInputVoltageAC', 'Farbtemperatur', 'Anschlussquerschnitt', 'MinAmbientTemperature', 'MaxAmbientTemperature'];
+  if (anfrageItem) {
+    EXTRA_FIELDS.forEach(f => {
+      if (!(f in fieldMap) && anfrageItem[f] !== undefined && anfrageItem[f] !== null) {
+        fieldMap[f] = { value: anfrageItem[f], source: null };
+      }
+    });
+  }
+
+  if (Object.keys(fieldMap).length === 0 && !topHtml) return '';
+
+  // Group fields
+  const groups = {};
+  Object.entries(fieldMap).forEach(([fname, fdata]) => {
+    let grp = getFieldGroup(fname);
+    if (grp === 'fg.other' && EXTRA_FIELDS.includes(fname)) grp = 'fg.anfrage_extra';
+    if (!groups[grp]) groups[grp] = [];
+    groups[grp].push({ fname, ...fdata });
+  });
+
+  const GROUP_ORDER = ['fg.identity', 'fg.mounting', 'fg.protection', 'fg.dimensions', 'fg.electrical', 'fg.material', 'fg.anfrage_extra', 'fg.other'];
+  let tableHtml = '';
+  GROUP_ORDER.forEach(grpKey => {
+    const fields = groups[grpKey];
+    if (!fields || fields.length === 0) return;
+    tableHtml += `<tr class="afr-group"><td colspan="3">${t(grpKey)}</td></tr>`;
+    fields.forEach(({ fname, value, source }) => {
+      const isEmpty = value === null || value === undefined || value === '' || value === '-';
+      const displayVal = isEmpty ? '\u2014' : escapeHtml(String(value));
+      const valClass = isEmpty ? 'afr-fval missing' : 'afr-fval';
+      const safeSrc = source && /^[a-z]+$/.test(source) ? source : '';
+      const badgeHtml = (!isEmpty && safeSrc) ? `<span class="afr-badge ${safeSrc}">${safeSrc}</span>` : '';
+      tableHtml += `<tr><td class="afr-fname">${escapeHtml(fname)}</td><td class="${valClass}">${displayVal}</td><td>${badgeHtml}</td></tr>`;
+    });
+  });
+
+  const tableSection = tableHtml ? `<table class="anfrage-field-table">${tableHtml}</table>` : '';
+
+  return `<div class="anfrage-panel">
+    <button class="anfrage-toggle" onclick="event.stopPropagation();document.getElementById('${panelId}').classList.toggle('open');this.textContent=(document.getElementById('${panelId}').classList.contains('open')?'\\u25BE':'\\u25B8')+' ${t('anfrage.toggle')}'">
+      \u25B8 ${t('anfrage.toggle')}
+    </button>
+    <div class="anfrage-body" id="${panelId}">
+      ${topHtml}
+      ${tableSection}
+    </div>
+  </div>`;
+}
+
 // LLM-NAV: JS RESULTS.
 // Comparison normalization, matrix rendering, selection state, and export summary live here.
 // ================================================================
@@ -5099,6 +5323,7 @@ function renderResults(data, options = {}) {
   }
 
   // Items
+  const anfrageIndex = getAnfrageIndex();
   const itemsEl = $('results-items');
   itemsEl.innerHTML = '';
   items.forEach((item, idx) => {
@@ -5155,6 +5380,8 @@ function renderResults(data, options = {}) {
         <div class="p93-body" id="${p93Id}">${escapeHtml(item.original_excerpt)}</div>
       </div>`;
     }
+
+    bodyHtml += renderAnfragePanel(key, qf, anfrageIndex);
 
     bodyHtml += '</div>';
     card.innerHTML = headerHtml + bodyHtml;

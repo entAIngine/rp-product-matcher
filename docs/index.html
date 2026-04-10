@@ -691,6 +691,7 @@
 
     .file-info-name { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-1); font-weight: 500; }
     .file-info-size { font-size: 0.75rem; color: var(--text-3); }
+    .file-info-status { font-size: 0.72rem; color: var(--green-400); font-weight: 500; margin-top: 2px; }
 
     .file-info-remove {
       background: none;
@@ -951,31 +952,6 @@
       margin-bottom: 32px;
     }
 
-    .meta-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding: 16px 20px;
-      background: var(--bg-2);
-      border: 1px solid var(--border-1);
-      border-radius: var(--radius-lg);
-      flex: 1 1 640px;
-      min-width: 0;
-    }
-
-    .meta-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      background: var(--bg-3);
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-family: var(--font-mono);
-    }
-
-    .meta-chip .meta-label { color: var(--text-3); }
-    .meta-chip .meta-value { color: var(--text-1); font-weight: 600; }
 
     .results-process-dock {
       flex: 0 0 auto;
@@ -1003,10 +979,6 @@
     .results-process-dock .process-pill {
       background: #F4F7FC;
       border-color: #D8E2F0;
-    }
-
-    .results-process-dock .process-share-btn {
-      padding-right: 2px;
     }
 
     /* ================================================================
@@ -1674,11 +1646,6 @@
     .task-output-body pre { background: #071F3D; color: #7BAAE8; }
 
     /* Results */
-    .meta-bar { background: #FFFFFF; border-color: #D8E2F0; box-shadow: 0 2px 8px rgba(30,50,90,0.06); }
-    .meta-chip { background: #F4F7FC; }
-    .meta-chip .meta-label { color: #4A6080; }
-    .meta-chip .meta-value { color: #1A2B40; }
-
     .item-card { background: #FFFFFF; border: 1px solid #D8E2F0; box-shadow: 0 2px 12px rgba(30,50,90,0.07); border-radius: 12px; }
     .item-card-header { background: #FFFFFF; border-bottom-color: #E8EDF5; }
     .item-card-header:hover { background: #F8FAFD; }
@@ -2340,80 +2307,38 @@
     .item-card-body { padding: 0 !important; }
 
     /* ================================================================
-       EVIDENCE PANEL — P93 source + ANFRAGE fields above matrix
+       P93 COLLAPSIBLE PANEL — below Zubehör
        ================================================================ */
-    .evidence-panel {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid #E0E8F4;
+    .p93-panel {
+      padding: 8px 20px;
+      border-top: 1px solid #E0E8F4;
+      background: #FAFBFD;
     }
-    @media (max-width: 800px) { .evidence-panel { grid-template-columns: 1fr; } }
-    .evidence-col { padding: 14px 20px; overflow: hidden; }
-    .evidence-col:last-child { border-left: 1px solid #E0E8F4; background: #F8FAFD; }
-    .evidence-label {
+    .p93-toggle {
       font-family: var(--font-mono);
-      font-size: 0.62rem;
-      font-weight: 700;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #4A6080;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 0;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #8BA0B8;
-      margin-bottom: 8px;
+      letter-spacing: 0.08em;
     }
-    .evidence-text {
+    .p93-toggle:hover { color: #1032CF; }
+    .p93-body {
+      display: none;
+      padding: 8px 0;
       font-size: 0.78rem;
       line-height: 1.6;
       color: #1A2B40;
       white-space: pre-wrap;
-      max-height: 160px;
+      max-height: 200px;
       overflow-y: auto;
       font-family: var(--font-mono);
     }
-    .evidence-fields {
-      display: flex;
-      flex-direction: column;
-      max-height: 160px;
-      overflow-y: auto;
-    }
-    .ev-field-row {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      padding: 3px 0;
-      border-bottom: 1px solid #EEF2F8;
-      font-size: 0.78rem;
-    }
-    .ev-field-row:last-child { border-bottom: none; }
-    .ev-fname {
-      font-family: var(--font-mono);
-      color: #4A6080;
-      font-size: 0.7rem;
-      flex: 0 0 140px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .ev-fval {
-      font-family: var(--font-mono);
-      color: #1A2B40;
-      font-weight: 600;
-      flex: 1;
-      font-size: 0.75rem;
-      min-width: 0;
-      overflow-wrap: anywhere;
-    }
-    .ev-fval.missing { color: #9CA3AF; font-weight: 400; font-style: italic; }
-    .ev-badge {
-      font-size: 0.58rem;
-      padding: 1px 5px;
-      border-radius: 3px;
-      font-family: var(--font-mono);
-      font-weight: 600;
-      flex-shrink: 0;
-      text-transform: uppercase;
-    }
-    .ev-badge.extracted { background: #DCFCE7; color: #15803D; }
-    .ev-badge.derived   { background: #DBEAFE; color: #1E40AF; }
-    .ev-badge.missing   { background: #F3F4F6; color: #9CA3AF; }
+    .p93-body.open { display: block; }
 
     /* ================================================================
        FEEDBACK BUTTON
@@ -2765,18 +2690,10 @@
       .results-summary {
         flex-direction: column;
       }
-      .meta-bar {
-        gap: 8px;
-        padding: 14px;
-      }
       .results-process-dock {
         width: 100%;
         flex-direction: row;
         align-items: center;
-      }
-      .results-process-dock .process-share-btn {
-        margin-left: auto;
-        padding-left: 10px;
       }
       .item-card-header {
         padding: 16px;
@@ -2804,9 +2721,6 @@
         width: auto;
         margin-left: 0;
         padding-left: 0;
-      }
-      .evidence-col {
-        padding: 14px 16px;
       }
     }
 
@@ -2987,50 +2901,6 @@
     .intermediate-actions button:hover { border-color: #1032CF; color: #1032CF; background: #EBF0FF; }
     .intermediate-actions button.copied { border-color: #22C55E; color: #15803D; background: #F0FDF4; }
 
-    /* Candidate stats funnel */
-    .stats-funnel {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 20px;
-      background: #F4F7FC;
-      border-bottom: 1px solid #E0E8F4;
-      overflow-x: auto;
-    }
-    .funnel-step {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      color: #4A6080;
-      white-space: nowrap;
-    }
-    .funnel-count {
-      font-weight: 700;
-      color: #1A2B40;
-      background: #FFFFFF;
-      border: 1px solid #D8E2F0;
-      border-radius: 4px;
-      padding: 1px 6px;
-    }
-    .funnel-arrow { color: #C8D8EE; font-size: 0.8rem; }
-    .funnel-final .funnel-count {
-      background: #EBF0FF;
-      border-color: #1032CF;
-      color: #1032CF;
-    }
-    .route-badge {
-      font-family: var(--font-mono);
-      font-size: 0.58rem;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 3px;
-      background: #EBF0FF;
-      color: #1032CF;
-      text-transform: uppercase;
-      margin-left: 4px;
-    }
   </style>
 </head>
 <body>
@@ -3143,6 +3013,7 @@
                 <div>
                   <div class="file-info-name" id="file-name"></div>
                   <div class="file-info-size" id="file-size"></div>
+                  <div class="file-info-status" id="file-status"></div>
                 </div>
                 <button type="button" class="file-info-remove" onclick="event.preventDefault(); event.stopPropagation(); removeFile()" data-i18n-title="file.remove">&#10005;</button>
               </div>
@@ -3338,7 +3209,6 @@
   <section class="section" id="section-results">
     <div id="results-warnings"></div>
     <div class="results-summary">
-      <div class="meta-bar" id="results-meta"></div>
       <div class="process-ribbon hidden results-process-dock" id="results-process-ribbon">
         <div class="process-ribbon-copy">
           <div class="process-ribbon-kicker" data-i18n="process.ribbon"></div>
@@ -3347,7 +3217,6 @@
             <span class="process-state-badge" id="results-process-state"></span>
           </div>
         </div>
-        <button class="btn btn-ghost process-share-btn" id="results-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
       </div>
     </div>
 
@@ -3363,6 +3232,7 @@
         <input type="text" class="item-search" id="item-search" placeholder="" oninput="filterItems(this.value)"/>
         <button class="btn-ghost toolbar-btn" onclick="toggleAllItems(true)" title=""><span id="expand-label"></span></button>
         <button class="btn-ghost toolbar-btn" onclick="toggleAllItems(false)" title=""><span id="collapse-label"></span></button>
+        <button class="btn btn-ghost process-share-btn" id="results-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
       </div>
     </div>
 
@@ -3431,6 +3301,7 @@ const I18N = {
     'file.drop': 'P93-Datei hierher ziehen',
     'file.click': 'oder zum Ausw\u00e4hlen klicken',
     'file.remove': 'Datei entfernen',
+    'file.ready': 'Datei hochgeladen \u2014 klicken Sie auf \u201eAnalyse starten\u201c',
     'settings.title': 'Parameter',
     'settings.optional': 'Optional',
     'settings.topk': 'Top K',
@@ -3545,19 +3416,12 @@ const I18N = {
     'json_unknown': 'Unbekanntes JSON-Format. Erwartet: {_meta, items} oder {outputs: [...]}',
     'timeout_after': 'Zeit\u00fcberschreitung nach',
     'evidence.p93': 'P93 Original-Text',
-    'evidence.fields': 'Extrahierte Anfrage-Felder',
     'feedback.btn': 'Feedback',
     'feedback.tooltip': 'Feedback an michael.auth@rp-group.com senden',
     'progress.reviewed': 'bearbeitet',
     'search.placeholder': 'Position suchen \u2026',
     'toolbar.expand': '\u25BC Alle \u00f6ffnen',
     'toolbar.collapse': '\u25B2 Alle schlie\u00dfen',
-    'stats.initial': 'Katalog',
-    'stats.system': 'System',
-    'stats.supply': 'Versorgung',
-    'stats.luminaire': 'Leuchte',
-    'stats.mounting': 'Montage',
-    'stats.scored': 'Bewertet',
     'zubehoer.title': 'Zubeh\u00f6r',
     'zubehoer.select_first': 'W\u00e4hlen Sie zuerst ein Produkt aus, um passendes Zubeh\u00f6r zu sehen.',
     'zubehoer.none': 'Kein Zubehör für diese Produktreihe bekannt.',
@@ -3597,6 +3461,7 @@ const I18N = {
     'file.drop': 'Drop P93 file here',
     'file.click': 'or click to browse',
     'file.remove': 'Remove file',
+    'file.ready': 'File uploaded \u2014 click \u201cStart Analysis\u201d',
     'settings.title': 'Parameters',
     'settings.optional': 'Optional',
     'settings.topk': 'Top K',
@@ -3711,19 +3576,12 @@ const I18N = {
     'json_unknown': 'Unknown JSON format. Expected: {_meta, items} or {outputs: [...]}',
     'timeout_after': 'Timeout after',
     'evidence.p93': 'P93 Original Text',
-    'evidence.fields': 'Extracted Inquiry Fields',
     'feedback.btn': 'Feedback',
     'feedback.tooltip': 'Send feedback to michael.auth@rp-group.com',
     'progress.reviewed': 'reviewed',
     'search.placeholder': 'Search position \u2026',
     'toolbar.expand': '\u25BC Expand all',
     'toolbar.collapse': '\u25B2 Collapse all',
-    'stats.initial': 'Catalog',
-    'stats.system': 'System',
-    'stats.supply': 'Supply',
-    'stats.luminaire': 'Luminaire',
-    'stats.mounting': 'Mounting',
-    'stats.scored': 'Scored',
     'zubehoer.title': 'Accessories',
     'zubehoer.select_first': 'Select a product first to see compatible accessories.',
     'zubehoer.none': 'No accessories known for this product series.',
@@ -4504,6 +4362,7 @@ function handleFile(f) {
   state.file = f;
   $('file-name').textContent = f.name;
   $('file-size').textContent = formatBytes(f.size);
+  $('file-status').textContent = t('file.ready');
   $('dropzone-empty').classList.add('hidden');
   $('dropzone-filled').classList.remove('hidden');
   dropzone.classList.add('has-file');
@@ -5108,25 +4967,6 @@ function toggleAllItems(open) {
   });
 }
 
-function renderCandidateStats(stats, route) {
-  if (!stats) return '';
-  const steps = [];
-  if (stats.initial != null) steps.push([t('stats.initial'), stats.initial, false]);
-  if (stats.explicit_system != null) steps.push([t('stats.system'), stats.explicit_system, false]);
-  if (stats.internal_supply != null) steps.push([t('stats.supply'), stats.internal_supply, false]);
-  if (stats.internal_luminaire != null) steps.push([t('stats.luminaire'), stats.internal_luminaire, false]);
-  if (stats.internal_mounting != null) steps.push([t('stats.mounting'), stats.internal_mounting, false]);
-  if (stats.scored != null) steps.push([t('stats.scored'), stats.scored, true]);
-  let html = '<div class="stats-funnel">';
-  steps.forEach(([label, count, isFinal], i) => {
-    if (i > 0) html += '<span class="funnel-arrow">\u2192</span>';
-    html += `<span class="funnel-step${isFinal ? ' funnel-final' : ''}"><span class="funnel-count">${count}</span>${label}</span>`;
-  });
-  if (route) html += `<span class="route-badge">${escapeHtml(route)}</span>`;
-  html += '</div>';
-  return html;
-}
-
 // Reason code → human label + category
 const REASON_LABELS = {
   'base_product_candidate': null, // suppress, it's always present
@@ -5135,7 +4975,7 @@ const REASON_LABELS = {
   'supply_match': ['Supply \u2713', 'match'],
   'supply_exact': ['Supply \u2713', 'match'],
   'mounting_match': ['Montage \u2713', 'match'],
-  'mounting_universal_compatible': ['Montage kompatibel', 'match'],
+  'mounting_universal_compatible': ['Montage universal', 'upgrade'],
   'ip_match': ['IP \u2713', 'match'],
   'ip_sufficient_upgrade': ['IP Upgrade', 'upgrade'],
   'ik_match': ['IK \u2713', 'match'],
@@ -5241,24 +5081,6 @@ function renderResults(data, options = {}) {
     warningsEl.innerHTML += `<div class="warning-bar">\u26A0 ${escapeHtml(w)}</div>`;
   });
 
-  // Meta bar
-  const metaEl = $('results-meta');
-  const chips = [];
-  if (meta.catalog_strategy) chips.push([t('results.strategy'), meta.catalog_strategy]);
-  if (meta.catalog_version) chips.push([t('results.catalog'), meta.catalog_version]);
-  if (meta.top_k) chips.push(['Top-K', meta.top_k]);
-  if (meta.item_count) chips.push([t('results.positions'), meta.item_count]);
-  if (meta.timings_ms?.total) chips.push([t('results.time'), `${meta.timings_ms.total.toFixed(0)} ms`]);
-  if (meta.serving_route) chips.push([t('results.route'), meta.serving_route]);
-  if (meta.route_counts) chips.push(['E9/E10', `${meta.route_counts.e9 || 0} / ${meta.route_counts.e10 || 0}`]);
-  if (meta.run_id) chips.push([t('results.run'), meta.run_id.slice(0, 8) + '\u2026']);
-  metaEl.innerHTML = chips.map(([l, v]) =>
-    `<div class="meta-chip"><span class="meta-label">${escapeHtml(l)}</span><span class="meta-value">${escapeHtml(String(v))}</span></div>`
-  ).join('');
-  if (meta.catalog_mode === 'virtual' || (meta.catalog_strategy || '').includes('virtual')) {
-    metaEl.innerHTML += `<div class="meta-chip" style="background:var(--yellow-bg);border:1px solid rgba(251,191,36,0.3)"><span class="meta-value" style="color:var(--yellow-400)">${t('results.experimental')}</span></div>`;
-  }
-
   state.accessorySelections = {};
   items.forEach(item => {
     const key = item.positionsnummer || item.item_id;
@@ -5305,41 +5127,8 @@ function renderResults(data, options = {}) {
         <span class="item-card-chevron">\u25BE</span>
       </div>`;
 
-    // Evidence panel: P93 text left, ANFRAGE fields right
-    let bodyHtml = '<div class="item-card-body"><div class="evidence-panel">';
+    let bodyHtml = '<div class="item-card-body">';
 
-    // Left: P93 original text
-    bodyHtml += '<div class="evidence-col"><div class="evidence-label">' + t('evidence.p93') + '</div>';
-    if (item.original_excerpt) {
-      bodyHtml += `<div class="evidence-text">${escapeHtml(item.original_excerpt)}</div>`;
-    } else {
-      bodyHtml += `<div class="evidence-text" style="color:#9CA3AF;font-style:italic">\u2014</div>`;
-    }
-    bodyHtml += '</div>';
-
-    // Right: extracted ANFRAGE fields (filter internal/verbose fields)
-    const HIDDEN_EV_FIELDS = new Set(['Positionsnummer','Verkaufstext','Artikelnummer','DesiredSupplyType','Mounting:AllowedMethods','Mounting:EnforcedMethods','Warnings','Evidence']);
-    const visibleQf = qf.filter(f => !HIDDEN_EV_FIELDS.has(f.field));
-    bodyHtml += '<div class="evidence-col"><div class="evidence-label">' + t('evidence.fields') + '</div>';
-    if (visibleQf.length > 0) {
-      bodyHtml += '<div class="evidence-fields">';
-      visibleQf.forEach(f => {
-        const srcCls = f.source === 'extracted' ? 'extracted' : f.source === 'derived' ? 'derived' : 'missing';
-        const hasVal = f.value != null;
-        bodyHtml += `<div class="ev-field-row">
-          <span class="ev-fname">${escapeHtml(formatFieldLabel(f.field))}</span>
-          <span class="ev-fval${hasVal ? '' : ' missing'}">${hasVal ? escapeHtml(String(formatDisplayValue(f.field, f.value))) : '\u2014'}</span>
-          <span class="ev-badge ${srcCls}">${escapeHtml(formatLabelText(f.source || '?'))}</span>
-        </div>`;
-      });
-      bodyHtml += '</div>';
-    } else {
-      bodyHtml += `<div class="zubehoer-empty">${t('no_fields')}</div>`;
-    }
-    bodyHtml += '</div></div>'; // close evidence cols + panel
-
-    // Candidate stats funnel + extralogic logs
-    bodyHtml += renderCandidateStats(item.candidate_stats, item.route);
     bodyHtml += renderExtralogicLogs(item.extralogic_logs, key);
 
     // Item-level warnings
@@ -5355,6 +5144,17 @@ function renderResults(data, options = {}) {
 
     // Zubehör panel
     bodyHtml += `<div class="zubehoer-panel" id="zubehoer-${escapeHtml(key)}">${renderZubehoerContent(key, proposals, state.selections[key])}</div>`;
+
+    // P93 Original-Text — collapsible, collapsed by default
+    if (item.original_excerpt) {
+      const p93Id = 'p93-' + key.replace(/[^a-zA-Z0-9]/g, '_');
+      bodyHtml += `<div class="p93-panel">
+        <button class="p93-toggle" onclick="event.stopPropagation();document.getElementById('${p93Id}').classList.toggle('open');this.textContent=(document.getElementById('${p93Id}').classList.contains('open')?'\\u25BE':'\\u25B8')+' ${t('evidence.p93')}'">
+          \u25B8 ${t('evidence.p93')}
+        </button>
+        <div class="p93-body" id="${p93Id}">${escapeHtml(item.original_excerpt)}</div>
+      </div>`;
+    }
 
     bodyHtml += '</div>';
     card.innerHTML = headerHtml + bodyHtml;
@@ -5590,7 +5390,21 @@ function getDisplayProposal(proposal, queryFields) {
 }
 
 function normalizeComparison(comp) {
-  if (!comp || comp.status !== 'different') return comp;
+  if (!comp) return comp;
+
+  // Mounting: "universal" should not satisfy a specific mounting request
+  if (comp.field === 'Mounting:MountingMethod') {
+    const qv = comp.query_value, cv = comp.candidate_value;
+    if (qv && cv) {
+      const ql = String(qv).toLowerCase().trim();
+      const cl = String(cv).toLowerCase().trim();
+      if (ql !== 'universal' && cl === 'universal' && comp.status !== 'different') {
+        return { ...comp, status: 'different', note: 'candidate uses universal mounting compatibility' };
+      }
+    }
+  }
+
+  if (comp.status !== 'different') return comp;
   const f = comp.field;
   const qv = comp.query_value, cv = comp.candidate_value;
   if (!qv || !cv) return comp;

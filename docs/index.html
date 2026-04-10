@@ -691,6 +691,7 @@
 
     .file-info-name { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-1); font-weight: 500; }
     .file-info-size { font-size: 0.75rem; color: var(--text-3); }
+    .file-info-status { font-size: 0.72rem; color: var(--green-400); font-weight: 500; margin-top: 2px; }
 
     .file-info-remove {
       background: none;
@@ -951,31 +952,6 @@
       margin-bottom: 32px;
     }
 
-    .meta-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding: 16px 20px;
-      background: var(--bg-2);
-      border: 1px solid var(--border-1);
-      border-radius: var(--radius-lg);
-      flex: 1 1 640px;
-      min-width: 0;
-    }
-
-    .meta-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      background: var(--bg-3);
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-family: var(--font-mono);
-    }
-
-    .meta-chip .meta-label { color: var(--text-3); }
-    .meta-chip .meta-value { color: var(--text-1); font-weight: 600; }
 
     .results-process-dock {
       flex: 0 0 auto;
@@ -1003,10 +979,6 @@
     .results-process-dock .process-pill {
       background: #F4F7FC;
       border-color: #D8E2F0;
-    }
-
-    .results-process-dock .process-share-btn {
-      padding-right: 2px;
     }
 
     /* ================================================================
@@ -1515,6 +1487,7 @@
     .dropzone-hint { color: #8BA0B8; }
     .dropzone-icon svg { color: #8BA0B8; }
     .dropzone-icon { background: #EEF2F8; }
+    .file-info-name { color: #1A2B40; }
 
     .settings-row { background: #F8FAFD; border-color: #D8E2F0; }
     .label { color: #4A6080; }
@@ -1646,39 +1619,55 @@
 
     .process-share-btn {
       margin-left: auto;
-      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid rgba(159, 183, 210, 0.35);
       border-radius: 999px;
-      padding: 5px 10px;
+      padding: 5px 12px;
       font-size: 0.72rem;
       font-weight: 600;
       color: #9FB7D2;
       background: transparent;
       white-space: nowrap;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
 
     #section-results .process-share-btn {
       color: #5E7594;
+      border-color: rgba(94, 117, 148, 0.3);
     }
 
     .process-share-btn:hover {
       background: rgba(255, 255, 255, 0.06);
       color: #FFFFFF;
+      border-color: rgba(255, 255, 255, 0.2);
     }
 
     #section-results .process-share-btn:hover {
       background: #EEF2F8;
       color: #1A2B40;
+      border-color: rgba(94, 117, 148, 0.45);
+    }
+
+    .process-share-btn.copied {
+      color: #16a34a;
+      border-color: rgba(22, 163, 74, 0.35);
+    }
+
+    #section-results .process-share-btn.copied {
+      color: #16a34a;
+      border-color: rgba(22, 163, 74, 0.35);
+    }
+
+    .process-share-btn svg {
+      flex-shrink: 0;
     }
     .task-output-item { background: #0D2A4D; border-color: #1E3E6A; }
     .task-output-header .task-name { color: #A4C8E4; }
     .task-output-body pre { background: #071F3D; color: #7BAAE8; }
 
     /* Results */
-    .meta-bar { background: #FFFFFF; border-color: #D8E2F0; box-shadow: 0 2px 8px rgba(30,50,90,0.06); }
-    .meta-chip { background: #F4F7FC; }
-    .meta-chip .meta-label { color: #4A6080; }
-    .meta-chip .meta-value { color: #1A2B40; }
-
     .item-card { background: #FFFFFF; border: 1px solid #D8E2F0; box-shadow: 0 2px 12px rgba(30,50,90,0.07); border-radius: 12px; }
     .item-card-header { background: #FFFFFF; border-bottom-color: #E8EDF5; }
     .item-card-header:hover { background: #F8FAFD; }
@@ -2340,80 +2329,93 @@
     .item-card-body { padding: 0 !important; }
 
     /* ================================================================
-       EVIDENCE PANEL — P93 source + ANFRAGE fields above matrix
+       P93 COLLAPSIBLE PANEL — below Zubehör
        ================================================================ */
-    .evidence-panel {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid #E0E8F4;
+    .p93-panel {
+      padding: 8px 20px;
+      border-top: 1px solid #E0E8F4;
+      background: #FAFBFD;
     }
-    @media (max-width: 800px) { .evidence-panel { grid-template-columns: 1fr; } }
-    .evidence-col { padding: 14px 20px; overflow: hidden; }
-    .evidence-col:last-child { border-left: 1px solid #E0E8F4; background: #F8FAFD; }
-    .evidence-label {
+    .p93-toggle {
       font-family: var(--font-mono);
-      font-size: 0.62rem;
-      font-weight: 700;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #4A6080;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 0;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #8BA0B8;
-      margin-bottom: 8px;
+      letter-spacing: 0.08em;
     }
-    .evidence-text {
+    .p93-toggle:hover { color: #1032CF; }
+    .p93-body {
+      display: none;
+      padding: 8px 0;
       font-size: 0.78rem;
       line-height: 1.6;
       color: #1A2B40;
       white-space: pre-wrap;
-      max-height: 160px;
+      max-height: 200px;
       overflow-y: auto;
       font-family: var(--font-mono);
     }
-    .evidence-fields {
-      display: flex;
-      flex-direction: column;
-      max-height: 160px;
-      overflow-y: auto;
+    .p93-body.open { display: block; }
+
+    /* ================================================================
+       ANFRAGE PANEL
+       ================================================================ */
+    .anfrage-panel {
+      border-top: 1px solid #E0E8F4;
+      background: #FAFBFD;
     }
-    .ev-field-row {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      padding: 3px 0;
-      border-bottom: 1px solid #EEF2F8;
-      font-size: 0.78rem;
-    }
-    .ev-field-row:last-child { border-bottom: none; }
-    .ev-fname {
+    .anfrage-toggle {
       font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
       color: #4A6080;
-      font-size: 0.7rem;
-      flex: 0 0 140px;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      width: 100%;
+      text-align: left;
+    }
+    .anfrage-toggle:hover { color: #1032CF; }
+    .anfrage-body { display: none; padding: 0 20px 12px; }
+    .anfrage-body.open { display: block; }
+
+    .anfrage-confidence { font-size: 0.72rem; font-family: var(--font-mono); margin-bottom: 8px; }
+    .anfrage-confidence.high { color: #15803D; }
+    .anfrage-confidence.mid  { color: #D97706; }
+    .anfrage-confidence.low  { color: #DC2626; }
+
+    .anfrage-constraints { margin-bottom: 8px; font-size: 0.72rem; }
+    .anfrage-constraint-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; margin-bottom: 3px; }
+    .anfrage-constraint-label { font-family: var(--font-mono); color: #4A6080; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; min-width: 120px; }
+    .constraint-badge {
+      display: inline-block;
+      font-size: 0.65rem; font-weight: 700; font-family: var(--font-mono);
+      padding: 2px 7px; border-radius: 999px;
       white-space: nowrap;
     }
-    .ev-fval {
-      font-family: var(--font-mono);
-      color: #1A2B40;
-      font-weight: 600;
-      flex: 1;
-      font-size: 0.75rem;
-      min-width: 0;
-      overflow-wrap: anywhere;
-    }
-    .ev-fval.missing { color: #9CA3AF; font-weight: 400; font-style: italic; }
-    .ev-badge {
-      font-size: 0.58rem;
-      padding: 1px 5px;
-      border-radius: 3px;
-      font-family: var(--font-mono);
-      font-weight: 600;
-      flex-shrink: 0;
-      text-transform: uppercase;
-    }
-    .ev-badge.extracted { background: #DCFCE7; color: #15803D; }
-    .ev-badge.derived   { background: #DBEAFE; color: #1E40AF; }
-    .ev-badge.missing   { background: #F3F4F6; color: #9CA3AF; }
+    .constraint-badge-hard { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+    .constraint-badge-soft { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+
+    .anfrage-evidence { font-size: 0.72rem; color: #1E40AF; font-family: var(--font-mono); margin-bottom: 8px; }
+    .anfrage-evidence-label { font-size: 0.65rem; color: #4A6080; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+
+    .anfrage-field-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 6px; }
+    .anfrage-field-table .afr-group td { background: #F4F7FC; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: #4A6080; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 6px; border-bottom: 1px solid #E0E8F4; }
+    .anfrage-field-table td { padding: 3px 6px; border-bottom: 1px solid #EEF2F8; vertical-align: middle; }
+    .anfrage-field-table .afr-fname { font-family: var(--font-mono); color: #4A6080; width: 40%; }
+    .anfrage-field-table .afr-fval  { color: #1A2B40; font-weight: 500; }
+    .anfrage-field-table .afr-fval.missing { color: #9CA3AF; font-style: italic; }
+    .afr-badge { font-size: 0.58rem; padding: 1px 5px; border-radius: 3px; font-family: var(--font-mono); font-weight: 600; text-transform: uppercase; margin-left: 4px; }
+    .afr-badge.extracted { background: #DCFCE7; color: #15803D; }
+    .afr-badge.derived   { background: #DBEAFE; color: #1E40AF; }
 
     /* ================================================================
        FEEDBACK BUTTON
@@ -2472,7 +2474,8 @@
     }
     .zubehoer-header {
       display: flex;
-      align-items: center;
+      align-items: baseline;
+      flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 10px;
     }
@@ -2495,26 +2498,68 @@
       color: #3D5170;
       margin-bottom: 5px;
     }
-    .zubehoer-items { display: flex; flex-wrap: wrap; gap: 6px; }
-    .zubehoer-chip {
+    .zubehoer-items {
       display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .zubehoer-chip {
+      display: grid;
+      grid-template-columns: 12px auto minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 4px 8px;
+      padding: 7px 10px;
       border: 1.5px solid #D8E2F0;
       border-radius: 8px;
       background: #FFFFFF;
       cursor: pointer;
       transition: all 0.15s;
       text-align: left;
+      max-width: 100%;
     }
     .zubehoer-chip:hover { border-color: #1032CF; background: #EBF0FF; }
     .zubehoer-chip.zc-selected { border-color: #1032CF; background: #EBF0FF; }
-    .zc-check { font-size: 0.7rem; color: #1032CF; width: 12px; text-align: center; }
+    .zc-check {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      font-size: 0.7rem;
+      color: #1032CF;
+      width: 12px;
+      text-align: center;
+      line-height: 1.5;
+      padding-top: 1px;
+    }
+    .zc-keyline {
+      grid-column: 2 / 4;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }
     .zc-key { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: #1A2B40; white-space: nowrap; }
-    .zc-sep { color: #C8D8EE; }
-    .zc-desc { font-size: 0.72rem; color: #4A6080; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .zc-fa { font-family: var(--font-mono); font-size: 0.6rem; color: #8BA0B8; background: #F4F7FC; padding: 1px 4px; border-radius: 3px; white-space: nowrap; }
+    .zc-desc {
+      grid-column: 2 / 4;
+      font-size: 0.72rem;
+      color: #4A6080;
+      line-height: 1.35;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .zc-fa {
+      grid-column: 4;
+      grid-row: 1 / span 2;
+      align-self: center;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: #8BA0B8;
+      background: #F4F7FC;
+      padding: 2px 6px;
+      border-radius: 999px;
+      white-space: nowrap;
+      margin-left: 2px;
+    }
     .zubehoer-empty { font-size: 0.8rem; color: #8BA0B8; padding: 2px 0; }
     .zubehoer-cat-mandatory {
       background: rgba(239, 68, 68, 0.04);
@@ -2532,23 +2577,33 @@
     .zc-paired-badge {
       font-size: 0.6rem;
       color: #22C55E;
-      margin-right: -2px;
     }
-    .zc-wrapper { display: contents; }
-    .zc-wrapper-selected { display: block; }
+    .zc-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 0 1 auto;
+      max-width: 100%;
+      min-width: 0;
+    }
+    .zc-wrapper-selected {
+      flex: 1 1 320px;
+      min-width: min(100%, 260px);
+    }
     .zc-detail {
       background: #F4F7FC;
       border: 1px solid #D8E2F0;
       border-top: none;
       border-radius: 0 0 6px 6px;
-      padding: 6px 10px;
+      padding: 8px 10px;
       margin-top: -1px;
       font-size: 0.68rem;
     }
     .zc-detail-row {
-      display: flex;
-      gap: 6px;
-      padding: 1px 0;
+      display: grid;
+      grid-template-columns: 78px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      padding: 2px 0;
     }
     .zc-detail-label {
       font-family: var(--font-mono);
@@ -2562,6 +2617,31 @@
       font-size: 0.6rem;
       color: #1A2B40;
       font-weight: 600;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 640px) {
+      .zubehoer-chip {
+        width: 100%;
+        grid-template-columns: 12px minmax(0, 1fr);
+      }
+      .zc-keyline,
+      .zc-desc {
+        grid-column: 2;
+      }
+      .zc-fa {
+        grid-column: 2;
+        grid-row: auto;
+        justify-self: start;
+        align-self: start;
+        margin-left: 0;
+      }
+      .zc-wrapper,
+      .zc-wrapper-selected {
+        flex-basis: 100%;
+        min-width: 100%;
+      }
     }
 
     /* ================================================================
@@ -2687,18 +2767,10 @@
       .results-summary {
         flex-direction: column;
       }
-      .meta-bar {
-        gap: 8px;
-        padding: 14px;
-      }
       .results-process-dock {
         width: 100%;
         flex-direction: row;
         align-items: center;
-      }
-      .results-process-dock .process-share-btn {
-        margin-left: auto;
-        padding-left: 10px;
       }
       .item-card-header {
         padding: 16px;
@@ -2726,9 +2798,6 @@
         width: auto;
         margin-left: 0;
         padding-left: 0;
-      }
-      .evidence-col {
-        padding: 14px 16px;
       }
     }
 
@@ -2909,50 +2978,6 @@
     .intermediate-actions button:hover { border-color: #1032CF; color: #1032CF; background: #EBF0FF; }
     .intermediate-actions button.copied { border-color: #22C55E; color: #15803D; background: #F0FDF4; }
 
-    /* Candidate stats funnel */
-    .stats-funnel {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 20px;
-      background: #F4F7FC;
-      border-bottom: 1px solid #E0E8F4;
-      overflow-x: auto;
-    }
-    .funnel-step {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      color: #4A6080;
-      white-space: nowrap;
-    }
-    .funnel-count {
-      font-weight: 700;
-      color: #1A2B40;
-      background: #FFFFFF;
-      border: 1px solid #D8E2F0;
-      border-radius: 4px;
-      padding: 1px 6px;
-    }
-    .funnel-arrow { color: #C8D8EE; font-size: 0.8rem; }
-    .funnel-final .funnel-count {
-      background: #EBF0FF;
-      border-color: #1032CF;
-      color: #1032CF;
-    }
-    .route-badge {
-      font-family: var(--font-mono);
-      font-size: 0.58rem;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 3px;
-      background: #EBF0FF;
-      color: #1032CF;
-      text-transform: uppercase;
-      margin-left: 4px;
-    }
   </style>
 </head>
 <body>
@@ -3065,6 +3090,7 @@
                 <div>
                   <div class="file-info-name" id="file-name"></div>
                   <div class="file-info-size" id="file-size"></div>
+                  <div class="file-info-status" id="file-status"></div>
                 </div>
                 <button type="button" class="file-info-remove" onclick="event.preventDefault(); event.stopPropagation(); removeFile()" data-i18n-title="file.remove">&#10005;</button>
               </div>
@@ -3197,7 +3223,10 @@
           <span class="process-state-badge" id="processing-process-state"></span>
         </div>
       </div>
-      <button class="btn btn-ghost process-share-btn" id="processing-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
+      <button class="btn btn-ghost process-share-btn" id="processing-share-btn" onclick="copyShareLink(this)">
+        <span class="share-btn-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+        <span class="share-btn-label" data-i18n="share.copy"></span>
+      </button>
     </div>
 
     <div class="pipeline">
@@ -3260,7 +3289,6 @@
   <section class="section" id="section-results">
     <div id="results-warnings"></div>
     <div class="results-summary">
-      <div class="meta-bar" id="results-meta"></div>
       <div class="process-ribbon hidden results-process-dock" id="results-process-ribbon">
         <div class="process-ribbon-copy">
           <div class="process-ribbon-kicker" data-i18n="process.ribbon"></div>
@@ -3269,7 +3297,6 @@
             <span class="process-state-badge" id="results-process-state"></span>
           </div>
         </div>
-        <button class="btn btn-ghost process-share-btn" id="results-share-btn" onclick="copyShareLink(this)" data-i18n="share.copy"></button>
       </div>
     </div>
 
@@ -3285,6 +3312,10 @@
         <input type="text" class="item-search" id="item-search" placeholder="" oninput="filterItems(this.value)"/>
         <button class="btn-ghost toolbar-btn" onclick="toggleAllItems(true)" title=""><span id="expand-label"></span></button>
         <button class="btn-ghost toolbar-btn" onclick="toggleAllItems(false)" title=""><span id="collapse-label"></span></button>
+        <button class="btn btn-ghost process-share-btn" id="results-share-btn" onclick="copyShareLink(this)">
+          <span class="share-btn-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          <span class="share-btn-label" data-i18n="share.copy"></span>
+        </button>
       </div>
     </div>
 
@@ -3353,6 +3384,7 @@ const I18N = {
     'file.drop': 'P93-Datei hierher ziehen',
     'file.click': 'oder zum Ausw\u00e4hlen klicken',
     'file.remove': 'Datei entfernen',
+    'file.ready': 'Datei hochgeladen \u2014 klicken Sie auf \u201eAnalyse starten\u201c',
     'settings.title': 'Parameter',
     'settings.optional': 'Optional',
     'settings.topk': 'Top K',
@@ -3453,6 +3485,13 @@ const I18N = {
     'fg.electrical': 'Elektrik & Backup',
     'fg.material': 'Material & Farbe',
     'fg.other': 'Weitere',
+    'fg.anfrage_extra': 'Produktionsdetails',
+    'anfrage.toggle': 'Extrahierte Anfrage-Daten',
+    'anfrage.confidence': 'Konfidenz',
+    'anfrage.hard': 'Harte Anforderungen',
+    'anfrage.soft': 'Weiche Pr\u00e4ferenzen',
+    'anfrage.evidence': 'Nachweise',
+    'anfrage.no_data': 'Keine Anfrage-Daten verf\u00fcgbar',
     'table.field': 'Feld',
     'table.query': 'Anfrage',
     'table.catalog': 'Katalog',
@@ -3467,19 +3506,12 @@ const I18N = {
     'json_unknown': 'Unbekanntes JSON-Format. Erwartet: {_meta, items} oder {outputs: [...]}',
     'timeout_after': 'Zeit\u00fcberschreitung nach',
     'evidence.p93': 'P93 Original-Text',
-    'evidence.fields': 'Extrahierte Anfrage-Felder',
     'feedback.btn': 'Feedback',
     'feedback.tooltip': 'Feedback an michael.auth@rp-group.com senden',
     'progress.reviewed': 'bearbeitet',
     'search.placeholder': 'Position suchen \u2026',
     'toolbar.expand': '\u25BC Alle \u00f6ffnen',
     'toolbar.collapse': '\u25B2 Alle schlie\u00dfen',
-    'stats.initial': 'Katalog',
-    'stats.system': 'System',
-    'stats.supply': 'Versorgung',
-    'stats.luminaire': 'Leuchte',
-    'stats.mounting': 'Montage',
-    'stats.scored': 'Bewertet',
     'zubehoer.title': 'Zubeh\u00f6r',
     'zubehoer.select_first': 'W\u00e4hlen Sie zuerst ein Produkt aus, um passendes Zubeh\u00f6r zu sehen.',
     'zubehoer.none': 'Kein Zubehör für diese Produktreihe bekannt.',
@@ -3519,6 +3551,7 @@ const I18N = {
     'file.drop': 'Drop P93 file here',
     'file.click': 'or click to browse',
     'file.remove': 'Remove file',
+    'file.ready': 'File uploaded \u2014 click \u201cStart Analysis\u201d',
     'settings.title': 'Parameters',
     'settings.optional': 'Optional',
     'settings.topk': 'Top K',
@@ -3619,6 +3652,13 @@ const I18N = {
     'fg.electrical': 'Electrical & Backup',
     'fg.material': 'Material & Color',
     'fg.other': 'Other',
+    'fg.anfrage_extra': 'Product Details',
+    'anfrage.toggle': 'Extracted Inquiry Data',
+    'anfrage.confidence': 'Confidence',
+    'anfrage.hard': 'Hard Constraints',
+    'anfrage.soft': 'Soft Preferences',
+    'anfrage.evidence': 'Evidence',
+    'anfrage.no_data': 'No inquiry data available',
     'table.field': 'Field',
     'table.query': 'Query',
     'table.catalog': 'Catalog',
@@ -3633,19 +3673,12 @@ const I18N = {
     'json_unknown': 'Unknown JSON format. Expected: {_meta, items} or {outputs: [...]}',
     'timeout_after': 'Timeout after',
     'evidence.p93': 'P93 Original Text',
-    'evidence.fields': 'Extracted Inquiry Fields',
     'feedback.btn': 'Feedback',
     'feedback.tooltip': 'Send feedback to michael.auth@rp-group.com',
     'progress.reviewed': 'reviewed',
     'search.placeholder': 'Search position \u2026',
     'toolbar.expand': '\u25BC Expand all',
     'toolbar.collapse': '\u25B2 Collapse all',
-    'stats.initial': 'Catalog',
-    'stats.system': 'System',
-    'stats.supply': 'Supply',
-    'stats.luminaire': 'Luminaire',
-    'stats.mounting': 'Mounting',
-    'stats.scored': 'Scored',
     'zubehoer.title': 'Accessories',
     'zubehoer.select_first': 'Select a product first to see compatible accessories.',
     'zubehoer.none': 'No accessories known for this product series.',
@@ -4131,15 +4164,24 @@ function copyShareLink(buttonEl) {
   const processId = getRoutableProcessId();
   if (!processId) return;
   const shareUrl = buildRouteUrl('results', processId).toString();
-  const original = t('share.copy');
+  const labelEl = buttonEl && buttonEl.querySelector('.share-btn-label');
+  const iconEl = buttonEl && buttonEl.querySelector('.share-btn-icon');
+  const linkSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+  const checkSvg = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   navigator.clipboard.writeText(shareUrl).then(() => {
     if (!buttonEl) return;
-    buttonEl.textContent = t('share.copied');
-    window.setTimeout(() => { buttonEl.textContent = original; }, 1400);
+    if (labelEl) labelEl.textContent = t('share.copied');
+    if (iconEl) iconEl.innerHTML = checkSvg;
+    buttonEl.classList.add('copied');
+    window.setTimeout(() => {
+      if (labelEl) labelEl.textContent = t('share.copy');
+      if (iconEl) iconEl.innerHTML = linkSvg;
+      buttonEl.classList.remove('copied');
+    }, 1400);
   }).catch(() => {
     if (buttonEl) {
-      buttonEl.textContent = t('share.failed');
-      window.setTimeout(() => { buttonEl.textContent = original; }, 1800);
+      if (labelEl) labelEl.textContent = t('share.failed');
+      window.setTimeout(() => { if (labelEl) labelEl.textContent = t('share.copy'); }, 1800);
     }
     window.prompt(t('share.manual'), shareUrl);
   });
@@ -4223,17 +4265,26 @@ function seriesFromArticle(article) {
   return best;
 }
 
+function buildFeedbackProcessUrl(processId = getRoutableProcessId()) {
+  const normalized = sanitizeProcessId(processId);
+  if (!normalized) return '';
+  return 'https://rp-group.entaingine.com/?process=' + encodeURIComponent(normalized) + '#results';
+}
+
 function buildFeedbackMailto(itemKey, item) {
   const p93name = (state.file?.name || 'unbekannt').replace(/\.p93$/i, '');
   const proposals = item.proposals || [];
   const qf = item.query_fields || [];
   const excerpt = (item.original_excerpt || '\u2014').slice(0, 200);
+  const processUrl = buildFeedbackProcessUrl();
   const qFieldsText = qf.filter(f => f.value != null)
     .map(f => '  ' + formatFieldLabel(f.field) + ': ' + formatDisplayValue(f.field, f.value)).join('\n');
   const topProps = proposals.slice(0, 3)
     .map((p, i) => '  #' + (p.rank || i + 1) + ': ' + (p.display_article || p.base_article || '?') + ' (Score: ' + (p.score || 0).toFixed(3) + ')').join('\n');
   const subject = 'RP Matcher Feedback \u2013 Position ' + itemKey + ' \u2013 ' + p93name;
-  const body = 'Hallo Michael,\n\nIch habe Feedback zu folgender Anfrage-Position:\n\nDatei:       ' + p93name + '\nPosition:    ' + itemKey + '\n\nP93 Original-Text:\n' + excerpt + '\n\nExtrahierte Felder:\n' + (qFieldsText || '  (keine)') + '\n\nKI-Vorschl\u00e4ge:\n' + (topProps || '  (keine)') + '\n\nMein Hinweis / Problem:\n[Bitte hier beschreiben]\n\nMit freundlichen Gr\u00fc\u00dfen';
+  const body = 'Hallo Michael,\n\nIch habe Feedback zu folgender Anfrage-Position:\n\nDatei:       ' + p93name + '\nPosition:    ' + itemKey
+    + (processUrl ? '\nAusf\u00fchrung: ' + processUrl : '')
+    + '\n\nP93 Original-Text:\n' + excerpt + '\n\nExtrahierte Felder:\n' + (qFieldsText || '  (keine)') + '\n\nKI-Vorschl\u00e4ge:\n' + (topProps || '  (keine)') + '\n\nMein Hinweis / Problem:\n[Bitte hier beschreiben]\n\nMit freundlichen Gr\u00fc\u00dfen';
   return 'mailto:michael.auth@rp-group.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
 
@@ -4288,9 +4339,10 @@ function renderZubehoerContent(itemKey, proposals, selectedProposalIdx) {
       html += '<div class="zc-wrapper' + (isSel ? ' zc-wrapper-selected' : '') + '">';
       html += '<button class="zubehoer-chip' + (isSel ? ' zc-selected' : '') + (isPaired ? ' zc-paired' : '') + '" onclick="toggleAccessory(\'' + ek + '\',\'' + ek2 + '\')" title="' + escapeHtml(det.d || key) + (isPaired ? ' — ' + t('zubehoer.paired') : '') + '">'
         + '<span class="zc-check">' + (isSel ? '✓' : '') + '</span>'
-        + (isPaired ? '<span class="zc-paired-badge">★</span>' : '')
+        + '<span class="zc-keyline">'
         + '<span class="zc-key">' + escapeHtml(key) + '</span>'
-        + '<span class="zc-sep">·</span>'
+        + (isPaired ? '<span class="zc-paired-badge">★</span>' : '')
+        + '</span>'
         + '<span class="zc-desc">' + escapeHtml(det.d || '') + '</span>'
         + (det.fa ? '<span class="zc-fa">' + escapeHtml(det.fa) + '</span>' : '')
         + '</button>';
@@ -4416,6 +4468,7 @@ function handleFile(f) {
   state.file = f;
   $('file-name').textContent = f.name;
   $('file-size').textContent = formatBytes(f.size);
+  $('file-status').textContent = t('file.ready');
   $('dropzone-empty').classList.add('hidden');
   $('dropzone-filled').classList.remove('hidden');
   dropzone.classList.add('has-file');
@@ -5020,25 +5073,6 @@ function toggleAllItems(open) {
   });
 }
 
-function renderCandidateStats(stats, route) {
-  if (!stats) return '';
-  const steps = [];
-  if (stats.initial != null) steps.push([t('stats.initial'), stats.initial, false]);
-  if (stats.explicit_system != null) steps.push([t('stats.system'), stats.explicit_system, false]);
-  if (stats.internal_supply != null) steps.push([t('stats.supply'), stats.internal_supply, false]);
-  if (stats.internal_luminaire != null) steps.push([t('stats.luminaire'), stats.internal_luminaire, false]);
-  if (stats.internal_mounting != null) steps.push([t('stats.mounting'), stats.internal_mounting, false]);
-  if (stats.scored != null) steps.push([t('stats.scored'), stats.scored, true]);
-  let html = '<div class="stats-funnel">';
-  steps.forEach(([label, count, isFinal], i) => {
-    if (i > 0) html += '<span class="funnel-arrow">\u2192</span>';
-    html += `<span class="funnel-step${isFinal ? ' funnel-final' : ''}"><span class="funnel-count">${count}</span>${label}</span>`;
-  });
-  if (route) html += `<span class="route-badge">${escapeHtml(route)}</span>`;
-  html += '</div>';
-  return html;
-}
-
 // Reason code → human label + category
 const REASON_LABELS = {
   'base_product_candidate': null, // suppress, it's always present
@@ -5047,7 +5081,7 @@ const REASON_LABELS = {
   'supply_match': ['Supply \u2713', 'match'],
   'supply_exact': ['Supply \u2713', 'match'],
   'mounting_match': ['Montage \u2713', 'match'],
-  'mounting_universal_compatible': ['Montage kompatibel', 'match'],
+  'mounting_universal_compatible': ['Montage universal', 'upgrade'],
   'ip_match': ['IP \u2713', 'match'],
   'ip_sufficient_upgrade': ['IP Upgrade', 'upgrade'],
   'ik_match': ['IK \u2713', 'match'],
@@ -5125,6 +5159,125 @@ function renderExtralogicLogs(logs, itemKey) {
   return html;
 }
 
+// ================================================================
+// ANFRAGE INDEX + PANEL RENDER
+// ================================================================
+function getAnfrageIndex() {
+  const outputs = state.pipelineResponse?.outputs || [];
+  for (const task of outputs) {
+    try {
+      const parsed = JSON.parse(task.outputText || '');
+      if (Array.isArray(parsed?.Produkte)) {
+        return Object.fromEntries(
+          parsed.Produkte.map(p => [String(p.Positionsnummer), p])
+        );
+      }
+    } catch {}
+  }
+  return null;
+}
+
+function renderAnfragePanel(key, queryFields, anfrageIndex) {
+  const anfrageItem = anfrageIndex?.[String(key)] || null;
+  const panelId = 'anfrage-' + String(key).replace(/[^a-zA-Z0-9]/g, '_');
+  const qf = queryFields || [];
+
+  // Top metadata (only available from full anfrage)
+  const conf = anfrageItem?.ExtractionConfidence ?? null;
+  const hard = Array.isArray(anfrageItem?.['ConstraintProfile:Hard']) ? anfrageItem['ConstraintProfile:Hard'] : [];
+  const soft = Array.isArray(anfrageItem?.['ConstraintProfile:Soft']) ? anfrageItem['ConstraintProfile:Soft'] : [];
+  const evidenceQf = qf.find(f => f.field === 'Evidence');
+  let evidence = [];
+  if (Array.isArray(anfrageItem?.Evidence)) {
+    evidence = anfrageItem.Evidence;
+  } else if (anfrageItem?.Evidence) {
+    evidence = String(anfrageItem.Evidence).split(',').map(s => s.trim()).filter(Boolean);
+  } else if (evidenceQf?.value) {
+    evidence = String(evidenceQf.value).split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  let topHtml = '';
+  if (conf !== null && conf !== undefined) {
+    const confClass = conf >= 90 ? 'high' : conf >= 70 ? 'mid' : 'low';
+    topHtml += `<div class="anfrage-confidence ${confClass}">\u25CF ${t('anfrage.confidence')}: ${conf}%</div>`;
+  }
+  if (hard.length > 0 || soft.length > 0) {
+    topHtml += '<div class="anfrage-constraints">';
+    if (hard.length > 0) {
+      topHtml += `<div class="anfrage-constraint-row"><span class="anfrage-constraint-label">${t('anfrage.hard')}</span>`;
+      hard.forEach(v => { topHtml += `<span class="constraint-badge constraint-badge-hard">${escapeHtml(String(v))}</span>`; });
+      topHtml += '</div>';
+    }
+    if (soft.length > 0) {
+      topHtml += `<div class="anfrage-constraint-row"><span class="anfrage-constraint-label">${t('anfrage.soft')}</span>`;
+      soft.forEach(v => { topHtml += `<span class="constraint-badge constraint-badge-soft">${escapeHtml(String(v))}</span>`; });
+      topHtml += '</div>';
+    }
+    topHtml += '</div>';
+  }
+  if (evidence.length > 0) {
+    topHtml += `<div class="anfrage-evidence-label">${t('anfrage.evidence')}</div>`;
+    topHtml += `<div class="anfrage-evidence">${evidence.map(e => escapeHtml(String(e))).join(' \u00B7 ')}</div>`;
+  }
+
+  // Field table
+  const EXCLUDED = new Set(['Positionsnummer', 'Verkaufstext', 'Evidence', 'Warnings']);
+  const fieldMap = {};
+  qf.forEach(f => {
+    if (!EXCLUDED.has(f.field)) {
+      fieldMap[f.field] = { value: f.value, source: f.source };
+    }
+  });
+  // Augment with extra fields from full anfrage not present in query_fields
+  const EXTRA_FIELDS = ['Menge', 'Batterietechnologie', 'Lichtquelle', 'MaxInputVoltageAC', 'Farbtemperatur', 'Anschlussquerschnitt', 'MinAmbientTemperature', 'MaxAmbientTemperature'];
+  if (anfrageItem) {
+    EXTRA_FIELDS.forEach(f => {
+      if (!(f in fieldMap) && anfrageItem[f] !== undefined && anfrageItem[f] !== null) {
+        fieldMap[f] = { value: anfrageItem[f], source: null };
+      }
+    });
+  }
+
+  if (Object.keys(fieldMap).length === 0 && !topHtml) return '';
+
+  // Group fields
+  const groups = {};
+  Object.entries(fieldMap).forEach(([fname, fdata]) => {
+    let grp = getFieldGroup(fname);
+    if (grp === 'fg.other' && EXTRA_FIELDS.includes(fname)) grp = 'fg.anfrage_extra';
+    if (!groups[grp]) groups[grp] = [];
+    groups[grp].push({ fname, ...fdata });
+  });
+
+  const GROUP_ORDER = ['fg.identity', 'fg.mounting', 'fg.protection', 'fg.dimensions', 'fg.electrical', 'fg.material', 'fg.anfrage_extra', 'fg.other'];
+  let tableHtml = '';
+  GROUP_ORDER.forEach(grpKey => {
+    const fields = groups[grpKey];
+    if (!fields || fields.length === 0) return;
+    tableHtml += `<tr class="afr-group"><td colspan="3">${t(grpKey)}</td></tr>`;
+    fields.forEach(({ fname, value, source }) => {
+      const isEmpty = value === null || value === undefined || value === '' || value === '-';
+      const displayVal = isEmpty ? '\u2014' : escapeHtml(String(value));
+      const valClass = isEmpty ? 'afr-fval missing' : 'afr-fval';
+      const safeSrc = source && /^[a-z]+$/.test(source) ? source : '';
+      const badgeHtml = (!isEmpty && safeSrc) ? `<span class="afr-badge ${safeSrc}">${safeSrc}</span>` : '';
+      tableHtml += `<tr><td class="afr-fname">${escapeHtml(fname)}</td><td class="${valClass}">${displayVal}</td><td>${badgeHtml}</td></tr>`;
+    });
+  });
+
+  const tableSection = tableHtml ? `<table class="anfrage-field-table">${tableHtml}</table>` : '';
+
+  return `<div class="anfrage-panel">
+    <button class="anfrage-toggle" onclick="event.stopPropagation();document.getElementById('${panelId}').classList.toggle('open');this.textContent=(document.getElementById('${panelId}').classList.contains('open')?'\\u25BE':'\\u25B8')+' ${t('anfrage.toggle')}'">
+      \u25B8 ${t('anfrage.toggle')}
+    </button>
+    <div class="anfrage-body" id="${panelId}">
+      ${topHtml}
+      ${tableSection}
+    </div>
+  </div>`;
+}
+
 // LLM-NAV: JS RESULTS.
 // Comparison normalization, matrix rendering, selection state, and export summary live here.
 // ================================================================
@@ -5153,24 +5306,6 @@ function renderResults(data, options = {}) {
     warningsEl.innerHTML += `<div class="warning-bar">\u26A0 ${escapeHtml(w)}</div>`;
   });
 
-  // Meta bar
-  const metaEl = $('results-meta');
-  const chips = [];
-  if (meta.catalog_strategy) chips.push([t('results.strategy'), meta.catalog_strategy]);
-  if (meta.catalog_version) chips.push([t('results.catalog'), meta.catalog_version]);
-  if (meta.top_k) chips.push(['Top-K', meta.top_k]);
-  if (meta.item_count) chips.push([t('results.positions'), meta.item_count]);
-  if (meta.timings_ms?.total) chips.push([t('results.time'), `${meta.timings_ms.total.toFixed(0)} ms`]);
-  if (meta.serving_route) chips.push([t('results.route'), meta.serving_route]);
-  if (meta.route_counts) chips.push(['E9/E10', `${meta.route_counts.e9 || 0} / ${meta.route_counts.e10 || 0}`]);
-  if (meta.run_id) chips.push([t('results.run'), meta.run_id.slice(0, 8) + '\u2026']);
-  metaEl.innerHTML = chips.map(([l, v]) =>
-    `<div class="meta-chip"><span class="meta-label">${escapeHtml(l)}</span><span class="meta-value">${escapeHtml(String(v))}</span></div>`
-  ).join('');
-  if (meta.catalog_mode === 'virtual' || (meta.catalog_strategy || '').includes('virtual')) {
-    metaEl.innerHTML += `<div class="meta-chip" style="background:var(--yellow-bg);border:1px solid rgba(251,191,36,0.3)"><span class="meta-value" style="color:var(--yellow-400)">${t('results.experimental')}</span></div>`;
-  }
-
   state.accessorySelections = {};
   items.forEach(item => {
     const key = item.positionsnummer || item.item_id;
@@ -5189,6 +5324,7 @@ function renderResults(data, options = {}) {
   }
 
   // Items
+  const anfrageIndex = getAnfrageIndex();
   const itemsEl = $('results-items');
   itemsEl.innerHTML = '';
   items.forEach((item, idx) => {
@@ -5217,41 +5353,8 @@ function renderResults(data, options = {}) {
         <span class="item-card-chevron">\u25BE</span>
       </div>`;
 
-    // Evidence panel: P93 text left, ANFRAGE fields right
-    let bodyHtml = '<div class="item-card-body"><div class="evidence-panel">';
+    let bodyHtml = '<div class="item-card-body">';
 
-    // Left: P93 original text
-    bodyHtml += '<div class="evidence-col"><div class="evidence-label">' + t('evidence.p93') + '</div>';
-    if (item.original_excerpt) {
-      bodyHtml += `<div class="evidence-text">${escapeHtml(item.original_excerpt)}</div>`;
-    } else {
-      bodyHtml += `<div class="evidence-text" style="color:#9CA3AF;font-style:italic">\u2014</div>`;
-    }
-    bodyHtml += '</div>';
-
-    // Right: extracted ANFRAGE fields (filter internal/verbose fields)
-    const HIDDEN_EV_FIELDS = new Set(['Positionsnummer','Verkaufstext','Artikelnummer','DesiredSupplyType','Mounting:AllowedMethods','Mounting:EnforcedMethods','Warnings','Evidence']);
-    const visibleQf = qf.filter(f => !HIDDEN_EV_FIELDS.has(f.field));
-    bodyHtml += '<div class="evidence-col"><div class="evidence-label">' + t('evidence.fields') + '</div>';
-    if (visibleQf.length > 0) {
-      bodyHtml += '<div class="evidence-fields">';
-      visibleQf.forEach(f => {
-        const srcCls = f.source === 'extracted' ? 'extracted' : f.source === 'derived' ? 'derived' : 'missing';
-        const hasVal = f.value != null;
-        bodyHtml += `<div class="ev-field-row">
-          <span class="ev-fname">${escapeHtml(formatFieldLabel(f.field))}</span>
-          <span class="ev-fval${hasVal ? '' : ' missing'}">${hasVal ? escapeHtml(String(formatDisplayValue(f.field, f.value))) : '\u2014'}</span>
-          <span class="ev-badge ${srcCls}">${escapeHtml(formatLabelText(f.source || '?'))}</span>
-        </div>`;
-      });
-      bodyHtml += '</div>';
-    } else {
-      bodyHtml += `<div class="zubehoer-empty">${t('no_fields')}</div>`;
-    }
-    bodyHtml += '</div></div>'; // close evidence cols + panel
-
-    // Candidate stats funnel + extralogic logs
-    bodyHtml += renderCandidateStats(item.candidate_stats, item.route);
     bodyHtml += renderExtralogicLogs(item.extralogic_logs, key);
 
     // Item-level warnings
@@ -5267,6 +5370,19 @@ function renderResults(data, options = {}) {
 
     // Zubehör panel
     bodyHtml += `<div class="zubehoer-panel" id="zubehoer-${escapeHtml(key)}">${renderZubehoerContent(key, proposals, state.selections[key])}</div>`;
+
+    // P93 Original-Text — collapsible, collapsed by default
+    if (item.original_excerpt) {
+      const p93Id = 'p93-' + key.replace(/[^a-zA-Z0-9]/g, '_');
+      bodyHtml += `<div class="p93-panel">
+        <button class="p93-toggle" onclick="event.stopPropagation();document.getElementById('${p93Id}').classList.toggle('open');this.textContent=(document.getElementById('${p93Id}').classList.contains('open')?'\\u25BE':'\\u25B8')+' ${t('evidence.p93')}'">
+          \u25B8 ${t('evidence.p93')}
+        </button>
+        <div class="p93-body" id="${p93Id}">${escapeHtml(item.original_excerpt)}</div>
+      </div>`;
+    }
+
+    bodyHtml += renderAnfragePanel(key, qf, anfrageIndex);
 
     bodyHtml += '</div>';
     card.innerHTML = headerHtml + bodyHtml;
@@ -5369,8 +5485,14 @@ function _normalizeTypeValue(value) {
   if (value === null || value === undefined) return '';
   return String(value)
     .toLowerCase()
+    .replace(/[_-]+/g, ' ')
     .replace(/\s+/g, ' ')
+    .replace(/\bled\s+/g, '')
     .replace(/\brettungszeichen\s*-?\s*\/\s*sicherheitsleuchte\b/g, 'rettungszeichenleuchte')
+    .replace(/\brettungszeichen\s+leuchte\b/g, 'rettungszeichenleuchte')
+    .replace(/\bsicherheits\s+leuchte\b/g, 'sicherheitsleuchte')
+    .replace(/\bnot\s+leuchte\b/g, 'notleuchte')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 const _OVERVIEW_SECONDARY_FIELDS = new Set([
@@ -5496,7 +5618,21 @@ function getDisplayProposal(proposal, queryFields) {
 }
 
 function normalizeComparison(comp) {
-  if (!comp || comp.status !== 'different') return comp;
+  if (!comp) return comp;
+
+  // Mounting: "universal" should not satisfy a specific mounting request
+  if (comp.field === 'Mounting:MountingMethod') {
+    const qv = comp.query_value, cv = comp.candidate_value;
+    if (qv && cv) {
+      const ql = String(qv).toLowerCase().trim();
+      const cl = String(cv).toLowerCase().trim();
+      if (ql !== 'universal' && cl === 'universal' && comp.status !== 'different') {
+        return { ...comp, status: 'different', note: 'candidate uses universal mounting compatibility' };
+      }
+    }
+  }
+
+  if (comp.status !== 'different') return comp;
   const f = comp.field;
   const qv = comp.query_value, cv = comp.candidate_value;
   if (!qv || !cv) return comp;

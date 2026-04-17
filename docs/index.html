@@ -942,44 +942,6 @@
       word-break: break-all;
     }
 
-    /* ================================================================
-       RESULTS — META BAR
-       ================================================================ */
-    .results-summary {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-
-    .results-process-dock {
-      flex: 0 0 auto;
-      align-self: stretch;
-      margin: 0;
-      padding: 10px 14px;
-      border-radius: var(--radius-lg);
-      background: #FFFFFF;
-      border: 1px solid #D8E2F0;
-      box-shadow: 0 2px 8px rgba(30,50,90,0.06);
-    }
-
-    .results-process-dock .process-ribbon-kicker {
-      display: none;
-    }
-
-    .results-process-dock .process-ribbon-copy {
-      gap: 8px;
-    }
-
-    .results-process-dock .process-ribbon-line {
-      gap: 6px;
-    }
-
-    .results-process-dock .process-pill {
-      background: #F4F7FC;
-      border-color: #D8E2F0;
-    }
 
     /* ================================================================
        RESULTS — ITEM CARD
@@ -1731,6 +1693,56 @@
       overscroll-behavior-y: auto;
       scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     }
+    /* ── Add-product toolbar (above matrix) ─────────────────────── */
+    .matrix-add-bar {
+      display: flex; justify-content: flex-end; align-items: center;
+      gap: 8px; padding: 8px 8px 6px;
+      position: sticky; left: 0; z-index: 6;
+      background: transparent;
+    }
+    .add-product-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 6px;
+      border: 1px solid #C8D4EE; background: #EBF0FF;
+      color: #1032CF; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap; line-height: 1;
+      box-shadow: 0 1px 3px rgba(16,50,207,0.1);
+      transition: background 0.12s, box-shadow 0.12s, color 0.12s;
+    }
+    .add-product-btn .add-product-btn-icon {
+      font-size: 1.05rem; font-weight: 500; line-height: 1;
+    }
+    .add-product-btn:hover {
+      background: #1032CF; color: #fff; border-color: #1032CF;
+      box-shadow: 0 2px 8px rgba(16,50,207,0.25);
+    }
+    /* ── Manual product badge ───────────────────────────────────── */
+    .ph-manual-badge {
+      display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 1px 5px;
+      border-radius: 3px; background: #FFF3CD; color: #856404; letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    /* ── Add-product search popover ─────────────────────────────── */
+    .add-product-popover {
+      position: absolute; z-index: 9999; width: 260px;
+      background: #fff; border: 1px solid #C8D4EE; border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(16,50,207,0.13); padding: 8px;
+    }
+    .catalog-search-input {
+      width: 100%; box-sizing: border-box; padding: 6px 10px;
+      border: 1px solid #C8D4EE; border-radius: 6px; font-size: 0.85rem; outline: none;
+    }
+    .catalog-search-input:focus { border-color: #1032CF; }
+    .catalog-result-list {
+      list-style: none; margin: 5px 0 0; padding: 0; max-height: 200px; overflow-y: auto;
+    }
+    .catalog-result-item {
+      padding: 6px 10px; border-radius: 5px; cursor: pointer;
+      font-size: 0.82rem; font-family: var(--font-mono, monospace);
+    }
+    .catalog-result-item:hover { background: #EBF0FF; color: #1032CF; }
+    .catalog-result-empty { padding: 6px 10px; font-size: 0.82rem; color: #888; }
+
     .matrix-table {
       border-collapse: separate;
       border-spacing: 0;
@@ -2407,6 +2419,15 @@
     .anfrage-evidence { font-size: 0.72rem; color: #1E40AF; font-family: var(--font-mono); margin-bottom: 8px; }
     .anfrage-evidence-label { font-size: 0.65rem; color: #4A6080; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
 
+    .anfrage-source-text { margin-bottom: 10px; }
+    .anfrage-section-label { font-size: 0.65rem; font-weight: 600; color: #4A6080; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; display: block; }
+    .anfrage-text-details summary { cursor: pointer; font-size: 0.72rem; color: #4A6080; font-style: italic; list-style: none; padding: 2px 0; }
+    .anfrage-text-details summary::before { content: '\25B8\00A0'; font-style: normal; }
+    .anfrage-text-details[open] summary::before { content: '\25BE\00A0'; }
+    .anfrage-text-pre { background: #F4F7FC; border-left: 3px solid #93C5FD; padding: 8px 10px; margin: 4px 0 0 0; font-size: 0.72rem; line-height: 1.55; white-space: pre-wrap; color: #1A2B40; border-radius: 0 4px 4px 0; font-family: var(--font-mono); }
+    .anfrage-warn-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .anfrage-warn-badge { font-size: 0.65rem; background: #FFF8E1; color: #7A5800; border: 1px solid #F0C040; border-radius: 3px; padding: 2px 7px; font-family: var(--font-mono); }
+
     .anfrage-field-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 6px; }
     .anfrage-field-table .afr-group td { background: #F4F7FC; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: #4A6080; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 6px; border-bottom: 1px solid #E0E8F4; }
     .anfrage-field-table td { padding: 3px 6px; border-bottom: 1px solid #EEF2F8; vertical-align: middle; }
@@ -2764,14 +2785,7 @@
         padding-left: var(--app-gutter);
         padding-right: var(--app-gutter);
       }
-      .results-summary {
-        flex-direction: column;
-      }
-      .results-process-dock {
-        width: 100%;
-        flex-direction: row;
-        align-items: center;
-      }
+
       .item-card-header {
         padding: 16px;
       }
@@ -3288,17 +3302,6 @@
        ============================================================ -->
   <section class="section" id="section-results">
     <div id="results-warnings"></div>
-    <div class="results-summary">
-      <div class="process-ribbon hidden results-process-dock" id="results-process-ribbon">
-        <div class="process-ribbon-copy">
-          <div class="process-ribbon-kicker" data-i18n="process.ribbon"></div>
-          <div class="process-ribbon-line">
-            <span class="process-pill" id="results-process-pill"></span>
-            <span class="process-state-badge" id="results-process-state"></span>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Toolbar: progress + controls -->
     <div class="results-toolbar" id="results-toolbar" style="display:none">
@@ -3329,7 +3332,7 @@
       <div class="export-summary" id="export-summary"></div>
       <div class="export-actions">
         <button class="btn btn-primary" onclick="downloadExport('csv')" data-i18n="export.csv"></button>
-        <button class="btn btn-secondary" onclick="downloadExport('json')" data-i18n="export.json"></button>
+        <button class="btn btn-secondary" onclick="downloadAbas()" data-i18n="export.abas"></button>
         <button class="btn btn-ghost" onclick="startFreshAnalysis()" data-i18n="btn.new"></button>
       </div>
     </div>
@@ -3347,6 +3350,9 @@
 <!-- ==============================================================
      JAVASCRIPT
      ============================================================== -->
+<!-- Product catalog data (generated from docs/product-catalog.csv by scripts/generate-catalog.js).
+     Exposes globals: _CATALOG_FIELDS, _CATALOG_DICT, _CATALOG_DATA. Must load before the main script. -->
+<script src="catalog.js"></script>
 <script>
 // LLM-NAV: JS I18N.
 // This section owns translations plus language-triggered rerender logic.
@@ -3469,7 +3475,7 @@ const I18N = {
     'export.none': 'Kein Vorschlag',
     'export.proposal': 'Vorschlag',
     'export.csv': 'CSV herunterladen',
-    'export.json': 'JSON herunterladen',
+    'export.abas': 'ABAS CSV herunterladen',
     'share.copy': 'Link kopieren',
     'share.copied': 'Link kopiert',
     'share.failed': 'Kopieren fehlgeschlagen',
@@ -3482,7 +3488,7 @@ const I18N = {
     'fg.mounting': 'Montage & System',
     'fg.protection': 'Schutz & Sicherheit',
     'fg.dimensions': 'Abmessungen',
-    'fg.electrical': 'Elektrik & Backup',
+    'fg.electrical': 'Lichtstärke und Autonomiezeit',
     'fg.material': 'Material & Farbe',
     'fg.other': 'Weitere',
     'fg.anfrage_extra': 'Produktionsdetails',
@@ -3491,6 +3497,8 @@ const I18N = {
     'anfrage.hard': 'Harte Anforderungen',
     'anfrage.soft': 'Weiche Pr\u00e4ferenzen',
     'anfrage.evidence': 'Nachweise',
+    'anfrage.source_text': 'Originaltext der Anfrage',
+    'anfrage.warnings': 'Hinweise zur Extraktion',
     'anfrage.no_data': 'Keine Anfrage-Daten verf\u00fcgbar',
     'table.field': 'Feld',
     'table.query': 'Anfrage',
@@ -3636,7 +3644,7 @@ const I18N = {
     'export.none': 'No proposal',
     'export.proposal': 'Proposal',
     'export.csv': 'Download CSV',
-    'export.json': 'Download JSON',
+    'export.abas': 'Download ABAS CSV',
     'share.copy': 'Copy link',
     'share.copied': 'Link copied',
     'share.failed': 'Copy failed',
@@ -3649,7 +3657,7 @@ const I18N = {
     'fg.mounting': 'Mounting & System',
     'fg.protection': 'Protection & Safety',
     'fg.dimensions': 'Dimensions',
-    'fg.electrical': 'Electrical & Backup',
+    'fg.electrical': 'Light Output & Backup Time',
     'fg.material': 'Material & Color',
     'fg.other': 'Other',
     'fg.anfrage_extra': 'Product Details',
@@ -3658,6 +3666,8 @@ const I18N = {
     'anfrage.hard': 'Hard Constraints',
     'anfrage.soft': 'Soft Preferences',
     'anfrage.evidence': 'Evidence',
+    'anfrage.source_text': 'Original Request Text',
+    'anfrage.warnings': 'Extraction Notes',
     'anfrage.no_data': 'No inquiry data available',
     'table.field': 'Field',
     'table.query': 'Query',
@@ -3870,11 +3880,11 @@ const SESSION_API_KEY_KEY = 'rp-matcher:api-key';
 const SESSION_PROCESS_CACHE_PREFIX = 'rp-matcher:process-cache:';
 
 const FIELD_GROUPS_MAP = {
-  'fg.identity': ['Produkttyp', 'RatingsCertifications:LuminaireType', 'Betriebsart'],
+  'fg.identity': ['RatingsCertifications:LuminaireType', 'Betriebsart'],
   'fg.mounting': ['Mounting:MountingMethod', 'Supply', 'Monitoring'],
-  'fg.protection': ['RatingsCertifications:IngressProtection', 'RatingsCertifications:IKclass', 'RatingsCertifications:RecognitionDistance'],
+  'fg.protection': ['RatingsCertifications:IngressProtection', 'RatingsCertifications:IKclass'],
   'fg.dimensions': ['HousingDimensions:Height', 'HousingDimensions:Length', 'HousingDimension:Width'],
-  'fg.electrical': ['ElectronicPerformanceData:LuminousFluxMains', 'ElectronicPerformanceData:LuminousFluxEmergency', 'ElectronicBackupTimes:MaxBackupTime'],
+  'fg.electrical': ['ElectronicPerformanceData:LuminousFluxMains', 'ElectronicPerformanceData:LuminousFluxEmergency', 'RatingsCertifications:RecognitionDistance', 'ElectronicBackupTimes:MaxBackupTime'],
   'fg.material': ['MaterialData:Material', 'HousingColorInformation:Color'],
 };
 
@@ -3942,9 +3952,40 @@ const state = {
   results: null,
   selections: {},
   accessorySelections: {},
+  catalog: null,
+  manualProducts: {},
 };
+window.state = state; // expose for Playwright tests and debugging
 
 let suppressRouteSync = false;
+
+// ================================================================
+// PRODUCT CATALOG
+// ================================================================
+// Compact catalog: [[Artikelnummer, ABAS-ID], …] — only published rows.
+// Embedded so the page works with file:// and GitHub Pages without extra fetches.
+// _CATALOG_FIELDS, _CATALOG_DICT, and _CATALOG_DATA are defined in docs/catalog.js,
+// loaded via <script src="catalog.js"> earlier in the page. Regenerate with
+// `node scripts/generate-catalog.js` after updating docs/product-catalog.csv.
+function loadCatalog() {
+  if (state.catalog) return;
+  const byArticle = {};
+  const published = [];
+  _CATALOG_DATA.forEach(row => {
+    const art = row[0];
+    const abasId = row[1];
+    const entry = { 'Artikelnummer': art, 'ABAS-ID': abasId };
+    for (let i = 0; i < _CATALOG_FIELDS.length; i++) {
+      const idx = row[2 + i];
+      if (idx !== '' && idx !== undefined) {
+        entry[_CATALOG_FIELDS[i]] = _CATALOG_DICT[idx];
+      }
+    }
+    byArticle[art] = entry;
+    published.push(entry);
+  });
+  state.catalog = { published, byArticle };
+}
 
 function cloneAccessorySelections(selections) {
   const cloned = {};
@@ -4276,14 +4317,14 @@ function buildFeedbackMailto(itemKey, item) {
   const proposals = item.proposals || [];
   const qf = item.query_fields || [];
   const excerpt = (item.original_excerpt || '\u2014').slice(0, 200);
-  const processUrl = buildFeedbackProcessUrl();
+  const processUrl = buildFeedbackProcessUrl() || window.location.href;
   const qFieldsText = qf.filter(f => f.value != null)
     .map(f => '  ' + formatFieldLabel(f.field) + ': ' + formatDisplayValue(f.field, f.value)).join('\n');
   const topProps = proposals.slice(0, 3)
     .map((p, i) => '  #' + (p.rank || i + 1) + ': ' + (p.display_article || p.base_article || '?') + ' (Score: ' + (p.score || 0).toFixed(3) + ')').join('\n');
   const subject = 'RP Matcher Feedback \u2013 Position ' + itemKey + ' \u2013 ' + p93name;
   const body = 'Hallo Michael,\n\nIch habe Feedback zu folgender Anfrage-Position:\n\nDatei:       ' + p93name + '\nPosition:    ' + itemKey
-    + (processUrl ? '\nAusf\u00fchrung: ' + processUrl : '')
+    + '\nAusf\u00fchrung: ' + processUrl
     + '\n\nP93 Original-Text:\n' + excerpt + '\n\nExtrahierte Felder:\n' + (qFieldsText || '  (keine)') + '\n\nKI-Vorschl\u00e4ge:\n' + (topProps || '  (keine)') + '\n\nMein Hinweis / Problem:\n[Bitte hier beschreiben]\n\nMit freundlichen Gr\u00fc\u00dfen';
   return 'mailto:michael.auth@rp-group.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
@@ -4291,6 +4332,8 @@ function buildFeedbackMailto(itemKey, item) {
 function renderZubehoerContent(itemKey, proposals, selectedProposalIdx) {
   const selSet = state.accessorySelections[itemKey] || new Set();
   let series = null, articleName = null, pairedKeys = new Set();
+  const isManualSel = typeof selectedProposalIdx === 'string' && selectedProposalIdx.startsWith('manual:');
+  const hasSelection = typeof selectedProposalIdx === 'number' || isManualSel;
   if (typeof selectedProposalIdx === 'number' && proposals[selectedProposalIdx]) {
     const p = proposals[selectedProposalIdx];
     articleName = p.display_article || p.base_article || null;
@@ -4300,12 +4343,19 @@ function renderZubehoerContent(itemKey, proposals, selectedProposalIdx) {
     if (ak) {
       (typeof ak === 'string' ? ak.split('|') : Array.isArray(ak) ? ak : []).forEach(k => { if (k) pairedKeys.add(k.trim()); });
     }
+  } else if (isManualSel) {
+    const mi = parseInt(selectedProposalIdx.split(':')[1]);
+    const manuals = state.manualProducts[itemKey] || [];
+    if (manuals[mi]) {
+      articleName = manuals[mi]['Artikelnummer'] || null;
+      series = seriesFromArticle(articleName);
+    }
   }
   let html = '<div class="zubehoer-header"><span class="zubehoer-title">' + t('zubehoer.title') + '</span>';
   if (series && articleName) html += '<span class="zubehoer-subtitle">' + escapeHtml(articleName) + ' · Reihe ' + escapeHtml(series) + '</span>';
   html += '</div>';
   if (!series || !SERIES_MAP[series]) {
-    html += '<div class="zubehoer-empty">' + (typeof selectedProposalIdx === 'number' ? t('zubehoer.none') : t('zubehoer.select_first')) + '</div>';
+    html += '<div class="zubehoer-empty">' + (hasSelection ? t('zubehoer.none') : t('zubehoer.select_first')) + '</div>';
     return html;
   }
   const accKeys = SERIES_MAP[series];
@@ -5184,6 +5234,7 @@ function renderAnfragePanel(key, queryFields, anfrageIndex) {
 
   // Top metadata (only available from full anfrage)
   const conf = anfrageItem?.ExtractionConfidence ?? null;
+  const confPct = conf !== null ? Math.round(conf * 100) : null;
   const hard = Array.isArray(anfrageItem?.['ConstraintProfile:Hard']) ? anfrageItem['ConstraintProfile:Hard'] : [];
   const soft = Array.isArray(anfrageItem?.['ConstraintProfile:Soft']) ? anfrageItem['ConstraintProfile:Soft'] : [];
   const evidenceQf = qf.find(f => f.field === 'Evidence');
@@ -5197,9 +5248,18 @@ function renderAnfragePanel(key, queryFields, anfrageIndex) {
   }
 
   let topHtml = '';
-  if (conf !== null && conf !== undefined) {
-    const confClass = conf >= 90 ? 'high' : conf >= 70 ? 'mid' : 'low';
-    topHtml += `<div class="anfrage-confidence ${confClass}">\u25CF ${t('anfrage.confidence')}: ${conf}%</div>`;
+  if (anfrageItem?.Verkaufstext) {
+    const vt = anfrageItem.Verkaufstext;
+    const preview = vt.length > 120 ? escapeHtml(vt.slice(0, 120)) + '\u2026' : escapeHtml(vt);
+    topHtml += `<div class="anfrage-source-text"><span class="anfrage-section-label">${t('anfrage.source_text')}</span><details class="anfrage-text-details"><summary>${preview}</summary><pre class="anfrage-text-pre">${escapeHtml(vt)}</pre></details></div>`;
+  }
+  if (confPct !== null) {
+    const confClass = confPct >= 90 ? 'high' : confPct >= 70 ? 'mid' : 'low';
+    topHtml += `<div class="anfrage-confidence ${confClass}">\u25CF ${t('anfrage.confidence')}: ${confPct}%</div>`;
+  }
+  const warnings = Array.isArray(anfrageItem?.Warnings) ? anfrageItem.Warnings : [];
+  if (warnings.length > 0) {
+    topHtml += `<div class="anfrage-warn-row"><span class="anfrage-section-label">${t('anfrage.warnings')}</span>${warnings.map(w => `<span class="anfrage-warn-badge">\u26A0 ${escapeHtml(String(w))}</span>`).join('')}</div>`;
   }
   if (hard.length > 0 || soft.length > 0) {
     topHtml += '<div class="anfrage-constraints">';
@@ -5228,12 +5288,17 @@ function renderAnfragePanel(key, queryFields, anfrageIndex) {
       fieldMap[f.field] = { value: f.value, source: f.source };
     }
   });
-  // Augment with extra fields from full anfrage not present in query_fields
-  const EXTRA_FIELDS = ['Menge', 'Batterietechnologie', 'Lichtquelle', 'MaxInputVoltageAC', 'Farbtemperatur', 'Anschlussquerschnitt', 'MinAmbientTemperature', 'MaxAmbientTemperature'];
+  // Augment with all non-null fields from full anfrage not present in query_fields
+  const ANFRAGE_META = new Set([
+    'Positionsnummer', 'Artikelnummer', 'EAN code', 'Produkttyp',
+    'Verkaufstext', 'Evidence', 'Warnings',
+    'ConstraintProfile:Hard', 'ConstraintProfile:Soft', 'ExtractionConfidence',
+    'Accessory:Candidates', 'Lieferländer-id'
+  ]);
   if (anfrageItem) {
-    EXTRA_FIELDS.forEach(f => {
-      if (!(f in fieldMap) && anfrageItem[f] !== undefined && anfrageItem[f] !== null) {
-        fieldMap[f] = { value: anfrageItem[f], source: null };
+    Object.entries(anfrageItem).forEach(([f, v]) => {
+      if (!ANFRAGE_META.has(f) && !(f in fieldMap) && v !== null && v !== undefined) {
+        fieldMap[f] = { value: v, source: null };
       }
     });
   }
@@ -5244,7 +5309,6 @@ function renderAnfragePanel(key, queryFields, anfrageIndex) {
   const groups = {};
   Object.entries(fieldMap).forEach(([fname, fdata]) => {
     let grp = getFieldGroup(fname);
-    if (grp === 'fg.other' && EXTRA_FIELDS.includes(fname)) grp = 'fg.anfrage_extra';
     if (!groups[grp]) groups[grp] = [];
     groups[grp].push({ fname, ...fdata });
   });
@@ -5292,6 +5356,7 @@ function renderResults(data, options = {}) {
   const previousAccessorySelections = preserveState ? cloneAccessorySelections(state.accessorySelections) : {};
 
   state.selections = {};
+  state.manualProducts = {};
   items.forEach(item => {
     const key = item.positionsnummer || item.item_id;
     state.selections[key] = Object.prototype.hasOwnProperty.call(previousSelections, key)
@@ -5405,7 +5470,7 @@ function getFieldGroup(fieldName) {
   return 'fg.other';
 }
 
-const HIDDEN_COMP_FIELDS = new Set(['Positionsnummer','Verkaufstext','Artikelnummer','DesiredSupplyType','Mounting:AllowedMethods','Mounting:EnforcedMethods','Warnings','Evidence']);
+const HIDDEN_COMP_FIELDS = new Set(['Positionsnummer','Verkaufstext','Artikelnummer','DesiredSupplyType','Mounting:AllowedMethods','Mounting:EnforcedMethods','Warnings','Evidence','Produkttyp']);
 
 // ── Frontend comparison normalization ──
 // Re-evaluates "different" statuses from the backend for known equivalences
@@ -5744,9 +5809,10 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
   // ── COLGROUP (enforces consistent column widths) ────────────────
   const { fname: COL_FNAME, query: COL_QUERY, proposal: COL_PROP } = getMatrixLayoutMetrics();
   const fixedWidth = COL_FNAME + COL_QUERY;
-  const tableMinWidth = fixedWidth + displayProposals.length * COL_PROP;
-  const colGroupCols = `<col style="width:${COL_FNAME}px"><col style="width:${COL_QUERY}px">${displayProposals.map(() => `<col style="width:${COL_PROP}px">`).join('')}`;
-  const overviewGridCols = `${COL_FNAME}px ${COL_QUERY}px ${displayProposals.map(() => `${COL_PROP}px`).join(' ')}`;
+  const manuals = state.manualProducts[itemKey] || [];
+  const tableMinWidth = fixedWidth + (displayProposals.length + manuals.length) * COL_PROP;
+  const colGroupCols = `<col style="width:${COL_FNAME}px"><col style="width:${COL_QUERY}px">${displayProposals.map(() => `<col style="width:${COL_PROP}px">`).join('')}${manuals.map(() => `<col style="width:${COL_PROP}px">`).join('')}`;
+  const overviewGridCols = `${COL_FNAME}px ${COL_QUERY}px ${displayProposals.map(() => `${COL_PROP}px`).join(' ')}${manuals.length ? ' ' + manuals.map(() => `${COL_PROP}px`).join(' ') : ''}`;
 
   // ── THEAD ──────────────────────────────────────────────────────
   let html = '';
@@ -5768,7 +5834,7 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
       : (lang === 'de' ? 'Auswählen' : 'Select');
 
     // Slim sticky header: only rank + article + score
-    html += `<th class="col-proposal-th${isSel ? ' is-selected' : ''}" id="ph-${ek}-${pi}">
+    html += `<th class="col-proposal-th${isSel ? ' is-selected' : ''}" id="ph-${ek}-${pi}" data-col="${pi}">
       <div class="ph-inner ph-inner-slim">
         <div class="ph-head-top">
           <div class="ph-rank-row">
@@ -5826,26 +5892,58 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
         </div>
         <div class="overview-product-article">${escapeHtml(article)}</div>
       </div>
-      ${summaryHtml}${renderReasonCodes(p.reason_codes, 4)}${normIssuesHtml}
-      <div class="ph-overview-actions">
-        ${renderProductFeatures(p.displayFeatures || p.product_features, 'pf-' + ek + '-' + pi, true)}
-      </div>
+      ${summaryHtml}${normIssuesHtml}
     </div></div>`;
   });
+
+  // ── MANUAL PRODUCT HEADERS ─────────────────────────────────────
+  manuals.forEach((row, mi) => {
+    const mKey = `manual:${mi}`;
+    const isSel = state.selections[itemKey] === mKey;
+    const selLabel = isSel
+      ? (lang === 'de' ? '\u2713\u00a0Ausgewählt' : '\u2713\u00a0Selected')
+      : (lang === 'de' ? 'Auswählen' : 'Select');
+    html += `<th class="col-proposal-th col-manual${isSel ? ' is-selected' : ''}" id="ph-${ek}-manual-${mi}" data-col="${mKey}">
+      <div class="ph-inner ph-inner-slim">
+        <div class="ph-head-top">
+          <span class="ph-manual-badge">${lang === 'de' ? 'Manuell' : 'Manual'}</span>
+          <div class="ph-article">${escapeHtml(row['Artikelnummer'])}</div>
+        </div>
+        <div class="ph-header-actions">
+          <button class="ph-select-btn top-cta${isSel ? ' selected' : ''}"
+            data-item="${ek}" data-pi="${mKey}"
+            onclick="selectProposal('${ek}','${mKey}',this)">
+            ${selLabel}
+          </button>
+        </div>
+      </div>
+    </th>`;
+  });
   html += `</tr></thead><tbody>`;
+  const addBtnLabel = lang === 'de' ? 'Produkt manuell hinzufügen' : 'Add product manually';
+  const addBtnText = lang === 'de' ? 'Manuelles Produkt' : 'Manual product';
   html = `<div class="matrix-wrapper">
+    <div class="matrix-add-bar">
+      <button class="add-product-btn" onclick="openAddProductPopover('${ek}',this)" title="${addBtnLabel}" aria-label="${addBtnLabel}"><span class="add-product-btn-icon">+</span>${addBtnText}</button>
+    </div>
     <div class="matrix-overview" style="min-width:${tableMinWidth}px;grid-template-columns:${overviewGridCols}">
       <div class="matrix-overview-cell matrix-overview-label"><div class="col-fname-content">${lang === 'de' ? '\u00dcbersicht' : 'Overview'}</div></div>
       <div class="matrix-overview-cell matrix-overview-query">${renderQueryOverview(queryFields)}</div>
-      ${overviewCellsHtml}
+      ${overviewCellsHtml}${manuals.map(() => '<div class="matrix-overview-cell"></div>').join('')}
     </div>${html}`;
 
   // ── ROWS ───────────────────────────────────────────────────────
+  const _ROW_GROUP_ORDER = ['fg.identity', 'fg.mounting', 'fg.protection', 'fg.dimensions', 'fg.electrical', 'fg.material', 'fg.anfrage_extra', 'fg.other'];
+  fields.sort((a, b) => {
+    const ga = _ROW_GROUP_ORDER.indexOf(getFieldGroup(a.field));
+    const gb = _ROW_GROUP_ORDER.indexOf(getFieldGroup(b.field));
+    return (ga === -1 ? 99 : ga) - (gb === -1 ? 99 : gb);
+  });
   let lastGroup = null;
   fields.forEach(({ field, qf }) => {
     const group = getFieldGroup(field);
     if (group !== lastGroup) {
-      html += `<tr class="group-row"><td class="group-label-cell" colspan="2">${escapeHtml(t(group))}</td><td class="group-label-fill" colspan="${proposals.length}"></td></tr>`;
+      html += `<tr class="group-row"><td class="group-label-cell" colspan="2">${escapeHtml(t(group))}</td><td class="group-label-fill" colspan="${proposals.length + manuals.length}"></td></tr>`;
       lastGroup = group;
     }
     const qVal = qf?.value != null ? String(qf.value) : null;
@@ -5873,6 +5971,26 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
         html += `<td class="${sc}${selCls}" data-col="${pi}"><div class="cell-inner"><span class="cell-icon">${icon}</span><span class="cell-val" title="${escapeHtml(cVal + (note ? ' (' + note + ')' : ''))}">${escapeHtml(cVal)}</span></div></td>`;
       }
     });
+    manuals.forEach((manualRow, mi) => {
+      const mKey = `manual:${mi}`;
+      const isSel = state.selections[itemKey] === mKey;
+      const selCls = isSel ? ' col-selected' : '';
+      if (!manualRow._comparisonByField) {
+        const comps = buildManualComparison(manualRow, queryFields);
+        manualRow._comparisonByField = new Map(comps.map(c => [c.field, c]));
+      }
+      const rawComp = manualRow._comparisonByField.get(field);
+      if (!rawComp || rawComp.candidate_value == null) {
+        html += `<td class="cell-nodata${selCls}" data-col="${mKey}"><div class="cell-inner"><span class="cell-icon" style="color:#D1D5DB">\u00b7</span><span class="cell-val" style="color:#D1D5DB">\u2014</span></div></td>`;
+      } else {
+        const comp = normalizeComparison(rawComp);
+        const sc = comp.status === 'match' ? 'cell-match' : comp.status === 'different' ? 'cell-diff' : comp.status === 'upgrade' ? 'cell-upgrade' : 'cell-missing';
+        const icon = comp.status === 'match' ? '\u2713' : comp.status === 'different' ? '\u2717' : comp.status === 'upgrade' ? '\u2191' : '\u00b7';
+        const cVal = comp.candidate_value != null ? String(formatDisplayValue(field, comp.candidate_value)) : '\u2014';
+        const note = comp.note ? String(formatLabelText(comp.note)) : '';
+        html += `<td class="${sc}${selCls}" data-col="${mKey}"><div class="cell-inner"><span class="cell-icon">${icon}</span><span class="cell-val" title="${escapeHtml(cVal + (note ? ' (' + note + ')' : ''))}">${escapeHtml(cVal)}</span></div></td>`;
+      }
+    });
     html += '</tr>';
   });
 
@@ -5894,8 +6012,19 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
       </button>
     </div></td>`;
   });
+  manuals.forEach((_, mi) => {
+    const mKey = `manual:${mi}`;
+    const isSel = state.selections[itemKey] === mKey;
+    html += `<td style="background:#FAFAFA;border-top:2px solid #D8E2F0 !important"><div style="padding:10px 12px">
+      <button class="ph-select-btn${isSel ? ' selected' : ''}" style="font-size:0.72rem"
+        data-item="${ek}" data-pi="${mKey}"
+        onclick="selectProposal('${ek}','${mKey}',this)">
+        ${isSel ? (currentLang === 'de' ? '\u2713\u00a0Ausgew\u00e4hlt' : '\u2713\u00a0Selected') : (currentLang === 'de' ? 'Ausw\u00e4hlen' : 'Select')}
+      </button>
+    </div></td>`;
+  });
   html += '</tr></tfoot></table></div>';
-  return html;
+  return `<div id="matrix-wrap-${ek}">${html}</div>`;
 }
 
 // ================================================================
@@ -5907,14 +6036,18 @@ function selectProposal(itemKey, value, el) {
   const itemCard = el.closest('.item-card');
   if (!itemCard) { updateExportSummary(); return; }
 
-  // Update proposal column headers
-  itemCard.querySelectorAll('.col-proposal-th').forEach((th, pi) => {
-    th.classList.toggle('is-selected', sel === pi);
+  // Update proposal column headers (use data-col for both numeric and manual:N keys)
+  itemCard.querySelectorAll('.col-proposal-th').forEach(th => {
+    const colVal = th.dataset.col;
+    const matched = typeof sel === 'number' ? sel === parseInt(colVal) : sel === colVal;
+    th.classList.toggle('is-selected', matched);
   });
 
   // Highlight full column body cells
   itemCard.querySelectorAll('[data-col]').forEach(el => {
-    el.classList.toggle('col-selected', sel === parseInt(el.dataset.col));
+    const colVal = el.dataset.col;
+    const matched = typeof sel === 'number' ? sel === parseInt(colVal) : sel === colVal;
+    el.classList.toggle('col-selected', matched);
   });
 
   // Update Zubehör panel
@@ -5924,9 +6057,10 @@ function selectProposal(itemKey, value, el) {
     if (itm) zubehoerPanel.innerHTML = renderZubehoerContent(itemKey, itm.proposals || [], sel);
   }
 
-  // Update all select buttons (header + footer)
+  // Update all select buttons (header + footer) — data-pi can be numeric or 'manual:N'
   itemCard.querySelectorAll('.ph-select-btn').forEach(btn => {
-    const pi = btn.dataset.pi !== undefined ? parseInt(btn.dataset.pi) : -1;
+    const piRaw = btn.dataset.pi;
+    const pi = piRaw !== undefined ? (/^\d+$/.test(piRaw) ? parseInt(piRaw) : piRaw) : -1;
     const isSel = sel === pi;
     btn.classList.toggle('selected', isSel);
     btn.textContent = isSel
@@ -5965,6 +6099,120 @@ function selectProposal(itemKey, value, el) {
   updateExportSummary();
 }
 
+// ================================================================
+// MANUAL PRODUCT ADD
+// ================================================================
+function rerenderMatrix(itemKey) {
+  const ek = escapeHtml(itemKey);
+  const wrapper = document.getElementById('matrix-wrap-' + ek);
+  if (!wrapper) return;
+  const item = (state.results?.items || []).find(i => (i.positionsnummer || i.item_id) === itemKey);
+  if (!item) return;
+  wrapper.outerHTML = renderComparisonMatrix(item.proposals || [], item.query_fields || [], itemKey);
+}
+
+function _popoverOutsideClick(e) {
+  if (!e.target.closest('#add-product-popover') && !e.target.closest('.add-product-btn')) {
+    closeAddProductPopover();
+  }
+}
+function _popoverKeydown(e) {
+  if (e.key === 'Escape') closeAddProductPopover();
+}
+
+function closeAddProductPopover() {
+  const p = document.getElementById('add-product-popover');
+  if (p) p.remove();
+  document.removeEventListener('click', _popoverOutsideClick);
+  document.removeEventListener('keydown', _popoverKeydown);
+}
+
+function openAddProductPopover(itemKey, btn) {
+  closeAddProductPopover();
+  loadCatalog();
+  const pop = document.createElement('div');
+  pop.id = 'add-product-popover';
+  pop.className = 'add-product-popover';
+  pop.innerHTML = `
+    <input id="catalog-search-input" class="catalog-search-input" placeholder="${currentLang === 'de' ? 'Artikelnummer\u2026' : 'Article number\u2026'}" autocomplete="off">
+    <ul id="catalog-result-list" class="catalog-result-list"></ul>`;
+  document.body.appendChild(pop);
+  const rect = btn.getBoundingClientRect();
+  pop.style.position = 'absolute';
+  pop.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+  pop.style.left = Math.max(8, rect.left + window.scrollX - 200) + 'px';
+  const input = pop.querySelector('#catalog-search-input');
+  const list = pop.querySelector('#catalog-result-list');
+  input.focus();
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    const hits = q.length < 1 ? [] :
+      (state.catalog?.published || []).filter(r => r['Artikelnummer'].toLowerCase().includes(q)).slice(0, 10);
+    if (hits.length) {
+      list.innerHTML = hits.map(r =>
+        `<li class="catalog-result-item" data-artnr="${escapeHtml(r['Artikelnummer'])}">${escapeHtml(r['Artikelnummer'])}</li>`
+      ).join('');
+    } else if (q.length > 0) {
+      list.innerHTML = `<li class="catalog-result-empty">${currentLang === 'de' ? 'Keine Treffer' : 'No results'}</li>`;
+    } else {
+      list.innerHTML = '';
+    }
+  });
+  list.addEventListener('click', e => {
+    const item = e.target.closest('.catalog-result-item');
+    if (!item) return;
+    addManualProduct(itemKey, item.dataset.artnr);
+  });
+  // Keydown (Escape) can be registered immediately — it won't catch the opening click
+  document.addEventListener('keydown', _popoverKeydown);
+  // Outside-click listener deferred so it doesn't catch the button click that opened the popover
+  setTimeout(() => {
+    document.addEventListener('click', _popoverOutsideClick);
+  }, 10);
+}
+
+function addManualProduct(itemKey, artNr) {
+  const row = state.catalog?.byArticle[artNr];
+  if (!row) return;
+  state.manualProducts[itemKey] = state.manualProducts[itemKey] || [];
+  if (state.manualProducts[itemKey].some(r => r['Artikelnummer'] === artNr)) {
+    closeAddProductPopover();
+    return;
+  }
+  // Store a shallow clone so per-position comparison caches don't leak across positions
+  state.manualProducts[itemKey].push(Object.assign({}, row));
+  closeAddProductPopover();
+  rerenderMatrix(itemKey);
+}
+
+// Build a synthetic comparison array for a manual product row so the matrix
+// rendering pipeline can display real field values (matches the shape of
+// API proposal.comparison entries).
+function buildManualComparison(catalogRow, queryFields) {
+  const qfMap = new Map((queryFields || []).map(qf => [qf.field, qf]));
+  return _CATALOG_FIELDS.map(field => {
+    const candidateVal = catalogRow[field] != null ? catalogRow[field] : null;
+    const qf = qfMap.get(field);
+    const queryVal = qf && qf.value != null ? qf.value : null;
+    let status;
+    if (candidateVal == null && queryVal == null) status = 'missing';
+    else if (candidateVal == null) status = 'missing_candidate';
+    else if (queryVal == null) status = 'missing_query';
+    else {
+      const a = String(candidateVal).trim().toLowerCase();
+      const b = String(queryVal).trim().toLowerCase();
+      status = a === b ? 'match' : 'different';
+    }
+    return {
+      field,
+      label: field,
+      candidate_value: candidateVal,
+      query_value: queryVal,
+      status,
+    };
+  });
+}
+
 function updateExportSummary() {
   if (!state.results) return;
   const items = state.results.items || [];
@@ -5977,6 +6225,13 @@ function updateExportSummary() {
     let selText, selArticle = '';
     if (sel === null || sel === undefined) { selText = `<span class="text-muted">${t('export.not_selected')}</span>`; }
     else if (sel === 'none') { selText = `<span style="color:#DC2626">${t('export.none')}</span>`; selected++; }
+    else if (typeof sel === 'string' && sel.startsWith('manual:')) {
+      const mi = parseInt(sel.split(':')[1]);
+      const manuals = state.manualProducts[key] || [];
+      selText = `<span class="ph-manual-badge">${currentLang === 'de' ? 'Manuell' : 'Manual'}</span>`;
+      selArticle = manuals[mi]?.['Artikelnummer'] || '?';
+      selected++;
+    }
     else { const p = proposals[sel]; selText = `${t('export.proposal')} #${p?.rank || sel + 1}`; selArticle = p?.display_article || p?.base_article || '?'; selected++; }
     rowsHtml += `<div class="export-row"><span class="export-oz">${escapeHtml(key)}</span><span class="export-selection">${selText}</span><span class="export-article">${escapeHtml(selArticle)}</span></div>`;
   });
@@ -5997,38 +6252,74 @@ function downloadExport(format) {
     const sel = state.selections[key];
     const proposals = item.proposals || [];
     const accSet = state.accessorySelections[key];
+    const isManual = typeof sel === 'string' && sel.startsWith('manual:');
     const row = {
       positionsnummer: key, item_id: item.item_id || '', run_id: meta.run_id || '',
-      decision: sel === null ? '' : sel === 'none' ? 'NONE' : 'SELECTED',
-      selected_rank: sel !== null && sel !== 'none' ? (proposals[sel]?.rank || sel + 1) : '',
+      decision: sel === null || sel === undefined ? '' : sel === 'none' ? 'NONE' : 'SELECTED',
+      selected_rank: typeof sel === 'number' ? (proposals[sel]?.rank || sel + 1) : '',
       selected_article: '', selected_score: '',
       selected_accessories: accSet && accSet.size > 0 ? Array.from(accSet).join('|') : '',
     };
-    if (sel !== null && sel !== 'none' && proposals[sel]) {
+    if (typeof sel === 'number' && proposals[sel]) {
       row.selected_article = proposals[sel].display_article || proposals[sel].base_article || '';
       row.selected_score = proposals[sel].score ?? '';
+    } else if (isManual) {
+      const mi = parseInt(sel.split(':')[1]);
+      const manuals = state.manualProducts[key] || [];
+      if (manuals[mi]) row.selected_article = manuals[mi]['Artikelnummer'];
     }
     rows.push(row);
   });
 
-  let content, mime, ext;
-  if (format === 'csv') {
-    const headers = Object.keys(rows[0] || {});
-    content = [headers.join(';'), ...rows.map(r => headers.map(h => String(r[h] ?? '')).join(';'))].join('\n');
-    mime = 'text/csv;charset=utf-8'; ext = 'csv';
-  } else {
-    content = JSON.stringify({ _export_meta: { ...meta, exported_at: new Date().toISOString() }, selections: rows }, null, 2);
-    mime = 'application/json'; ext = 'json';
-  }
-  const blob = new Blob([content], { type: mime });
+  const headers = Object.keys(rows[0] || {});
+  const content = [headers.join(';'), ...rows.map(r => headers.map(h => String(r[h] ?? '')).join(';'))].join('\n');
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `rp-matcher-export-${new Date().toISOString().slice(0, 10)}.${ext}`;
+  a.download = `rp-matcher-export-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+function downloadAbas() {
+  if (!state.results) return;
+  loadCatalog();
+  const items = state.results.items || [];
+  const lines = ['OZ;ABAS-ID;'];
+  items.forEach(item => {
+    const key = item.positionsnummer || item.item_id;
+    const sel = state.selections[key];
+    if (sel === null || sel === undefined || sel === 'none') return;
+    const oz = key;
+    let abasId = '';
+    if (typeof sel === 'number') {
+      const proposals = item.proposals || [];
+      const p = proposals[sel];
+      abasId = p?.abas_id || '';
+      if (!abasId) {
+        const article = p?.display_article || p?.base_article;
+        if (article && state.catalog?.byArticle[article]) {
+          abasId = state.catalog.byArticle[article]['ABAS-ID'] || '';
+        }
+      }
+    } else if (typeof sel === 'string' && sel.startsWith('manual:')) {
+      const mi = parseInt(sel.split(':')[1]);
+      abasId = (state.manualProducts[key] || [])[mi]?.['ABAS-ID'] || '';
+    }
+    lines.push(`${oz};${abasId};`);
+  });
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const fileId = state.activeProcessId || state.results?._meta?.run_id || new Date().toISOString().slice(0, 10);
+  a.download = `abas-${fileId}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 100);
 }
 
 function _copyToClipboard(text, btnId) {

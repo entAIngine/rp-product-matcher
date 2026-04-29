@@ -5685,14 +5685,14 @@ function getDisplayProposal(proposal, queryFields) {
 function normalizeComparison(comp) {
   if (!comp) return comp;
 
-  // Mounting: "universal" should not satisfy a specific mounting request
+  // Mounting: "universal" candidate is a superset that satisfies any specific mounting request -> upgrade
   if (comp.field === 'Mounting:MountingMethod') {
     const qv = comp.query_value, cv = comp.candidate_value;
     if (qv && cv) {
       const ql = String(qv).toLowerCase().trim();
       const cl = String(cv).toLowerCase().trim();
-      if (ql !== 'universal' && cl === 'universal' && comp.status !== 'different') {
-        return { ...comp, status: 'different', note: 'candidate uses universal mounting compatibility' };
+      if (ql !== 'universal' && cl === 'universal' && comp.status !== 'upgrade') {
+        return { ...comp, status: 'upgrade', note: 'candidate supports universal mounting (compatible with specific request)' };
       }
     }
   }

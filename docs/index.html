@@ -3331,8 +3331,7 @@
       </div>
       <div class="export-summary" id="export-summary"></div>
       <div class="export-actions">
-        <button class="btn btn-primary" onclick="downloadExport('csv')" data-i18n="export.csv"></button>
-        <button class="btn btn-secondary" onclick="downloadAbas()" data-i18n="export.abas"></button>
+        <button class="btn btn-primary" onclick="downloadAbas()" data-i18n="export.abas"></button>
         <button class="btn btn-ghost" onclick="startFreshAnalysis()" data-i18n="btn.new"></button>
       </div>
     </div>
@@ -3411,9 +3410,9 @@ const I18N = {
     'settings.system.option.zb': 'ZB — Zentralbatterie',
     'settings.system.option.sc': 'SC — Self-Contained',
     'settings.system.option.wl': 'WL — WirelessControl',
-    'settings.system.option.wb': 'WB — Wired Bus',
-    'settings.system.option.ml': 'ML — Mittelleistung',
-    'settings.system.option.cc': 'CC — Zentralsteuerung',
+    'settings.system.option.wb': 'WB — Wireless Basic',
+    'settings.system.option.ml': 'ML — Multicontrol',
+    'settings.system.option.cc': 'CC — Core Compact',
     'settings.system.option.cps': 'CPS — Zentralversorgung',
     'btn.start': 'Analyse starten',
     'btn.cancel': 'Abbrechen',
@@ -3580,9 +3579,9 @@ const I18N = {
     'settings.system.option.zb': 'ZB — Central battery',
     'settings.system.option.sc': 'SC — Self-contained',
     'settings.system.option.wl': 'WL — WirelessControl',
-    'settings.system.option.wb': 'WB — Wired bus',
-    'settings.system.option.ml': 'ML — Medium power',
-    'settings.system.option.cc': 'CC — Central control',
+    'settings.system.option.wb': 'WB — Wireless Basic',
+    'settings.system.option.ml': 'ML — Multicontrol',
+    'settings.system.option.cc': 'CC — Core Compact',
     'settings.system.option.cps': 'CPS — Central power supply',
     'btn.start': 'Start Analysis',
     'btn.cancel': 'Cancel',
@@ -5470,7 +5469,7 @@ function getFieldGroup(fieldName) {
   return 'fg.other';
 }
 
-const HIDDEN_COMP_FIELDS = new Set(['Positionsnummer','Verkaufstext','Artikelnummer','DesiredSupplyType','Mounting:AllowedMethods','Mounting:EnforcedMethods','Warnings','Evidence','Produkttyp']);
+const HIDDEN_COMP_FIELDS = new Set(['Positionsnummer','Verkaufstext','Artikelnummer','DesiredSupplyType','Mounting:AllowedMethods','Mounting:EnforcedMethods','Warnings','Evidence','RatingsCertifications:LuminaireType']);
 
 // ── Frontend comparison normalization ──
 // Re-evaluates "different" statuses from the backend for known equivalences
@@ -5952,8 +5951,16 @@ function renderComparisonMatrix(proposals, queryFields, itemKey) {
       ? `<span class="qval" title="${escapeHtml(String(formatDisplayValue(field, qVal)))}">${escapeHtml(String(formatDisplayValue(field, qVal)))}</span><span class="src-dot ${srcCls}" title="${escapeHtml(String(formatLabelText(qf?.source || '')))}"></span>`
       : `<span class="qval missing">\u2014</span>`;
 
+    const anfrageNoteText = field === 'Produkttyp'
+      ? (lang === 'de'
+          ? 'Wert stammt aus der Anfrage und kann von der RP-Datenbank abweichen.'
+          : 'Value extracted from the inquiry — may differ from the RP database.')
+      : '';
+    const anfrageNoteIcon = anfrageNoteText
+      ? ` <span class="anfrage-note" title="${escapeHtml(anfrageNoteText)}" aria-label="${escapeHtml(anfrageNoteText)}">ⓘ</span>`
+      : '';
     html += `<tr class="field-row">
-      <td class="col-fname"><div class="col-fname-content" title="${escapeHtml(formatFieldLabel(field))}">${escapeHtml(formatFieldLabel(field))}</div></td>
+      <td class="col-fname"><div class="col-fname-content" title="${escapeHtml(formatFieldLabel(field))}">${escapeHtml(formatFieldLabel(field))}${anfrageNoteIcon}</div></td>
       <td class="col-query"><div class="col-query-content">${qDisplay}</div></td>`;
 
     displayProposals.forEach((p, pi) => {
